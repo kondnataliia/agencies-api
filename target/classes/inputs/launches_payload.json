@@ -1,0 +1,65 @@
+{
+    "launch_count": 2,
+    "launches": [
+        {
+            "id": "e3df2ecd-c239-472f-95e4-2b89b4f75800",
+            "slug": "sputnik-8k74ps-sputnik-1",
+            "name": "Sputnik 8K74PS | Sputnik 1",
+            "status": "Success",
+            "launch_year": "1957",
+            "failreason": "",
+            "launch_service_provider": "Soviet Space Program",
+            "rocket": {
+                "name": "Sputnik 8K74PS",
+                "family": "Sputnik",
+                "full_name": "Sputnik 8K74PS",
+                "variant": "8K74PS"
+            },
+            "mission": {
+                "name": "Sputnik 1",
+                "description": "First artificial satellite consisting of a 58 cm pressurized aluminium shell containing two 1 W transmitters for a total mass of 83.6 kg.",
+                "type": "Test Flight",
+                "orbit": "Low Earth Orbit"
+            },
+            "pad": {
+                "name": "1/5",
+                "location": {
+                    "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+                    "country_code": "KAZ",
+                    "total_launch_count": 1522,
+                    "total_landing_count": 0
+                }
+            }
+        },
+        {
+            "id": "f8c9f344-a6df-4f30-873a-90fe3a7840b3",
+            "slug": "sputnik-8k74ps-sputnik-2",
+            "name": "Sputnik 8K74PS | Sputnik 2",
+            "status": "Success",
+            "launch_year": "1957",
+            "failreason": "",
+            "launch_service_provider": "Soviet Space Program",
+            "rocket": {
+                "name": "Sputnik 8K74PS",
+                "family": "Sputnik",
+                "full_name": "Sputnik 8K74PS",
+                "variant": "8K74PS"
+            },
+            "mission": {
+                "name": "Sputnik 2",
+                "description": "Second artificial satellite and first to carry an animal into orbit.",
+                "type": "Test Flight",
+                "orbit": "Low Earth Orbit"
+            },
+            "pad": {
+                "name": "1/5",
+                "location": {
+                    "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+                    "country_code": "KAZ",
+                    "total_launch_count": 1522,
+                    "total_landing_count": 0
+                }
+            }
+        }
+    ]
+}

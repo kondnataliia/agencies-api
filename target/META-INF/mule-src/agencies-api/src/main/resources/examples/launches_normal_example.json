@@ -1,0 +1,36 @@
+[
+	{
+		"name": "Molniya 8K78 | Mars-1b",
+		"status": "Failure",
+		"launch_year": null,
+		"rocket_name": "Molniya 8K78",
+		"mission": {
+			"name": "Mars-1b",
+			"description": "A Russian mars flyby probe intended to photograph Mars.  The third stage failed to ignite.",
+			"planet_of_interest": {
+				"name": "Mars",
+				"moons": [
+					"Phobos",
+					"De\u00EFmos"
+				],
+				"perihelion": 206700000,
+				"aphelion": 249200000,
+				"mass": 6.41712,
+				"density": 3.9341,
+				"gravity": 3.71,
+				"meanRadius": 3389.5,
+				"sideralOrbit": 686.98,
+				"sideralRotation": 24.6229,
+				"discoveredBy": "",
+				"discoveryDate": "",
+				"alternativeName": "",
+				"axialTilt": 25.19,
+				"avgTemp": 0
+			}
+		},
+		"pad": {
+			"name": "1/5",
+			"location": "Baikonur Cosmodrome, Republic of Kazakhstan"
+		}
+	}
+]

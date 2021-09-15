@@ -1,0 +1,23 @@
+http:
+  port: "8081"
+
+planets:
+  host: "localhost"
+  basepath: "/api/"
+  port: "8088"
+
+stations:
+  host: "localhost"
+  basepath: "/api/"
+  port: "8083"
+
+launches:
+  host: "localhost"
+  basepath: "/api/"
+  port: "8085"
+
+thespacedevs:
+  host: "lldev.thespacedevs.com"
+  basepath: "/2.2.0/config/"
+  protocol: "HTTP"
+

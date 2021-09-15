@@ -1,0 +1,15 @@
+[
+	{
+		"name": "Antares 110",
+		"program": [
+			{
+				"name": "Commercial Resupply Services",
+				"description": "Commercial Resupply Services (CRS) are a series of flights awarded by NASA for the delivery of cargo and supplies to the International Space Station.The first CRS contracts were signed in 2008 and awarded $1.6 billion to SpaceX for twelve cargo Dragon and $1.9 billion to Orbital Sciences for eight Cygnus flights, covering deliveries to 2016. The Falcon 9 and Antares rockets were also developed under the CRS program to deliver cargo spacecraft to the ISS."
+			}
+		],
+		"family": "Antares",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/antares_image_20190222030727.jpeg",
+		"wiki_url": "https://en.wikipedia.org/wiki/Antares_(rocket)#Antares_100"
+	}
+]

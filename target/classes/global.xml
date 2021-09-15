@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<apikit:config name="agencies-api-config" api="agencies-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c8d723b7-0100-46ea-bf2d-50ae7a2fd300" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration_Launches" doc:name="HTTP Request configuration" doc:id="25dca176-af15-44a7-b451-974f92b2b8a7" basePath="${launches.basepath}">
+		<http:request-connection host="${launches.host}" port="${launches.port}" />
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configuration_Stations" doc:name="HTTP Request configuration" doc:id="a041588c-ae4a-4661-9ba4-685709c6ff57" basePath="${stations.basepath}">
+		<http:request-connection host="${stations.host}" port="${stations.port}" />
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="3ad43fb9-63be-440a-b2fa-1f00c220e257" file="config.yaml" />
+	<http:request-config name="HTTP_Request_configuration_Planets" doc:name="HTTP Request configuration" doc:id="67b8a629-6006-45fb-8354-7927a03fafcb" basePath="${planets.basepath}" >
+		<http:request-connection host="${planets.host}" port="${planets.port}" />
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configuration_Rockets" doc:name="HTTP Request configuration" doc:id="51ca6867-f254-43f7-9300-9a06937855ae" basePath="${thespacedevs.basepath}" >
+		<http:request-connection host="${thespacedevs.host}" protocol="${thespacedevs.protocol}"/>
+	</http:request-config>
+</mule>

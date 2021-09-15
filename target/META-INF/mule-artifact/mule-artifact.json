@@ -1,0 +1,55 @@
+{
+  "configs": [
+    "implementation.xml",
+    "interface.xml",
+    "global.xml"
+  ],
+  "secureProperties": [],
+  "redeploymentEnabled": true,
+  "name": "com.mycompany:agencies-api:1.0.0-SNAPSHOT",
+  "minMuleVersion": "4.3.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedPackages": [
+        "org.spaceagencies.utils"
+      ],
+      "exportedResources": [
+        "api/agencies-api.raml",
+        "api/data_types/agency_detailed_data_types.raml",
+        "api/data_types/agency_list_data_types.raml",
+        "api/data_types/agency_normal_data_types.raml",
+        "api/data_types/info_by_agency_n_year_data_types.raml",
+        "api/examples/agency_detailed_example.json",
+        "api/examples/agency_list_example.json",
+        "api/examples/agency_normal_example.json",
+        "api/examples/info_by_agency_n_year_example.json",
+        "application-types.xml",
+        "config.yaml",
+        "examples/general_agency_info_list.json",
+        "examples/general_agency_info_normal.json",
+        "examples/launches_example.json",
+        "examples/launches_normal_example.json",
+        "examples/planet_example.json",
+        "examples/rockets_example.json",
+        "examples/rockets_normal_example.json",
+        "examples/stations_example.json",
+        "global.xml",
+        "implementation.xml",
+        "inputs/general_agency_info_payload.json",
+        "inputs/launches_payload.json",
+        "inputs/launch_planet_payload.json",
+        "inputs/planet_payload.json",
+        "inputs/rockets_payload.json",
+        "inputs/stations_payload.json",
+        "interface.xml",
+        "log4j2.xml"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}

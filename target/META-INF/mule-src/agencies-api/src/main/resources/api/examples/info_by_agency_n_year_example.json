@@ -1,0 +1,60 @@
+[
+    {
+        "agency": "Russian Federal Space Agency (ROSCOSMOS)",
+        "launches": {
+            "launches_count": 1,
+            "launches_list": [
+                {
+                    "name": "Little Joe | LJ-1",
+                    "status": "Failure",
+                    "launch_year": "1988",
+                    "rocket": "Little Joe",
+                    "mission": {
+                        "name": "LJ-1",
+                        "description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+                        "planet_of_interest": {
+                            "name": "Mercury",
+                            "moons": [],
+                            "semimajorAxis": 57909227,
+                            "perihelion": 46001200,
+                            "aphelion": 69816900,
+                            "eccentricity": 0.20560,
+                            "inclination": 7.00000,
+                            "mass": 3.30114,
+                            "density": 5.42910,
+                            "gravity": 3.70000,
+                            "meanRadius": 2439.40000,
+                            "polarRadius": 2439.70000,
+                            "discoveredBy": "",
+                            "discoveryDate": "",
+                            "alternativeName": "",
+                            "axialTilt": 0.0352,
+                            "avgTemp": 0
+                        }
+                    },
+                    "pad": {
+                        "name": "Launch Area 1",
+                        "location": "Wallops Island, Virginia, USA"
+                    }
+                }
+            ]
+        },
+        "stations": {
+            "stations_count": 1,
+            "stations_list": [
+                {
+                    "name": "Mir",
+                    "status": "De-Orbited",
+                    "founded": "1986-02-20",
+                    "deorbited": "2001-03-23",
+                    "description": "Mir was a space station that operated in low Earth orbit from 1986 to 2001, operated by the Soviet Union and later by Russia. Mir was the first modular space station and was assembled in orbit from 1986 to 1996.\r\n\r\nThe station served as a microgravity research laboratory in which crews conducted experiments in biology, human biology, physics, astronomy, meteorology and spacecraft systems with a goal of developing technologies required for permanent occupation of space.",
+                    "orbit": "Low Earth Orbit",
+                    "owners": [
+                        "Russian Federal Space Agency (ROSCOSMOS)"
+                    ],
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/mir_image_20190218204938.jpeg"
+                }
+            ]
+        }
+    }
+]

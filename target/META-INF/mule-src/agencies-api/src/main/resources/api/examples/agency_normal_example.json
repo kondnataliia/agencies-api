@@ -1,0 +1,70 @@
+[
+    {
+        "agency": "National Aeronautics and Space Administration",
+        "stations": {
+            "stations_count": 1,
+            "stations_list": [
+                {
+                    "name": "Skylab",
+                    "status_name": "De-Orbited",
+                    "founded": "1973-05-14",
+                    "deorbited": "1979-07-11",
+                    "description": "Skylab was a United States space station launched and operated by NASA, and occupied for about 24 weeks between May 1973 and February 1974 – the only space station the U.S. has operated exclusively. In 1979 it fell back to Earth amid huge worldwide media attention. Skylab included a workshop, a solar observatory, and other systems necessary for crew survival and scientific experiments. It was launched unmanned by a modified Saturn V rocket, with a weight of 170,000 pounds (77,000 kg). Lifting Skylab into low earth orbit was the final mission and launch of a Saturn V rocket (famous for carrying the manned Moon landing missions). Three missions delivered three-astronaut crews in the Apollo command and service module (Apollo CSM), launched by the smaller Saturn IB rocket. For the final two manned missions to Skylab, a backup Apollo CSM/Saturn IB was assembled and made ready in case an in-orbit rescue mission was needed, but this backup vehicle was never flown.",
+                    "orbit": "Low Earth Orbit",
+                    "owners": [
+                        "National Aeronautics and Space Administration"
+                    ],
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/skylab_image_20190215230143.jpeg"
+                }
+            ]
+        },
+        "launches": {
+            "launches_count": 1,
+            "launches_list": [
+                {
+                    "name": "Little Joe | LJ-1",
+                    "status": "Failure",
+                    "launch_year": "",
+                    "rocket_name": "Little Joe",
+                    "mission": {
+                        "name": "LJ-1",
+                        "description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+                        "planet_of_interest": {
+                            "name": "Mercury",
+                            "moons": [],
+                            "semimajorAxis": 57909227,
+                            "perihelion": 46001200,
+                            "aphelion": 69816900,
+                            "mass": 3.30114,
+                            "gravity": 3.70000,
+                            "meanRadius": 2439.40000,
+                            "discoveredBy": "",
+                            "discoveryDate": "",
+                            "axialTilt": 0.0352,
+                            "avgTemp": 0
+                        }
+                    },
+                    "pad": {
+                        "name": "Launch Area 1",
+                        "location": "Wallops Island, Virginia, USA"
+                    }
+                }
+            ]
+        },
+        "rockets": {
+            "rockets_count": 1,
+            "rockets_list": [
+                {
+                    "name": "Atlas LV-3B",
+                    "program": [
+                        "Mercury"
+                    ],
+                    "family": "Atlas",
+                    "reusable": false,
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/atlas_image_20190222030015.jpeg",
+                    "wiki_url": "https://en.wikipedia.org/wiki/Atlas_LV-3B"
+                }
+            ]
+        }
+    }
+]

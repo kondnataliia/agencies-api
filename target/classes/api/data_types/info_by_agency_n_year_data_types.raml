@@ -1,0 +1,69 @@
+#%RAML 1.0 DataType
+displayName: info_by_agency_n_year_data_types
+description: defines the combined data filtered by agency and year
+
+type: object
+properties:
+  agency: string
+  launches:
+    type: object
+    properties:
+      launches_count: integer
+      launches_list:
+        type: array
+        items:
+          properties:
+            name: string
+            status: string
+            launch_year: string
+            rocket: string
+            mission:
+              type: object
+              properties:
+                name: string
+                description: string
+                planet_of_interest: 
+                  type: object
+                  properties:
+                    name: string
+                    moons: 
+                      type: array
+                      items: string
+                    semimajorAxis: number
+                    perihelion: number
+                    aphelion: number
+                    eccentricity: number
+                    inclination: number
+                    mass: number
+                    density: number
+                    gravity: number
+                    meanRadius: number
+                    polarRadius: number
+                    discoveredBy: string
+                    discoveryDate: string
+                    alternativeName: string
+                    axialTilt: number
+                    avgTemp: number
+            pad:
+              type: object
+              properties:
+                name: string
+                location: string
+  stations:
+    type: object
+    properties:
+      stations_count: integer
+      stations_list:
+        type: array
+        items:
+          properties:
+            name: string
+            status: string
+            founded: string
+            deorbited: string
+            description: string
+            orbit: string
+            owners:
+              type: array
+              items: string
+            image_url: string
