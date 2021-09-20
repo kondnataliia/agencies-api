@@ -21,7 +21,7 @@ thespacedevs:
   basepath: "/2.2.0/config/"
   protocol: "HTTP"
 mongoDB:
-  connection: "mongodb+srv://kondnataliia:xPhmSMYgPEgzYHhe@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
+  connection: "mongodb+srv://<username>:<password>@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
 records:
   folder: "C:/Users/Natalka/Desktop/SoftServe/System Integration/Mule/DEMO2/Write/"
   
