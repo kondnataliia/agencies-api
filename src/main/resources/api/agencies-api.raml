@@ -84,3 +84,24 @@ types:
               {
                 message: "Invalid request"
               }
+/database:
+  post:
+    body:
+      application/json:
+        type: AgencyDetailedMode[]
+        example: !include examples/agency_detailed_example.json
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              {
+                message: "Record added"
+              }
+      400:
+        body:
+          application/json:
+            example:
+              {
+                message: "Record wasn't added"
+              }

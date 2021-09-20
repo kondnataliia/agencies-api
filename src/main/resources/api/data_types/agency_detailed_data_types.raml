@@ -107,7 +107,18 @@ properties:
                 image_url: string
             program:
               type: array
-              items: string
+              items:
+                type: object
+                properties:
+                  name: string
+                  description: string
+                  agencies:
+                    type: array
+                    items: string
+                  image_url: string
+                  start_date: string
+                  end_date: string 
+                  wiki_url: string
             family: string
             full_name: string
             variant: string

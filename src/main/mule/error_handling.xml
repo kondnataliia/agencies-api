@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="global_error_handling" doc:id="2ee7daa7-181f-4be2-a819-5c5ce5570675" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="68c257e6-b7ed-4df3-b2da-58fdbfa801d1" type="APP:INVALID_MODE">
+			<ee:transform doc:name="Error description" doc:id="2b3e8869-cd1c-4754-87f7-a5316ae70361" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="#[400]" doc:name="httpStatus" doc:id="f16ef0bb-9cab-4b3c-b3e9-52b3f6b9e07c" variableName="httpStatus"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8f8819ad-da10-45e2-95b6-a9d9d793d9f9" type="APP:INVALID_YEAR">
+			<ee:transform doc:name="Error description" doc:id="a01dcaf0-f0ea-4c29-bac7-fe9512ed37b4" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="#[400]" doc:name="httpStatus" doc:id="20c5e0c0-f014-45d2-b4ce-06dc215a1bba" variableName="httpStatus" />
+		</on-error-propagate>
+	</error-handler>
+</mule>

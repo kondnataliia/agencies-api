@@ -20,4 +20,16 @@ thespacedevs:
   host: "lldev.thespacedevs.com"
   basepath: "/2.2.0/config/"
   protocol: "HTTP"
-
+mongoDB:
+  connection: "mongodb+srv://kondnataliia:xPhmSMYgPEgzYHhe@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
+records:
+  folder: "C:/Users/Natalka/Desktop/SoftServe/System Integration/Mule/DEMO2/Write/"
+  
+validation:
+  mode:
+    regex: "^(detailed|normal|list)$"
+    message: "You have entered an incorrect presentation mode. Possible mode options: detailed, normal, list."
+  year:
+    regex: "^([0-9]{4})$"
+    message: "You have entered an incorrect year. The year parameter should be in the YYYY format, for example, 1987."
+  

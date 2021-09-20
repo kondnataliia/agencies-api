@@ -2,7 +2,8 @@
   "configs": [
     "implementation.xml",
     "interface.xml",
-    "global.xml"
+    "global.xml",
+    "error_handling.xml"
   ],
   "secureProperties": [],
   "redeploymentEnabled": true,
@@ -27,11 +28,13 @@
         "api/examples/info_by_agency_n_year_example.json",
         "application-types.xml",
         "config.yaml",
+        "error_handling.xml",
         "examples/general_agency_info_list.json",
         "examples/general_agency_info_normal.json",
         "examples/launches_example.json",
         "examples/launches_normal_example.json",
         "examples/planet_example.json",
+        "examples/record--20210918.json",
         "examples/rockets_example.json",
         "examples/rockets_normal_example.json",
         "examples/stations_example.json",

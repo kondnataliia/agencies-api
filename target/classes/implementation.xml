@@ -1,28 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+<mule
+	xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<sub-flow name="variables" doc:id="944c896e-dce1-42a4-b2fe-ec1b7fc21cca">
-		<set-variable value="#[message.attributes.queryParams.limit]" doc:name="Set limit" doc:id="51e13b5a-cae2-4a85-aafc-8d5c5768a1ee" variableName="limit" />
-		<set-variable value="#[message.attributes.queryParams.offset]" doc:name="Set offset" doc:id="4f327e66-08db-4fd9-9176-f09cb7319d77" variableName="offset" />
-		<set-variable value="#[message.attributes.queryParams.mode]" doc:name="Set mode" doc:id="9007427b-1199-4d46-9bfd-0776a864feda" variableName="mode" />
-		<set-variable value="#[message.attributes.queryParams.name]" doc:name="Set agency name" doc:id="00fe79b6-a3c0-4751-a811-d4978a3cee41" variableName="name" />
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+	<file:config name="File_Config" doc:name="File Config"
+		doc:id="afa5f1e3-724c-4a7d-9c70-9ab90e726291">
+		<file:connection workingDir="${records.folder}" />
+	</file:config>
+	<sub-flow name="variables"
+		doc:id="944c896e-dce1-42a4-b2fe-ec1b7fc21cca">
+		<set-variable
+			value="#[message.attributes.queryParams.limit default 100]"
+			doc:name="Set limit" doc:id="51e13b5a-cae2-4a85-aafc-8d5c5768a1ee"
+			variableName="limit" />
+		<set-variable
+			value="#[message.attributes.queryParams.offset]"
+			doc:name="Set offset" doc:id="4f327e66-08db-4fd9-9176-f09cb7319d77"
+			variableName="offset" />
+		<set-variable
+			value='#[message.attributes.queryParams.mode default "list"]'
+			doc:name="Set mode" doc:id="9007427b-1199-4d46-9bfd-0776a864feda"
+			variableName="mode" />
+		<validation:matches-regex
+			doc:name="Check for mode validity"
+			doc:id="b5831dff-3919-4259-80bc-62121c0af587"
+			config-ref="Validation_Config" value="#[vars.mode]"
+			regex="${validation.mode.regex}" message="${validation.mode.message}">
+			<error-mapping sourceType="VALIDATION:MISMATCH"
+				targetType="APP:INVALID_MODE" />
+		</validation:matches-regex>
+		<set-variable
+			value="#[message.attributes.queryParams.name]"
+			doc:name="Set agency name"
+			doc:id="00fe79b6-a3c0-4751-a811-d4978a3cee41" variableName="name" />
 	</sub-flow>
-	<sub-flow name="getRockets" doc:id="914ffeb8-e7b5-4944-8f20-c86bfabd505b">
-		<http:request method="GET" doc:name="getRockets" doc:id="9d5934e9-c4b8-4d25-9588-2e12dd167033" config-ref="HTTP_Request_configuration_Rockets" path="launcher">
-					<http:query-params><![CDATA[#[output application/java
+	<sub-flow name="getRockets"
+		doc:id="914ffeb8-e7b5-4944-8f20-c86bfabd505b">
+		<http:request method="GET" doc:name="getRockets"
+			doc:id="9d5934e9-c4b8-4d25-9588-2e12dd167033"
+			config-ref="HTTP_Request_configuration_Rockets" path="launcher">
+			<http:query-params><![CDATA[#[output application/java
 ---
 {
 	"offset" : vars.offset,
 	"limit" : vars.limit
 }]]]></http:query-params>
-				</http:request>
-		<ee:transform doc:name="Basic data filtering" doc:id="b622ad06-bf02-43f4-aead-b5189ed3e81c">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
+		</http:request>
+		<ee:transform doc:name="Basic data filtering"
+			doc:id="b622ad06-bf02-43f4-aead-b5189ed3e81c">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 payload.results filter ((item, index) -> item.manufacturer.name == vars.name) map ( result , indexOfResult ) -> {
@@ -51,29 +91,40 @@ payload.results filter ((item, index) -> item.manufacturer.name == vars.name) ma
 	image_url: result.image_url default "",
 	wiki_url: result.wiki_url default ""
 }]]></ee:set-payload>
-					</ee:message>
-				</ee:transform>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
-	<sub-flow name="getStations" doc:id="b42af5cc-cf60-4c11-a8d8-747d58ba7b54">
-		<http:request method="GET" doc:name="getStations" doc:id="c66dd9e8-1c9f-45c9-a86e-500b387bea61" config-ref="HTTP_Request_configuration_Stations" path="station" responseTimeout="60000" />
-		<ee:transform doc:name="Basic data filtering" doc:id="0744ac6c-cc23-4479-88b0-247806b1ff68">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
+	<sub-flow name="getStations"
+		doc:id="b42af5cc-cf60-4c11-a8d8-747d58ba7b54">
+		<http:request method="GET" doc:name="getStations"
+			doc:id="c66dd9e8-1c9f-45c9-a86e-500b387bea61"
+			config-ref="HTTP_Request_configuration_Stations" path="station"
+			responseTimeout="60000" />
+		<ee:transform doc:name="Basic data filtering"
+			doc:id="0744ac6c-cc23-4479-88b0-247806b1ff68">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 payload filter ((item, index) -> item.owners contains(vars.name))]]></ee:set-payload>
-					</ee:message>
+			</ee:message>
 			<ee:variables>
 			</ee:variables>
-				</ee:transform>
+		</ee:transform>
 	</sub-flow>
-	<sub-flow name="getLaunchesAndPlanets" doc:id="2eafa69c-7893-4f17-af7e-e2614ae1264d">
-		<http:request method="GET" doc:name="getLaunches" doc:id="33edb96d-bfdb-4eab-9f50-609278864808" config-ref="HTTP_Request_configuration_Launches" path='#["launchesByStatusAndYear?limit=" ++ vars.limit ++ "&amp;offset=" ++ vars.offset]' responseTimeout="60000" />
-		<ee:transform doc:name="Basic data filtering" doc:id="e98ff262-b8ce-4f83-8723-3ac6e1e40b50">
-					<ee:message>
-					</ee:message>
-					<ee:variables>
-						<ee:set-variable variableName="launchInfo"><![CDATA[%dw 2.0
+	<sub-flow name="getLaunchesAndPlanets"
+		doc:id="2eafa69c-7893-4f17-af7e-e2614ae1264d">
+		<http:request method="GET" doc:name="getLaunches"
+			doc:id="33edb96d-bfdb-4eab-9f50-609278864808"
+			config-ref="HTTP_Request_configuration_Launches"
+			path='#["launchesByStatusAndYear?limit=" ++ vars.limit ++ "&amp;offset=" ++ vars.offset]'
+			responseTimeout="60000" />
+		<ee:transform doc:name="Basic data filtering"
+			doc:id="e98ff262-b8ce-4f83-8723-3ac6e1e40b50">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="launchInfo"><![CDATA[%dw 2.0
 output application/json
 ---
 payload.launches filter ((item, index) -> item.launch_service_provider == vars.name) map ( launch , indexOfLaunch ) -> {
@@ -109,17 +160,31 @@ payload.launches filter ((item, index) -> item.launch_service_provider == vars.n
 output application/json
 ---
 []]]></ee:set-variable>
-					</ee:variables>
-				</ee:transform>
-		<foreach doc:name="For Each" doc:id="a2eb3e74-bea9-4626-9152-6842a4b0f1b8" collection="#[vars.launchInfo]">
-					<set-variable value="#[payload]" doc:name="Set oneLaunch" doc:id="96d1c54e-3caa-43b8-9b9c-95bc81175bf7" variableName="oneLaunch" />
-					<set-variable doc:name="Set planetName" doc:id="5242e890-7c2e-4794-aca0-f76641b808ea" variableName="planetName" value="#[java!org::spaceagencies::utils::MyUtils::getPlanetName(vars.oneLaunch.mission.description)]" />
-					<choice doc:name="Choice" doc:id="145eec21-9d4e-4da9-b741-61f43d5949be">
-						<when expression='#[vars.planetName != ""]'>
-							<http:request method="GET" doc:name="getPlanet" doc:id="f90465f9-31db-49bb-99c7-17a429dc13c9" config-ref="HTTP_Request_configuration_Planets" path='#["planets?name=" ++ vars.planetName]' responseTimeout="60000" />
-							<ee:transform doc:name="Planet info" doc:id="c20c49c7-d509-490e-a55e-5eb891dcf463">
-								<ee:message>
-									<ee:set-payload><![CDATA[%dw 2.0
+			</ee:variables>
+		</ee:transform>
+		<foreach doc:name="For Each"
+			doc:id="a2eb3e74-bea9-4626-9152-6842a4b0f1b8"
+			collection="#[vars.launchInfo]">
+			<set-variable value="#[payload]"
+				doc:name="Set oneLaunch"
+				doc:id="96d1c54e-3caa-43b8-9b9c-95bc81175bf7"
+				variableName="oneLaunch" />
+			<set-variable doc:name="Set planetName"
+				doc:id="5242e890-7c2e-4794-aca0-f76641b808ea"
+				variableName="planetName"
+				value="#[java!org::spaceagencies::utils::MyUtils::getPlanetName(vars.oneLaunch.mission.description)]" />
+			<choice doc:name="Choice"
+				doc:id="145eec21-9d4e-4da9-b741-61f43d5949be">
+				<when expression='#[vars.planetName != ""]'>
+					<http:request method="GET" doc:name="getPlanet"
+						doc:id="f90465f9-31db-49bb-99c7-17a429dc13c9"
+						config-ref="HTTP_Request_configuration_Planets"
+						path='#["planets?name=" ++ vars.planetName]'
+						responseTimeout="60000" />
+					<ee:transform doc:name="Planet info"
+						doc:id="c20c49c7-d509-490e-a55e-5eb891dcf463">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 {
@@ -141,11 +206,12 @@ output application/json
 	axialTilt: payload[0].axialTilt,
 	avgTemp: payload[0].avgTemp
 }]]></ee:set-payload>
-								</ee:message>
-							</ee:transform>
-							<ee:transform doc:name="One launch with planet info" doc:id="9319699e-3513-441a-8a75-5730d898e78a">
-								<ee:message>
-									<ee:set-payload><![CDATA[%dw 2.0
+						</ee:message>
+					</ee:transform>
+					<ee:transform doc:name="One launch with planet info"
+						doc:id="9319699e-3513-441a-8a75-5730d898e78a">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 {
@@ -177,54 +243,67 @@ output application/json
 		}
 	}
 }]]></ee:set-payload>
-								</ee:message>
-							</ee:transform>
-							<ee:transform doc:name="Adding payload to launch_planet_arr" doc:id="d4fc3172-6da2-491d-af73-016e4dcfb9ed">
-								<ee:message />
-								<ee:variables>
-									<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
+						</ee:message>
+					</ee:transform>
+					<ee:transform
+						doc:name="Adding payload to launch_planet_arr"
+						doc:id="d4fc3172-6da2-491d-af73-016e4dcfb9ed">
+						<ee:message />
+						<ee:variables>
+							<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
 output application/json
 ---
 vars.launch_planet_arr + payload]]></ee:set-variable>
-								</ee:variables>
-							</ee:transform>
-						</when>
-						<otherwise>
-							<ee:transform doc:name="Adding oneLaunch to launch_planet_arr" doc:id="e19dcb1b-ab8a-47d3-b30c-7e017d5b22c6">
-								<ee:message />
-								<ee:variables>
-									<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
+						</ee:variables>
+					</ee:transform>
+				</when>
+				<otherwise>
+					<ee:transform
+						doc:name="Adding oneLaunch to launch_planet_arr"
+						doc:id="e19dcb1b-ab8a-47d3-b30c-7e017d5b22c6">
+						<ee:message />
+						<ee:variables>
+							<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
 output application/json
 ---
 vars.launch_planet_arr + vars.oneLaunch]]></ee:set-variable>
-								</ee:variables>
-							</ee:transform>
-						</otherwise>
-					</choice>
-				</foreach>
-		<ee:transform doc:name="Final launch_planet_arr" doc:id="61dc42ea-6c72-4170-a105-e56c6b71f7ca">
-						<ee:message>
-							<ee:set-payload><![CDATA[%dw 2.0
+						</ee:variables>
+					</ee:transform>
+				</otherwise>
+			</choice>
+		</foreach>
+		<ee:transform doc:name="Final launch_planet_arr"
+			doc:id="61dc42ea-6c72-4170-a105-e56c6b71f7ca">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 vars.launch_planet_arr]]></ee:set-payload>
-						</ee:message>
-					</ee:transform>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
-	<sub-flow name="agencyWithStationAndLaunches" doc:id="6c9f186d-7f41-4d50-bc6c-38d4417189c0" >
-		<flow-ref doc:name="variables" doc:id="fc442cc5-ffb5-4607-8f6a-e0de95c4da68" name="variables" />
-		<scatter-gather doc:name="Scatter-Gather" doc:id="5f3c3e3b-3331-4e2b-8c6c-856a7cb06ee4">
+	<sub-flow name="agencyWithStationAndLaunches"
+		doc:id="6c9f186d-7f41-4d50-bc6c-38d4417189c0">
+		<flow-ref doc:name="variables"
+			doc:id="fc442cc5-ffb5-4607-8f6a-e0de95c4da68" name="variables" />
+		<scatter-gather doc:name="Scatter-Gather"
+			doc:id="5f3c3e3b-3331-4e2b-8c6c-856a7cb06ee4">
 			<route>
-				<flow-ref doc:name="getLaunchesAndPlanets" doc:id="42242f03-0978-422b-b0d7-7764fe58ea1f" name="getLaunchesAndPlanets" />
+				<flow-ref doc:name="getLaunchesAndPlanets"
+					doc:id="42242f03-0978-422b-b0d7-7764fe58ea1f"
+					name="getLaunchesAndPlanets" />
 			</route>
 			<route>
-				<flow-ref doc:name="getStations" doc:id="6f9bf2c0-80bf-409f-b1b3-621f430cefb4" name="getStations" />
+				<flow-ref doc:name="getStations"
+					doc:id="6f9bf2c0-80bf-409f-b1b3-621f430cefb4" name="getStations" />
 			</route>
 			<route>
-				<flow-ref doc:name="getRockets" doc:id="72529153-02b0-4344-bcaa-bc530594f8eb" name="getRockets" />
+				<flow-ref doc:name="getRockets"
+					doc:id="72529153-02b0-4344-bcaa-bc530594f8eb" name="getRockets" />
 			</route>
 		</scatter-gather>
-		<ee:transform doc:name="Final detailed presentation" doc:id="1f947523-f746-44c6-afb8-96e137eeb4f2">
+		<ee:transform doc:name="Final detailed presentation"
+			doc:id="1f947523-f746-44c6-afb8-96e137eeb4f2">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -246,7 +325,8 @@ output application/json
 }]]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<ee:transform doc:name="Agency info modes" doc:id="785c1af3-b842-48e0-883c-0236e4033030">
+		<ee:transform doc:name="Agency info modes"
+			doc:id="785c1af3-b842-48e0-883c-0236e4033030">
 			<ee:message>
 			</ee:message>
 			<ee:variables>
@@ -333,7 +413,8 @@ payload map ( generalInfo , index ) -> {
 }]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<ee:transform doc:name="Mode choice" doc:id="8ce6474a-003f-4d97-a67d-204ab837ef55">
+		<ee:transform doc:name="Mode choice"
+			doc:id="8ce6474a-003f-4d97-a67d-204ab837ef55">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -347,71 +428,172 @@ else
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
-	<sub-flow name="launchesAndStationsByAgencyAndYear" doc:id="c373dc04-0fb0-499a-bbff-bc6ebea1763f">
-		<flow-ref doc:name="variables" doc:id="3450ab5a-6b4c-4846-8759-68318ef4b74f" name="variables" />
-		<set-variable value="#[message.attributes.queryParams.launchYear]" doc:name="Set launch year" doc:id="0677cae9-079f-4b4c-9b2d-8384a25d0a70" variableName="launchYear" />
-		<set-variable value="#[message.attributes.queryParams.status]" doc:name="Set status" doc:id="e504d954-f0dc-4cf1-9cc5-ca29af2df708" variableName="status" />
-		<scatter-gather doc:name="Scatter-Gather" doc:id="fe5b8a32-4805-40cf-968d-677ed0c90065">
+	<sub-flow name="launchesAndStationsByAgencyAndYear"
+		doc:id="c373dc04-0fb0-499a-bbff-bc6ebea1763f">
+		<flow-ref doc:name="variables"
+			doc:id="3450ab5a-6b4c-4846-8759-68318ef4b74f" name="variables" />
+		<set-variable
+			value="#[message.attributes.queryParams.year]" doc:name="Set year"
+			doc:id="0677cae9-079f-4b4c-9b2d-8384a25d0a70" variableName="year" />
+		<validation:matches-regex
+			doc:name="Check for year validity"
+			doc:id="3d594f44-10de-4bfc-b16f-892e1e2e4ae9"
+			config-ref="Validation_Config" value="#[vars.year]"
+			regex="${validation.year.regex}" message="${validation.year.message}">
+			<error-mapping sourceType="VALIDATION:MISMATCH"
+				targetType="APP:INVALID_YEAR" />
+		</validation:matches-regex>
+		<scatter-gather doc:name="Scatter-Gather"
+			doc:id="867d81b6-5b92-42de-8527-6b41a1e83696">
 			<route>
-				<http:request method="GET" doc:name="getLaunches" doc:id="0ee1f6fd-2c72-4793-8c62-23afafcbd099" config-ref="HTTP_Request_configuration_Launches" path='#["launchesByStatusAndYear?limit=" ++ vars.limit ++ "&amp;offset=" ++ vars.offset ++ "&amp;launch_year=" ++ vars.launchYear]' />
-				<ee:transform doc:name="Transform Message" doc:id="32339c49-8ff9-4126-8987-99db2c0c0f4c">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload.launches filter ((item, index) -> item.launch_service_provider == vars.name) map ( launch , indexOfLaunch ) -> {
-	name: launch.name,
-	status: launch.status,
-	launch_date: launch.launch_year,
-	mission: {
-		name: launch.mission.name,
-		description: launch.mission.description
-	},
-	rocket: launch.rocket.name
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-			</route>
-			<route>
-				<http:request method="GET" doc:name="getStations" doc:id="4b5acf2e-fac1-4cb6-8986-a3138a9d706b" config-ref="HTTP_Request_configuration_Stations" path="station" responseTimeout="60000" />
-				<ee:transform doc:name="Transform Message" doc:id="7354a015-7974-4203-9df9-3e3883cb849e">
+				<flow-ref doc:name="getLaunchesAndPlanets"
+					doc:id="0e30aa53-85f6-49ee-b65f-b2ec61ed2724"
+					name="getLaunchesAndPlanets" />
+				<ee:transform doc:name="Filtering by year"
+					doc:id="e0232cbd-dc63-450e-8d60-84bd99084a9c">
 					<ee:message>
 						<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-payload filter ((item, index) -> (item.owners contains(vars.name)) and (item.status_name == vars.status)) map ( payload01 , indexOfPayload01 ) -> {
-	name: payload01.name,
-	status: payload01.status_name,
-	"type": payload01."type",
-	founded: payload01.founded,
-	deorbited: payload01.deorbited as String default "",
-	description: payload01.description,
-	orbit: payload01.orbit,
-	owners: payload01.owners map ( owner , indexOfOwner ) -> owner,
-	image_url: payload01.image_url
+payload filter ((item, index) -> item.launch_year == vars.year)]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+			<route>
+				<http:request method="GET" doc:name="getStations"
+					doc:id="b69b611f-abf3-4c8b-8ed3-7c89086e369c"
+					config-ref="HTTP_Request_configuration_Stations" path="station"
+					responseTimeout="60000" />
+				<ee:transform
+					doc:name="Filtering by agency name and activity years"
+					doc:id="4d908a1c-37fb-480d-865e-51029f405076">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload filter ((item, index) -> (item.owners contains(vars.name)) and item.founded[0 to 3] as Number <= vars.year as Number and item.deorbited[0 to 3] as Number > vars.year as Number) map ( payload01 , indexOfPayload01 ) -> {
+  name: payload01.name,
+  status: payload01.status_name,
+  "type": payload01."type",
+  founded: payload01.founded,
+  deorbited: payload01.deorbited as String default "",
+  description: payload01.description,
+  orbit: payload01.orbit,
+  owners: payload01.owners map ( owner , indexOfOwner ) -> owner,
+  image_url: payload01.image_url
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
 			</route>
+			<route>
+				<http:request method="GET" doc:name="Request"
+					doc:id="15455fb9-0856-4616-974d-81ff09417134"
+					config-ref="HTTP_Request_configuration_Planets"
+					path='#["discovery?year=" ++ vars.year]' />
+			</route>
 		</scatter-gather>
-		<ee:transform doc:name="Transform Message" doc:id="833a30cf-2319-42ee-8f20-5d7c0b1265a2">
+		<ee:transform doc:name="Transform Message"
+			doc:id="833a30cf-2319-42ee-8f20-5d7c0b1265a2">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 [{
-	agency: vars.name,
-	launches: {
-		launches_count: sizeOf(payload."0".payload),
-		launches_list: payload."0".payload
-	},
-	stations: {
-		stations_count: sizeOf(payload."1".payload),
-		stations_list: payload."1".payload
-	}
+  agency: vars.name,
+  launches: {
+    launches_count: sizeOf(payload."0".payload),
+    launches_list: payload."0".payload
+  },
+  stations: {
+    stations_count: sizeOf(payload."1".payload),
+    stations_list: payload."1".payload
+  },
+  discovered_objects: {
+    objects_count: sizeOf(payload."2".payload),
+    objects_list: payload."2".payload
+  }
 }]]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
-
+	<sub-flow name="setToFile"
+		doc:id="ee6a7413-131b-47ab-8cbc-b238a96e4a87">
+		<choice doc:name="Choice"
+			doc:id="b34540e7-89e2-4009-b711-1061da8a8c18">
+			<when expression='#[vars.mode == "detailed"]'>
+				<set-variable
+					value='#[Mule::p("records.folder") ++ "/record" ++ "-" ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyyMMdd"} ++ ".json"]'
+					doc:name="Set file_name"
+					doc:id="f294327c-8062-4833-951d-aaa9b8710940"
+					variableName="file_name" />
+				<file:write doc:name="Write"
+					doc:id="7ea4de48-437f-4f4b-a7cf-7a7141fe32b5"
+					config-ref="File_Config" path="#[vars.file_name]" mode="CREATE_NEW">
+				</file:write>
+			</when>
+		</choice>
+	</sub-flow>
+	<flow name="databaseFilling"
+		doc:id="f2283ffe-ed84-423d-926c-4861a5dcc896">
+		<http:listener doc:name="Listener"
+			doc:id="e6a3c9ce-4b0a-4780-985f-fbc838c18c9b"
+			config-ref="HTTP_Listener_config" path="/test" />
+		<flow-ref doc:name="variables"
+			doc:id="34d0dae6-7e79-4512-9ece-0cad71167271" name="variables" />
+		<choice doc:name="Choice"
+			doc:id="92a3c93e-caf2-416c-af2a-684bc2be4c50">
+			<when
+				expression="#[vars.offset &gt; 15 and vars.offset &lt; 468]">
+				<flow-ref doc:name="agencyWithStationAndLaunches"
+					doc:id="bb83864c-451e-4569-a13c-1d6675d1d599"
+					name="agencyWithStationAndLaunches" />
+				<ee:transform doc:name="Transform Message"
+					doc:id="b3abe485-6c71-40d6-bc3f-2164bf31f96d">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( generalInfo , index ) -> {
+	agency: generalInfo.agency,
+	launches: {
+		launches_count: generalInfo.launches.launches_count,
+		launches_list: generalInfo.launches.launches_list
+	},
+	rockets: {
+		rockets_count: generalInfo.rockets.rockets_count,
+		rockets_list: generalInfo.rockets.rockets_list
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<when expression="#[vars.offset &gt; 468]">
+				<flow-ref doc:name="agencyWithStationAndLaunches"
+					doc:id="961b9b29-cce4-4d50-b473-f9dd27aa79c0"
+					name="agencyWithStationAndLaunches" />
+				<ee:transform doc:name="Transform Message"
+					doc:id="7f2ae695-a573-4561-ba1a-f85d0b4b9851">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( generalInfo , index ) -> {
+	agency: generalInfo.agency,
+	launches: {
+	    launches_count: generalInfo.launches.launches_count,
+		launches_list: generalInfo.launches.launches_list
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise>
+				<flow-ref doc:name="agencyWithStationAndLaunches"
+					doc:id="16fdfd1c-8b5c-4c16-a9f1-9ae50536bea1"
+					name="agencyWithStationAndLaunches" />
+			</otherwise>
+		</choice>
+		<flow-ref doc:name="setToFile"
+			doc:id="cf98a8cf-1899-47f1-95e7-e669057837f6" name="setToFile" />
+	</flow>
 </mule>
