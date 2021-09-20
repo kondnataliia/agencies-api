@@ -25,9 +25,6 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 	<http:request-config name="HTTP_Request_configuration_Rockets" doc:name="HTTP Request configuration" doc:id="51ca6867-f254-43f7-9300-9a06937855ae" basePath="${thespacedevs.basepath}" >
 		<http:request-connection host="${thespacedevs.host}" protocol="${thespacedevs.protocol}"/>
 	</http:request-config>
-	<mongo:config name="MongoDB_Config" doc:name="MongoDB Config" doc:id="48584e5a-1e91-4d30-b44e-8faa570dd215" >
-		<mongo:connection-string-connection connectionString="${mongoDB.connection}" />
-	</mongo:config>
 	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="633da790-bd1f-4bad-b733-12ee9e641100" />
 	<configuration doc:name="Configuration" doc:id="bf3570b3-c5eb-49cd-b477-905af6b2b245" defaultErrorHandler-ref="global_error_handling" />
 </mule>

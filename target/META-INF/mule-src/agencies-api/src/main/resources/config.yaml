@@ -22,8 +22,13 @@ thespacedevs:
   protocol: "HTTP"
 mongoDB:
   connection: "mongodb+srv://kondnataliia:xPhmSMYgPEgzYHhe@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
+
 records:
   folder: "C:/Users/Natalka/Desktop/SoftServe/System Integration/Mule/DEMO2/Write/"
+  folder2: "C:/Users/Natalka/Desktop/SoftServe/System Integration/Mule/DEMO2/id/"
+  dir: "C:\\Users\\Natalka\\Desktop\\SoftServe\\System Integration\\Mule\\DEMO2\\id\\"
+  file: "r_id.txt"
+  
   
 validation:
   mode:

@@ -9,7 +9,8 @@
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
@@ -597,9 +598,9 @@ payload map ( generalInfo , index ) -> {
 			doc:id="cf98a8cf-1899-47f1-95e7-e669057837f6" name="setToFile" />
 	</flow>
 	<flow name="implementationFlow"
-		doc:id="4bbc2567-8316-4b8a-b205-ca82a4b1173c">
+		doc:id="5c5f8906-4a8d-41a7-9707-059128597755">
 		<file:listener doc:name="On New or Updated File"
-			doc:id="37315767-7822-4098-8715-fe94457642e7"
+			doc:id="848d228e-8d0e-4016-b54c-44b9c2f37b76"
 			config-ref="File_Config"
 			directory="C:\Users\Natalka\Desktop\SoftServe\System Integration\Mule\DEMO2\Write"
 			autoDelete="true">
@@ -608,8 +609,9 @@ payload map ( generalInfo , index ) -> {
 			</scheduling-strategy>
 			<file:matcher filenamePattern="*.json" />
 		</file:listener>
-		<ee:transform doc:name="Transform Message"
-			doc:id="0278a280-cb80-4d60-9115-0341d9c5a64f">
+		<choice doc:name="Choice" doc:id="a08a069c-99d9-4915-9025-7423ee20ff77" >
+			<when expression="#[java!org::spaceagencies::utils::FileOperations::isFileExists(Mule::p('records.dir'), Mule::p('records.file')) == false]">
+				<ee:transform doc:name="Transform Message" doc:id="393a23cf-432d-40c5-8f56-e17dab16150b">
 			<ee:message>
 			</ee:message>
 			<ee:variables>
@@ -617,33 +619,58 @@ payload map ( generalInfo , index ) -> {
 output application/json
 ---
 payload map (record, index) -> {
-	r_id: 1,
-	agency: record.agency,
-	stations: record.stations,
-	launches: record.launches,
-	rockets: record.rockets
+  r_id: 0,
+  agency: record.agency,
+  stations: record.stations,
+  launches: record.launches,
+  rockets: record.rockets
 }]]></ee:set-variable>
 
 			</ee:variables>
 		</ee:transform>
+				<file:write doc:name="Write" doc:id="3891b913-6134-41e2-b73b-f03a7b6a3699" config-ref="File_Config" path='#[Mule::p("records.folder2") ++ Mule::p("records.file")]' mode="CREATE_NEW">
+					<file:content ><![CDATA[#[vars.record.r_id + 1 as Number]]]></file:content>
+				</file:write>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="b1a38336-ba50-41b0-8549-f4711637f808" >
+					<ee:message />
+					<ee:variables >
+						<ee:set-variable variableName="record" ><![CDATA[%dw 2.0
+output application/json
+---
+payload map (record, index) -> {
+  r_id: java!org::spaceagencies::utils::FileOperations::fileReader(Mule::p('records.file')),
+  agency: record.agency,
+  stations: record.stations,
+  launches: record.launches,
+  rockets: record.rockets
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<file:write doc:name="Write" doc:id="99f752e3-ed5a-4006-9443-3de14da9d444" config-ref="File_Config" path='#[Mule::p("records.folder2") ++ Mule::p("records.file")]'>
+			<file:content><![CDATA[#[vars.record.r_id + 1 as Number]]]></file:content>
+		</file:write>
+			</otherwise>
+		</choice>
 		<mongo:collection-exists
 			collectionName="#[vars.record[0].agency]"
 			doc:name="Collection exists"
-			doc:id="76bdd5bf-beb6-4a7b-8f41-082dcb4684b0"
+			doc:id="4f721197-7cce-458b-ad18-25e3d2200fb4"
 			config-ref="MongoDB_Config" />
 		<choice doc:name="Choice"
-			doc:id="0d1d6523-34e8-4c79-8e39-84c9c186a891">
+			doc:id="ae06f6c7-c318-4420-bb50-929b611d5af0">
 			<when expression="#[payload == false]">
 				<mongo:create-collection
 					doc:name="Create collection"
-					doc:id="2765c8ed-fff0-4c3f-b6f8-89b9e9809bb4"
+					doc:id="5ce2b9fa-927a-4b1f-953d-621bf5dd71d6"
 					config-ref="MongoDB_Config"
 					collectionName="#[vars.record[0].agency]" />
 			</when>
 		</choice>
 		<mongo:insert-documents
 			collectionName="#[vars.record[0].agency]" doc:name="Insert documents"
-			doc:id="c7017b92-f0fd-41d2-bfb6-7d1b12a1f1f5"
+			doc:id="5cf46087-2d6f-410e-b840-b7fc10d2a401"
 			config-ref="MongoDB_Config">
 			<mongo:documents><![CDATA[#[vars.record]]]></mongo:documents>
 		</mongo:insert-documents>

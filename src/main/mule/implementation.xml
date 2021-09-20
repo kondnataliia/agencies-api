@@ -9,7 +9,8 @@
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
@@ -533,67 +534,4 @@ output application/json
 			</when>
 		</choice>
 	</sub-flow>
-	<flow name="databaseFilling"
-		doc:id="f2283ffe-ed84-423d-926c-4861a5dcc896">
-		<http:listener doc:name="Listener"
-			doc:id="e6a3c9ce-4b0a-4780-985f-fbc838c18c9b"
-			config-ref="HTTP_Listener_config" path="/test" />
-		<flow-ref doc:name="variables"
-			doc:id="34d0dae6-7e79-4512-9ece-0cad71167271" name="variables" />
-		<choice doc:name="Choice"
-			doc:id="92a3c93e-caf2-416c-af2a-684bc2be4c50">
-			<when
-				expression="#[vars.offset &gt; 15 and vars.offset &lt; 468]">
-				<flow-ref doc:name="agencyWithStationAndLaunches"
-					doc:id="bb83864c-451e-4569-a13c-1d6675d1d599"
-					name="agencyWithStationAndLaunches" />
-				<ee:transform doc:name="Transform Message"
-					doc:id="b3abe485-6c71-40d6-bc3f-2164bf31f96d">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload map ( generalInfo , index ) -> {
-	agency: generalInfo.agency,
-	launches: {
-		launches_count: generalInfo.launches.launches_count,
-		launches_list: generalInfo.launches.launches_list
-	},
-	rockets: {
-		rockets_count: generalInfo.rockets.rockets_count,
-		rockets_list: generalInfo.rockets.rockets_list
-	}
-}]]></ee:set-payload>
-					</ee:message>
-				</ee:transform>
-			</when>
-			<when expression="#[vars.offset &gt; 468]">
-				<flow-ref doc:name="agencyWithStationAndLaunches"
-					doc:id="961b9b29-cce4-4d50-b473-f9dd27aa79c0"
-					name="agencyWithStationAndLaunches" />
-				<ee:transform doc:name="Transform Message"
-					doc:id="7f2ae695-a573-4561-ba1a-f85d0b4b9851">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload map ( generalInfo , index ) -> {
-	agency: generalInfo.agency,
-	launches: {
-	    launches_count: generalInfo.launches.launches_count,
-		launches_list: generalInfo.launches.launches_list
-	}
-}]]></ee:set-payload>
-					</ee:message>
-				</ee:transform>
-			</when>
-			<otherwise>
-				<flow-ref doc:name="agencyWithStationAndLaunches"
-					doc:id="16fdfd1c-8b5c-4c16-a9f1-9ae50536bea1"
-					name="agencyWithStationAndLaunches" />
-			</otherwise>
-		</choice>
-		<flow-ref doc:name="setToFile"
-			doc:id="cf98a8cf-1899-47f1-95e7-e669057837f6" name="setToFile" />
-	</flow>
 </mule>
