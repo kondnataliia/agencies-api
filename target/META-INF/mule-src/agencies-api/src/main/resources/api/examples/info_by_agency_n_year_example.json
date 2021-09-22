@@ -5,13 +5,22 @@
             "launches_count": 1,
             "launches_list": [
                 {
-                    "name": "Little Joe | LJ-1",
-                    "status": "Failure",
-                    "launch_year": "1988",
-                    "rocket": "Little Joe",
+                    "name": "Soyuz-U2 | Soyuz TM-15",
+                    "status": "Success",
+                    "launch_year": "1992",
+                    "failreason": "",
+                    "launch_service_provider": "Russian Federal Space Agency (ROSCOSMOS)",
+                    "rocket": {
+                        "name": "Soyuz-U",
+                        "family": "Soyuz-U",
+                        "full_name": "Soyuz-U2",
+                        "variant": "2"
+                    },
                     "mission": {
-                        "name": "LJ-1",
-                        "description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+                        "name": "Soyuz TM-15",
+                        "description": "Soyuz TM-15 was the 15th mission and the 12th long-duration expedition to Mir space station. The mission began on July 27, 1992, 06:08:42 UTC, launching Commander Anatoly Solovyev, Flight Engineer Sergei Avdeyev and Research Cosmonaut Michel Tognini into orbit. They docked with Mir two days later. During their stay there, cosmonauts performed EVAs, various station repair and maintenance tasks, and carried out scientific experiments in materials research, space technology, astrophysics and earth observation. They were visited by several Progress resupply spacecrafts, and welcomed aboard the Soyuz TM-16 crew.\nThe mission concluded with a safe landing back on Earth on February 1, 1993, 03:49:57 UTC.",
+                        "type": "Human Exploration",
+                        "orbit": "Low Earth Orbit",
                         "planet_of_interest": {
                             "name": "Mercury",
                             "moons": [],
@@ -33,8 +42,13 @@
                         }
                     },
                     "pad": {
-                        "name": "Launch Area 1",
-                        "location": "Wallops Island, Virginia, USA"
+                        "name": "1/5",
+                        "location": {
+                            "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+                            "country_code": "KAZ",
+                            "total_launch_count": 1523,
+                            "total_landing_count": 0
+                        }
                     }
                 }
             ]
@@ -45,6 +59,7 @@
                 {
                     "name": "Mir",
                     "status": "De-Orbited",
+                    "type": "Government",
                     "founded": "1986-02-20",
                     "deorbited": "2001-03-23",
                     "description": "Mir was a space station that operated in low Earth orbit from 1986 to 2001, operated by the Soviet Union and later by Russia. Mir was the first modular space station and was assembled in orbit from 1986 to 1996.\r\n\r\nThe station served as a microgravity research laboratory in which crews conducted experiments in biology, human biology, physics, astronomy, meteorology and spacecraft systems with a goal of developing technologies required for permanent occupation of space.",
@@ -53,6 +68,31 @@
                         "Russian Federal Space Agency (ROSCOSMOS)"
                     ],
                     "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/mir_image_20190218204938.jpeg"
+                }
+            ]
+        },
+        "discovered_objects": {
+            "objects_count": 1,
+            "objects_list": [
+                {
+                    "name": "5145 Pholus",
+                    "isPlanet": false,
+                    "moons": 0,
+                    "perihelion": 0,
+                    "aphelion": 0,
+                    "eccentricity": 0.00000,
+                    "inclination": 0.00000,
+                    "mass": 2.40000,
+                    "density": 1.00000,
+                    "gravity": 0.00000,
+                    "flattening": 0.00000,
+                    "dimension": "39×37×25",
+                    "aroundPlanet": "",
+                    "discoveredBy": "David Rabinowitz / Spacewatch",
+                    "discoveryDate": "09/01/1992",
+                    "alternativeName": "1992 AD",
+                    "axialTilt": 0,
+                    "avgTemp": 0
                 }
             ]
         }

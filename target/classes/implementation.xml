@@ -17,18 +17,15 @@ http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mo
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
-	<file:config name="File_Config" doc:name="File Config"
-		doc:id="afa5f1e3-724c-4a7d-9c70-9ab90e726291">
-		<file:connection workingDir="${records.folder}" />
-	</file:config>
 	<sub-flow name="variables"
 		doc:id="944c896e-dce1-42a4-b2fe-ec1b7fc21cca">
+		<logger level="INFO" doc:name="Start log" doc:id="391c182f-a167-4b7a-bebb-9128acbca7bd" />
 		<set-variable
 			value="#[message.attributes.queryParams.limit default 100]"
 			doc:name="Set limit" doc:id="51e13b5a-cae2-4a85-aafc-8d5c5768a1ee"
 			variableName="limit" />
 		<set-variable
-			value="#[message.attributes.queryParams.offset]"
+			value="#[message.attributes.queryParams.offset default -1]"
 			doc:name="Set offset" doc:id="4f327e66-08db-4fd9-9176-f09cb7319d77"
 			variableName="offset" />
 		<set-variable
@@ -43,10 +40,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 			<error-mapping sourceType="VALIDATION:MISMATCH"
 				targetType="APP:INVALID_MODE" />
 		</validation:matches-regex>
-		<set-variable
-			value="#[message.attributes.queryParams.name]"
-			doc:name="Set agency name"
-			doc:id="00fe79b6-a3c0-4751-a811-d4978a3cee41" variableName="name" />
+		<set-variable value='#[message.attributes.queryParams.name default ""]' doc:name="Set agency name" doc:id="00fe79b6-a3c0-4751-a811-d4978a3cee41" variableName="name" />
 	</sub-flow>
 	<sub-flow name="getRockets"
 		doc:id="914ffeb8-e7b5-4944-8f20-c86bfabd505b">
@@ -133,7 +127,6 @@ payload.launches filter ((item, index) -> item.launch_service_provider == vars.n
 	status: launch.status default "",
 	launch_year: launch.launch_year default "",
 	failreason: launch.failreason default "",
-	launch_service_provider: launch.launch_service_provider default "",
 	rocket: {
 		name: launch.rocket.name default "",
 		family: launch.rocket.family default "",
@@ -220,7 +213,6 @@ output application/json
 	status: vars.oneLaunch.status default "",
 	launch_year: vars.oneLaunch.launch_date default "",
 	failreason: vars.oneLaunch.failreason default "",
-	launch_service_provider: vars.oneLaunch.launch_service_provider default "",
 	rocket: {
 		name: vars.oneLaunch.rocket.name default "",
 		family: vars.oneLaunch.rocket.family default "",
@@ -428,6 +420,7 @@ else
     payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<flow-ref doc:name="setToFile" doc:id="24df5f2a-05d5-4fd6-864a-b4939fc4f95f" name="setToFile"/>
 	</sub-flow>
 	<sub-flow name="launchesAndStationsByAgencyAndYear"
 		doc:id="c373dc04-0fb0-499a-bbff-bc6ebea1763f">
@@ -472,7 +465,7 @@ payload filter ((item, index) -> item.launch_year == vars.year)]]></ee:set-paylo
 						<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-payload filter ((item, index) -> (item.owners contains(vars.name)) and item.founded[0 to 3] as Number <= vars.year as Number and item.deorbited[0 to 3] as Number > vars.year as Number) map ( payload01 , indexOfPayload01 ) -> {
+payload filter ((item, index) -> (item.owners contains(vars.name)) and (item.founded[0 to 3] as Number <= vars.year as Number) and ((item.deorbited == null) or (item.deorbited[0 to 3] as Number > vars.year as Number))) map ( payload01 , indexOfPayload01 ) -> {
   name: payload01.name,
   status: payload01.status_name,
   "type": payload01."type",
@@ -493,7 +486,7 @@ payload filter ((item, index) -> (item.owners contains(vars.name)) and item.foun
 					path='#["discovery?year=" ++ vars.year]' />
 			</route>
 		</scatter-gather>
-		<ee:transform doc:name="Transform Message"
+		<ee:transform doc:name="Final presentation"
 			doc:id="833a30cf-2319-42ee-8f20-5d7c0b1265a2">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0

@@ -16,12 +16,21 @@ properties:
             name: string
             status: string
             launch_year: string
-            rocket: string
+            failreason: string
+            rocket: 
+              type: object
+              properties:
+                name: string
+                family: string
+                full_name: string
+                variant: string
             mission:
               type: object
               properties:
                 name: string
                 description: string
+                type: string
+                orbit: string
                 planet_of_interest: 
                   type: object
                   properties:
@@ -48,7 +57,13 @@ properties:
               type: object
               properties:
                 name: string
-                location: string
+                location: 
+                  type: object
+                  properties:
+                    name: string
+                    country_code: string
+                    total_launch_count: integer
+                    total_landing_count: integer
   stations:
     type: object
     properties:
@@ -59,6 +74,7 @@ properties:
           properties:
             name: string
             status: string
+            type: string
             founded: string
             deorbited: string
             description: string
@@ -67,3 +83,30 @@ properties:
               type: array
               items: string
             image_url: string
+  discovered_objects:
+    type: object
+    properties:
+      objects_count: integer
+      objects_list:
+        type: array
+        items:
+          type: object
+          properties:
+            name: string
+            isPlanet: boolean
+            moons: integer
+            perihelion: number
+            aphelion: number
+            eccentricity: number
+            inclination: number
+            mass: number
+            density: number
+            gravity: number
+            flattening: number
+            dimension: string
+            aroundPlanet: string
+            discoveredBy: string
+            discoveryDate: string
+            alternativeName: string
+            axialTilt: number
+            avgTemp: number

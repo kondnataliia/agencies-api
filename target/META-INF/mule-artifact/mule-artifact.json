@@ -41,7 +41,6 @@
         "global.xml",
         "implementation.xml",
         "inputs/general_agency_info_payload.json",
-        "inputs/launches_payload.json",
         "inputs/launch_planet_payload.json",
         "inputs/planet_payload.json",
         "inputs/rockets_payload.json",

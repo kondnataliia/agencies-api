@@ -57,7 +57,7 @@ types:
 
 /infoByAgencyAndYear:
   get:
-    displayName: Get Info By Agency And Year
+    displayName: Get Info By Agency Name And Year
     description: Retrieves information about space launches made by a given agency in a given year, space stations active 
                  in that year, owned by that agency, and solar system objects discovered in that year
     queryParameters:
@@ -83,25 +83,4 @@ types:
             example:
               {
                 message: "Invalid request"
-              }
-/database:
-  post:
-    body:
-      application/json:
-        type: AgencyDetailedMode[]
-        example: !include examples/agency_detailed_example.json
-    responses:
-      200:
-        body:
-          application/json:
-            example:
-              {
-                message: "Record added"
-              }
-      400:
-        body:
-          application/json:
-            example:
-              {
-                message: "Record wasn't added"
               }
