@@ -31,5 +31,44 @@ output application/json
 			</ee:transform>
 			<set-variable value="#[400]" doc:name="httpStatus" doc:id="20c5e0c0-f014-45d2-b4ce-06dc215a1bba" variableName="httpStatus" />
 		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2d21be0e-b1a3-48ae-bca6-16a019cec132" type="APP:MISS_OFFSET">
+			<ee:transform doc:name="Error description" doc:id="26943411-a110-496b-853f-93d8ea7837d4" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="#[400]" doc:name="httpStatus" doc:id="0c4d0c8f-fae5-45c9-a49a-87f6c712f491" variableName="httpStatus"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="90cd8ebc-8afe-4b87-844a-47ea4167318d" type="APP:MISS_NAME">
+			<ee:transform doc:name="Error description" doc:id="4c4ac164-cef1-4866-9b3e-bf8e6125076e" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="#[400]" doc:name="httpStatus" doc:id="68e35515-adbf-42db-b563-7d9c994b303a" variableName="httpStatus" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9d38e0c5-14f7-447c-ad04-8617e70bee42" type="APP:ALL_EMPTY">
+			<ee:transform doc:name="Error description" doc:id="866ea6ab-ecdc-4312-88cc-69e247c4f164" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="#[404]" doc:name="httpStatus" doc:id="f89f5ad6-d93e-41ae-a958-ae9232ba5977" variableName="httpStatus" />
+		</on-error-propagate>
 	</error-handler>
 </mule>

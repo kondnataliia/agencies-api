@@ -7,7 +7,7 @@
   ],
   "secureProperties": [],
   "redeploymentEnabled": true,
-  "name": "com.mycompany:agencies-api:1.0.0-SNAPSHOT",
+  "name": "com.mycompany:common-agencies-api:1.0.0-SNAPSHOT",
   "minMuleVersion": "4.3.0",
   "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {

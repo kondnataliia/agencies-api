@@ -1,5 +1,5 @@
 http:
-  port: "8082"
+  port: "8081"
 
 planets:
   host: "localhost"
@@ -22,7 +22,7 @@ thespacedevs:
   protocol: "HTTP"
 
 records:
-  folder: "C:/Users/Natalka/Desktop/SoftServe/System Integration/Mule/DEMO2/Write/"
+  folder: "C:/Users/Natalka/AnypointStudio/demo-workspace/agencies-api/src/main/resources/Write/"
   
 validation:
   mode:
@@ -31,4 +31,11 @@ validation:
   year:
     regex: "^([0-9]{4})$"
     message: "You have entered an incorrect year. The year parameter should be in the YYYY format, for example, 1987."
-  
+
+error_messaging:
+  all_empty: "No results were received for your query. This may be due to the following:\n
+              1. No entries were found for the specified parameters.\n
+              2. An incorrectly written or non-existent agency name is entered. 
+              Check the spelling of the agency name or refer to the help page to see a list of existing agencies.\n
+              3. There are no records with the specified launch year on the page you are viewing. 
+              Refer to the help page to find out which pages correspond to the year you are interested in and change the offset to the appropriate one."

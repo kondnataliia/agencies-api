@@ -17,30 +17,26 @@ http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mo
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
-	<sub-flow name="variables"
-		doc:id="944c896e-dce1-42a4-b2fe-ec1b7fc21cca">
-		<logger level="INFO" doc:name="Start log" doc:id="391c182f-a167-4b7a-bebb-9128acbca7bd" />
-		<set-variable
-			value="#[message.attributes.queryParams.limit default 100]"
-			doc:name="Set limit" doc:id="51e13b5a-cae2-4a85-aafc-8d5c5768a1ee"
-			variableName="limit" />
-		<set-variable
-			value="#[message.attributes.queryParams.offset default -1]"
-			doc:name="Set offset" doc:id="4f327e66-08db-4fd9-9176-f09cb7319d77"
-			variableName="offset" />
-		<set-variable
-			value='#[message.attributes.queryParams.mode default "list"]'
-			doc:name="Set mode" doc:id="9007427b-1199-4d46-9bfd-0776a864feda"
-			variableName="mode" />
-		<validation:matches-regex
-			doc:name="Check for mode validity"
-			doc:id="b5831dff-3919-4259-80bc-62121c0af587"
-			config-ref="Validation_Config" value="#[vars.mode]"
-			regex="${validation.mode.regex}" message="${validation.mode.message}">
-			<error-mapping sourceType="VALIDATION:MISMATCH"
-				targetType="APP:INVALID_MODE" />
-		</validation:matches-regex>
+	<sub-flow name="variables" doc:id="944c896e-dce1-42a4-b2fe-ec1b7fc21cca">
+		<logger level="INFO" doc:name="Start log" doc:id="391c182f-a167-4b7a-bebb-9128acbca7bd" message='#["The application has been launched"]' />
+		<set-variable value="#[message.attributes.queryParams.limit default 100]" doc:name="Set limit" doc:id="51e13b5a-cae2-4a85-aafc-8d5c5768a1ee" variableName="limit" />
+		<set-variable value="#[message.attributes.queryParams.offset default -1]" doc:name="Set offset" doc:id="4f327e66-08db-4fd9-9176-f09cb7319d77" variableName="offset" />
 		<set-variable value='#[message.attributes.queryParams.name default ""]' doc:name="Set agency name" doc:id="00fe79b6-a3c0-4751-a811-d4978a3cee41" variableName="name" />
+		<choice doc:name="Choice" doc:id="f1553f30-ff0f-47af-b442-47b4d1f658cb">
+			<when expression="#[vars.offset == -1]">
+				<raise-error doc:name="MISS_OFFSET error" doc:id="583c964a-dd11-49bf-a42c-b9cbc3ab3c98" type="APP:MISS_OFFSET" description="You forgot to specify the 'offset' parameter" />
+			</when>
+			<when expression='#[vars.name == ""]'>
+				<raise-error doc:name="MISS_NAME error" doc:id="1ccdaaed-7344-48a5-9b94-9e02c5b8f10a" type="APP:MISS_NAME" description="You forgot to specify the 'name' parameter" />
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Default block logger" doc:id="cc059b05-36d1-479b-96d0-d17d03080deb" message='#["Default block execution"]' />
+			</otherwise>
+		</choice>
+		<set-variable value='#[message.attributes.queryParams.mode default "list"]' doc:name="Set mode" doc:id="9007427b-1199-4d46-9bfd-0776a864feda" variableName="mode" />
+		<validation:matches-regex doc:name="Check for mode validity" doc:id="b5831dff-3919-4259-80bc-62121c0af587" config-ref="Validation_Config" value="#[vars.mode]" regex="${validation.mode.regex}" message="${validation.mode.message}">
+			<error-mapping sourceType="VALIDATION:MISMATCH" targetType="APP:INVALID_MODE" />
+		</validation:matches-regex>
 	</sub-flow>
 	<sub-flow name="getRockets"
 		doc:id="914ffeb8-e7b5-4944-8f20-c86bfabd505b">
@@ -295,26 +291,40 @@ vars.launch_planet_arr]]></ee:set-payload>
 					doc:id="72529153-02b0-4344-bcaa-bc530594f8eb" name="getRockets" />
 			</route>
 		</scatter-gather>
-		<ee:transform doc:name="Final detailed presentation"
+		<choice doc:name="Choice" doc:id="2eb7cd03-23d3-4ec8-8e71-082e2ee11f4b" >
+			<when expression='#[payload."1".payload == [] and payload."0".payload == [] and payload."2".payload == []]'>
+				<raise-error doc:name="ALL_EMPTY error" doc:id="1a6b691f-ae28-433f-9897-43b5540e36cc" type="APP:ALL_EMPTY" description="${error_messaging.all_empty}"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="a0946e50-b1b3-4631-bec3-f6d01d08f955" message='#["Default block execution"]'/>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Final detailed representation"
 			doc:id="1f947523-f746-44c6-afb8-96e137eeb4f2">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 [{
-	agency: vars.name,
-	stations: {
-		stations_count: sizeOf(payload."1".payload),
-		stations_list: payload."1".payload
-	},
-	launches: {
-		launches_count: sizeOf(payload."0".payload),
-		launches_list: payload."0".payload
-	},
-	rockets: {
-		rockets_count: sizeOf(payload."2".payload),
-		rockets_list: payload."2".payload
-	}
+  agency: vars.name,
+  stations: if (sizeOf(payload."1".payload) == 0) 
+	"There are no records on this page about space stations owned by the " ++ vars.name ++ "."
+  else {
+    stations_count: sizeOf(payload."1".payload),
+	stations_list: payload."1".payload
+  },
+  launches: if (sizeOf(payload."0".payload) == 0) 
+    "There are no records of space launches made by the " ++ vars.name ++ " on this page."
+  else {
+    launches_count: sizeOf(payload."0".payload),
+    launches_list: payload."0".payload
+  },
+  rockets: if (sizeOf(payload."2".payload) == 0) 
+    "There are no records on this page about rockets manufactured by the " ++ vars.name ++ "."
+  else {
+    rockets_count: sizeOf(payload."2".payload),
+	rockets_list: payload."2".payload
+  }
 }]]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
@@ -328,7 +338,9 @@ output application/json
 ---
 payload map ( generalInfo , index ) -> {
 	agency: generalInfo.agency,
-	stations: {
+	stations: if (generalInfo.stations is String)
+      generalInfo.stations
+    else {
 		stations_count: generalInfo.stations.stations_count,
 		stations_list: generalInfo.stations.stations_list map ( stationslist , indexOfStationslist ) -> {
 			name: stationslist.name,
@@ -341,7 +353,9 @@ payload map ( generalInfo , index ) -> {
 			image_url: stationslist.image_url
 		}
 	},
-	launches: {
+	launches: if (generalInfo.launches is String)
+      generalInfo.launches
+    else {
 		launches_count: generalInfo.launches.launches_count,
 		launches_list: generalInfo.launches.launches_list map ( launcheslist , indexOfLauncheslist ) -> {
 			name: launcheslist.name,
@@ -374,7 +388,9 @@ payload map ( generalInfo , index ) -> {
 			}
 		}
 	},
-	rockets: {
+	rockets: if (generalInfo.rockets is String)
+      generalInfo.rockets
+    else {
 		rockets_count: generalInfo.rockets.rockets_count,
 		rockets_list: generalInfo.rockets.rockets_list map ( rocketslist , indexOfRocketslist ) -> {
 			name: rocketslist.name,
@@ -386,20 +402,25 @@ payload map ( generalInfo , index ) -> {
 		}
 	}
 }]]></ee:set-variable>
-				<ee:set-variable variableName="list_mode"><![CDATA[%dw 2.0
-output application/json
+				<ee:set-variable variableName="list_mode"><![CDATA[output application/json
 ---
 payload map ( generalInfo , index ) -> {
 	agency: generalInfo.agency,
-	stations: {
+	stations: if (generalInfo.stations is String)
+	  generalInfo.stations
+	else {
 		stations_count: generalInfo.stations.stations_count,
 		stations_list: generalInfo.stations.stations_list.name
 	},
-	launches: {
+	launches: if (generalInfo.launches is String)
+	  generalInfo.launches
+	else {
 		launches_count: generalInfo.launches.launches_count,
 		launches_list: generalInfo.launches.launches_list.name
 	},
-	rockets: {
+	rockets: if (generalInfo.rockets is String)
+	  generalInfo.rockets
+	else {
 		rockets_count: generalInfo.rockets.rockets_count,
 		rockets_list: generalInfo.rockets.rockets_list.name
 	}
@@ -426,16 +447,9 @@ else
 		doc:id="c373dc04-0fb0-499a-bbff-bc6ebea1763f">
 		<flow-ref doc:name="variables"
 			doc:id="3450ab5a-6b4c-4846-8759-68318ef4b74f" name="variables" />
-		<set-variable
-			value="#[message.attributes.queryParams.year]" doc:name="Set year"
-			doc:id="0677cae9-079f-4b4c-9b2d-8384a25d0a70" variableName="year" />
-		<validation:matches-regex
-			doc:name="Check for year validity"
-			doc:id="3d594f44-10de-4bfc-b16f-892e1e2e4ae9"
-			config-ref="Validation_Config" value="#[vars.year]"
-			regex="${validation.year.regex}" message="${validation.year.message}">
-			<error-mapping sourceType="VALIDATION:MISMATCH"
-				targetType="APP:INVALID_YEAR" />
+		<set-variable value="#[message.attributes.queryParams.year]" doc:name="Set year" doc:id="0677cae9-079f-4b4c-9b2d-8384a25d0a70" variableName="year" />
+		<validation:matches-regex doc:name="Check for year validity" doc:id="3d594f44-10de-4bfc-b16f-892e1e2e4ae9" config-ref="Validation_Config" value="#[vars.year]" regex="${validation.year.regex}" message="${validation.year.message}">
+			<error-mapping sourceType="VALIDATION:MISMATCH" targetType="APP:INVALID_YEAR" />
 		</validation:matches-regex>
 		<scatter-gather doc:name="Scatter-Gather"
 			doc:id="867d81b6-5b92-42de-8527-6b41a1e83696">
@@ -486,23 +500,36 @@ payload filter ((item, index) -> (item.owners contains(vars.name)) and (item.fou
 					path='#["discovery?year=" ++ vars.year]' />
 			</route>
 		</scatter-gather>
-		<ee:transform doc:name="Final presentation"
-			doc:id="833a30cf-2319-42ee-8f20-5d7c0b1265a2">
+		<choice doc:name="Choice" doc:id="12e6ee87-6211-4ad2-8e61-d53e13e475cc">
+			<when expression='#[payload."0".payload == [] and payload."1".payload == []]'>
+				<raise-error doc:name="ALL_EMPTY error" doc:id="decc200a-a371-43a9-bb1c-782c5a953a95" type="APP:ALL_EMPTY" description="${error_messaging.all_empty}" />
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Default block logger" doc:id="cfb2493b-2246-4ac2-85c8-75a112d007c4" message='#["Default block execution"]' />
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Final representation" doc:id="833a30cf-2319-42ee-8f20-5d7c0b1265a2">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 [{
   agency: vars.name,
-  launches: {
+  launches: if (sizeOf(payload."0".payload) == 0) 
+    "In specified year, the " ++ vars.name ++ " did not carry out space launches."
+  else {
     launches_count: sizeOf(payload."0".payload),
     launches_list: payload."0".payload
   },
-  stations: {
+  stations: if (sizeOf(payload."1".payload) == 0)
+    "In specified year, the " ++ vars.name ++ " did not have active space stations."
+  else {
     stations_count: sizeOf(payload."1".payload),
     stations_list: payload."1".payload
   },
-  discovered_objects: {
+  discovered_objects: if (sizeOf(payload."2".payload) == 0)
+    "No new solar system objects were discovered in specified year."
+  else {
     objects_count: sizeOf(payload."2".payload),
     objects_list: payload."2".payload
   }
@@ -516,7 +543,7 @@ output application/json
 			doc:id="b34540e7-89e2-4009-b711-1061da8a8c18">
 			<when expression='#[vars.mode == "detailed"]'>
 				<set-variable
-					value='#[Mule::p("records.folder") ++ "/record" ++ "-" ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyyMMdd"} ++ ".json"]'
+					value='#[Mule::p("records.folder") ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyy-MM-dd"} ++ "-" ++&#10;&#10;now() as String {format: "hh-m-s"} ++ ".json"]'
 					doc:name="Set file_name"
 					doc:id="f294327c-8062-4833-951d-aaa9b8710940"
 					variableName="file_name" />
@@ -524,7 +551,8 @@ output application/json
 					doc:id="7ea4de48-437f-4f4b-a7cf-7a7141fe32b5"
 					config-ref="File_Config" path="#[vars.file_name]" mode="CREATE_NEW">
 				</file:write>
-			</when>
+			
+</when>
 		</choice>
 	</sub-flow>
 </mule>
