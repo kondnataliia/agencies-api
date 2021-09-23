@@ -38,6 +38,161 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 			<error-mapping sourceType="VALIDATION:MISMATCH" targetType="APP:INVALID_MODE" />
 		</validation:matches-regex>
 	</sub-flow>
+	<sub-flow name="getLaunchesAndPlanets" doc:id="2eafa69c-7893-4f17-af7e-e2614ae1264d">
+		<http:request method="GET" doc:name="getLaunches" doc:id="33edb96d-bfdb-4eab-9f50-609278864808" config-ref="HTTP_Request_configuration_Launches" path='#["launchesByStatusAndYear?limit=" ++ vars.limit ++ "&amp;offset=" ++ vars.offset]' responseTimeout="60000" />
+		<ee:transform doc:name="Basic data filtering" doc:id="e98ff262-b8ce-4f83-8723-3ac6e1e40b50">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="launchInfo"><![CDATA[%dw 2.0
+output application/json
+---
+payload.launches filter ((item, index) -> item.launch_service_provider == vars.name) map ( launch , indexOfLaunch ) -> {
+	name: launch.name default "",
+	status: launch.status default "",
+	launch_year: launch.launch_year default "",
+	failreason: launch.failreason default "",
+	rocket: {
+		name: launch.rocket.name default "",
+		family: launch.rocket.family default "",
+		full_name: launch.rocket.full_name default "",
+		variant: launch.rocket.variant default ""
+	},
+	mission: {
+		name: launch.mission.name default "",
+		description: launch.mission.description default "",
+		"type": launch.mission."type" default "",
+		orbit: launch.mission.orbit default "",
+		planet_of_interest: ""
+	},
+	pad: {
+		name: launch.pad.name default "",
+		location: {
+			name: launch.pad.location.name default "",
+			country_code: launch.pad.location.country_code default "",
+			total_launch_count: launch.pad.location.total_launch_count default "",
+			total_landing_count: launch.pad.location.total_landing_count default ""
+		}
+	}
+}]]></ee:set-variable>
+				<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="a2eb3e74-bea9-4626-9152-6842a4b0f1b8" collection="#[vars.launchInfo]">
+			<set-variable value="#[payload]" doc:name="Set oneLaunch" doc:id="96d1c54e-3caa-43b8-9b9c-95bc81175bf7" variableName="oneLaunch" />
+			<set-variable doc:name="Set planetName" doc:id="5242e890-7c2e-4794-aca0-f76641b808ea" variableName="planetName" value="#[java!org::spaceagencies::utils::MyUtils::getPlanetName(vars.oneLaunch.mission.description)]" />
+			<choice doc:name="Choice" doc:id="145eec21-9d4e-4da9-b741-61f43d5949be">
+				<when expression='#[vars.planetName != ""]'>
+					<http:request method="GET" doc:name="getPlanet" doc:id="f90465f9-31db-49bb-99c7-17a429dc13c9" config-ref="HTTP_Request_configuration_Planets" path='#["planets?name=" ++ vars.planetName]' responseTimeout="60000" />
+					<ee:transform doc:name="Planet info" doc:id="c20c49c7-d509-490e-a55e-5eb891dcf463">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	name: payload[0].name,
+	moons: payload[0].moons.moon default [],
+	semimajorAxis: payload[0].semimajorAxis,
+	perihelion: payload[0].perihelion,
+	aphelion: payload[0].aphelion,
+	eccentricity: payload[0].eccentricity,
+	inclination: payload[0].inclination,
+	mass: payload[0].mass.massValue,
+	density: payload[0].density,
+	gravity: payload[0].gravity,
+	meanRadius: payload[0].meanRadius,
+	polarRadius: payload[0].polarRadius,
+	discoveredBy: payload[0].discoveredBy,
+	discoveryDate: payload[0].discoveryDate,
+	alternativeName: payload[0].alternativeName,
+	axialTilt: payload[0].axialTilt,
+	avgTemp: payload[0].avgTemp
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<ee:transform doc:name="One launch with planet info" doc:id="9319699e-3513-441a-8a75-5730d898e78a">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	name: vars.oneLaunch.name default "",
+	status: vars.oneLaunch.status default "",
+	launch_year: vars.oneLaunch.launch_date default "",
+	failreason: vars.oneLaunch.failreason default "",
+	rocket: {
+		name: vars.oneLaunch.rocket.name default "",
+		family: vars.oneLaunch.rocket.family default "",
+		full_name: vars.oneLaunch.rocket.full_name default "",
+		variant: vars.oneLaunch.rocket.variant default ""
+	},
+	mission: {
+		name: vars.oneLaunch.mission.name default "",
+		description: vars.oneLaunch.mission.description default "",
+		"type": vars.oneLaunch.mission."type" default "",
+		orbit: vars.oneLaunch.mission.orbit default "",
+		planet_of_interest: payload
+	},
+	pad: {
+		name: vars.oneLaunch.pad.name default "",
+		location: {
+			name: vars.oneLaunch.pad.location.name default "",
+			country_code: vars.oneLaunch.pad.location.country_code default "",
+			total_launch_count: vars.oneLaunch.pad.location.total_launch_count default "",
+			total_landing_count: vars.oneLaunch.pad.location.total_landing_count default ""
+		}
+	}
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<ee:transform doc:name="Adding payload to launch_planet_arr" doc:id="d4fc3172-6da2-491d-af73-016e4dcfb9ed">
+						<ee:message />
+						<ee:variables>
+							<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
+output application/json
+---
+vars.launch_planet_arr + payload]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</when>
+				<otherwise>
+					<ee:transform doc:name="Adding oneLaunch to launch_planet_arr" doc:id="e19dcb1b-ab8a-47d3-b30c-7e017d5b22c6">
+						<ee:message />
+						<ee:variables>
+							<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
+output application/json
+---
+vars.launch_planet_arr + vars.oneLaunch]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</otherwise>
+			</choice>
+		</foreach>
+		<ee:transform doc:name="Final launch_planet_arr" doc:id="61dc42ea-6c72-4170-a105-e56c6b71f7ca">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+vars.launch_planet_arr]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="getStations" doc:id="b42af5cc-cf60-4c11-a8d8-747d58ba7b54">
+		<http:request method="GET" doc:name="getStations" doc:id="c66dd9e8-1c9f-45c9-a86e-500b387bea61" config-ref="HTTP_Request_configuration_Stations" path="station" responseTimeout="60000" />
+		<ee:transform doc:name="Basic data filtering" doc:id="0744ac6c-cc23-4479-88b0-247806b1ff68">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload filter ((item, index) -> item.owners contains(vars.name))]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
 	<sub-flow name="getRockets"
 		doc:id="914ffeb8-e7b5-4944-8f20-c86bfabd505b">
 		<http:request method="GET" doc:name="getRockets"
@@ -85,220 +240,31 @@ payload.results filter ((item, index) -> item.manufacturer.name == vars.name) ma
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
-	<sub-flow name="getStations"
-		doc:id="b42af5cc-cf60-4c11-a8d8-747d58ba7b54">
-		<http:request method="GET" doc:name="getStations"
-			doc:id="c66dd9e8-1c9f-45c9-a86e-500b387bea61"
-			config-ref="HTTP_Request_configuration_Stations" path="station"
-			responseTimeout="60000" />
-		<ee:transform doc:name="Basic data filtering"
-			doc:id="0744ac6c-cc23-4479-88b0-247806b1ff68">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload filter ((item, index) -> item.owners contains(vars.name))]]></ee:set-payload>
-			</ee:message>
-			<ee:variables>
-			</ee:variables>
-		</ee:transform>
-	</sub-flow>
-	<sub-flow name="getLaunchesAndPlanets"
-		doc:id="2eafa69c-7893-4f17-af7e-e2614ae1264d">
-		<http:request method="GET" doc:name="getLaunches"
-			doc:id="33edb96d-bfdb-4eab-9f50-609278864808"
-			config-ref="HTTP_Request_configuration_Launches"
-			path='#["launchesByStatusAndYear?limit=" ++ vars.limit ++ "&amp;offset=" ++ vars.offset]'
-			responseTimeout="60000" />
-		<ee:transform doc:name="Basic data filtering"
-			doc:id="e98ff262-b8ce-4f83-8723-3ac6e1e40b50">
-			<ee:message>
-			</ee:message>
-			<ee:variables>
-				<ee:set-variable variableName="launchInfo"><![CDATA[%dw 2.0
-output application/json
----
-payload.launches filter ((item, index) -> item.launch_service_provider == vars.name) map ( launch , indexOfLaunch ) -> {
-	name: launch.name default "",
-	status: launch.status default "",
-	launch_year: launch.launch_year default "",
-	failreason: launch.failreason default "",
-	rocket: {
-		name: launch.rocket.name default "",
-		family: launch.rocket.family default "",
-		full_name: launch.rocket.full_name default "",
-		variant: launch.rocket.variant default ""
-	},
-	mission: {
-		name: launch.mission.name default "",
-		description: launch.mission.description default "",
-		"type": launch.mission."type" default "",
-		orbit: launch.mission.orbit default "",
-		planet_of_interest: ""
-	},
-	pad: {
-		name: launch.pad.name default "",
-		location: {
-			name: launch.pad.location.name default "",
-			country_code: launch.pad.location.country_code default "",
-			total_launch_count: launch.pad.location.total_launch_count default "",
-			total_landing_count: launch.pad.location.total_landing_count default ""
-		}
-	}
-}]]></ee:set-variable>
-				<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
-output application/json
----
-[]]]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
-		<foreach doc:name="For Each"
-			doc:id="a2eb3e74-bea9-4626-9152-6842a4b0f1b8"
-			collection="#[vars.launchInfo]">
-			<set-variable value="#[payload]"
-				doc:name="Set oneLaunch"
-				doc:id="96d1c54e-3caa-43b8-9b9c-95bc81175bf7"
-				variableName="oneLaunch" />
-			<set-variable doc:name="Set planetName"
-				doc:id="5242e890-7c2e-4794-aca0-f76641b808ea"
-				variableName="planetName"
-				value="#[java!org::spaceagencies::utils::MyUtils::getPlanetName(vars.oneLaunch.mission.description)]" />
-			<choice doc:name="Choice"
-				doc:id="145eec21-9d4e-4da9-b741-61f43d5949be">
-				<when expression='#[vars.planetName != ""]'>
-					<http:request method="GET" doc:name="getPlanet"
-						doc:id="f90465f9-31db-49bb-99c7-17a429dc13c9"
-						config-ref="HTTP_Request_configuration_Planets"
-						path='#["planets?name=" ++ vars.planetName]'
-						responseTimeout="60000" />
-					<ee:transform doc:name="Planet info"
-						doc:id="c20c49c7-d509-490e-a55e-5eb891dcf463">
-						<ee:message>
-							<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-	name: payload[0].name,
-	moons: payload[0].moons.moon default [],
-	semimajorAxis: payload[0].semimajorAxis,
-	perihelion: payload[0].perihelion,
-	aphelion: payload[0].aphelion,
-	eccentricity: payload[0].eccentricity,
-	inclination: payload[0].inclination,
-	mass: payload[0].mass.massValue,
-	density: payload[0].density,
-	gravity: payload[0].gravity,
-	meanRadius: payload[0].meanRadius,
-	polarRadius: payload[0].polarRadius,
-	discoveredBy: payload[0].discoveredBy,
-	discoveryDate: payload[0].discoveryDate,
-	alternativeName: payload[0].alternativeName,
-	axialTilt: payload[0].axialTilt,
-	avgTemp: payload[0].avgTemp
-}]]></ee:set-payload>
-						</ee:message>
-					</ee:transform>
-					<ee:transform doc:name="One launch with planet info"
-						doc:id="9319699e-3513-441a-8a75-5730d898e78a">
-						<ee:message>
-							<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-	name: vars.oneLaunch.name default "",
-	status: vars.oneLaunch.status default "",
-	launch_year: vars.oneLaunch.launch_date default "",
-	failreason: vars.oneLaunch.failreason default "",
-	rocket: {
-		name: vars.oneLaunch.rocket.name default "",
-		family: vars.oneLaunch.rocket.family default "",
-		full_name: vars.oneLaunch.rocket.full_name default "",
-		variant: vars.oneLaunch.rocket.variant default ""
-	},
-	mission: {
-		name: vars.oneLaunch.mission.name default "",
-		description: vars.oneLaunch.mission.description default "",
-		"type": vars.oneLaunch.mission."type" default "",
-		orbit: vars.oneLaunch.mission.orbit default "",
-		planet_of_interest: payload
-	},
-	pad: {
-		name: vars.oneLaunch.pad.name default "",
-		location: {
-			name: vars.oneLaunch.pad.location.name default "",
-			country_code: vars.oneLaunch.pad.location.country_code default "",
-			total_launch_count: vars.oneLaunch.pad.location.total_launch_count default "",
-			total_landing_count: vars.oneLaunch.pad.location.total_landing_count default ""
-		}
-	}
-}]]></ee:set-payload>
-						</ee:message>
-					</ee:transform>
-					<ee:transform
-						doc:name="Adding payload to launch_planet_arr"
-						doc:id="d4fc3172-6da2-491d-af73-016e4dcfb9ed">
-						<ee:message />
-						<ee:variables>
-							<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
-output application/json
----
-vars.launch_planet_arr + payload]]></ee:set-variable>
-						</ee:variables>
-					</ee:transform>
-				</when>
-				<otherwise>
-					<ee:transform
-						doc:name="Adding oneLaunch to launch_planet_arr"
-						doc:id="e19dcb1b-ab8a-47d3-b30c-7e017d5b22c6">
-						<ee:message />
-						<ee:variables>
-							<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
-output application/json
----
-vars.launch_planet_arr + vars.oneLaunch]]></ee:set-variable>
-						</ee:variables>
-					</ee:transform>
-				</otherwise>
-			</choice>
-		</foreach>
-		<ee:transform doc:name="Final launch_planet_arr"
-			doc:id="61dc42ea-6c72-4170-a105-e56c6b71f7ca">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-vars.launch_planet_arr]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
+	<sub-flow name="primaryDataRetrieving" doc:id="7bee803a-da23-4a94-94c4-e1c088ddd942">
+		<flow-ref doc:name="variables" doc:id="fc442cc5-ffb5-4607-8f6a-e0de95c4da68" name="variables" />
+		<scatter-gather doc:name="Scatter-Gather" doc:id="5f3c3e3b-3331-4e2b-8c6c-856a7cb06ee4">
+			<route>
+				<flow-ref doc:name="getLaunchesAndPlanets" doc:id="42242f03-0978-422b-b0d7-7764fe58ea1f" name="getLaunchesAndPlanets" />
+			</route>
+			<route>
+				<flow-ref doc:name="getStations" doc:id="6f9bf2c0-80bf-409f-b1b3-621f430cefb4" name="getStations" />
+			</route>
+			<route>
+				<flow-ref doc:name="getRockets" doc:id="72529153-02b0-4344-bcaa-bc530594f8eb" name="getRockets" />
+			</route>
+		</scatter-gather>
+		<choice doc:name="Choice" doc:id="2eb7cd03-23d3-4ec8-8e71-082e2ee11f4b">
+			<when expression='#[payload."1".payload == [] and payload."0".payload == [] and payload."2".payload == []]'>
+				<raise-error doc:name="ALL_EMPTY error" doc:id="1a6b691f-ae28-433f-9897-43b5540e36cc" type="APP:ALL_EMPTY" description="${error_messaging.all_empty}" />
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Logger" doc:id="a0946e50-b1b3-4631-bec3-f6d01d08f955" message='#["Default block execution"]' />
+			</otherwise>
+		</choice>
 	</sub-flow>
 	<sub-flow name="agencyWithStationAndLaunches"
 		doc:id="6c9f186d-7f41-4d50-bc6c-38d4417189c0">
-		<flow-ref doc:name="variables"
-			doc:id="fc442cc5-ffb5-4607-8f6a-e0de95c4da68" name="variables" />
-		<scatter-gather doc:name="Scatter-Gather"
-			doc:id="5f3c3e3b-3331-4e2b-8c6c-856a7cb06ee4">
-			<route>
-				<flow-ref doc:name="getLaunchesAndPlanets"
-					doc:id="42242f03-0978-422b-b0d7-7764fe58ea1f"
-					name="getLaunchesAndPlanets" />
-			</route>
-			<route>
-				<flow-ref doc:name="getStations"
-					doc:id="6f9bf2c0-80bf-409f-b1b3-621f430cefb4" name="getStations" />
-			</route>
-			<route>
-				<flow-ref doc:name="getRockets"
-					doc:id="72529153-02b0-4344-bcaa-bc530594f8eb" name="getRockets" />
-			</route>
-		</scatter-gather>
-		<choice doc:name="Choice" doc:id="2eb7cd03-23d3-4ec8-8e71-082e2ee11f4b" >
-			<when expression='#[payload."1".payload == [] and payload."0".payload == [] and payload."2".payload == []]'>
-				<raise-error doc:name="ALL_EMPTY error" doc:id="1a6b691f-ae28-433f-9897-43b5540e36cc" type="APP:ALL_EMPTY" description="${error_messaging.all_empty}"/>
-			</when>
-			<otherwise >
-				<logger level="INFO" doc:name="Logger" doc:id="a0946e50-b1b3-4631-bec3-f6d01d08f955" message='#["Default block execution"]'/>
-			</otherwise>
-		</choice>
+		<flow-ref doc:name="primaryDataRetrieving" doc:id="75d4a96f-af07-4e31-85e3-b74d417eeaf4" name="primaryDataRetrieving" />
 		<ee:transform doc:name="Final detailed representation"
 			doc:id="1f947523-f746-44c6-afb8-96e137eeb4f2">
 			<ee:message>
@@ -441,7 +407,6 @@ else
     payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<flow-ref doc:name="setToFile" doc:id="24df5f2a-05d5-4fd6-864a-b4939fc4f95f" name="setToFile"/>
 	</sub-flow>
 	<sub-flow name="launchesAndStationsByAgencyAndYear"
 		doc:id="c373dc04-0fb0-499a-bbff-bc6ebea1763f">
@@ -543,7 +508,7 @@ output application/json
 			doc:id="b34540e7-89e2-4009-b711-1061da8a8c18">
 			<when expression='#[vars.mode == "detailed"]'>
 				<set-variable
-					value='#[Mule::p("records.folder") ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyy-MM-dd"} ++ "-" ++&#10;&#10;now() as String {format: "hh-m-s"} ++ ".json"]'
+					value='#[Mule::p("records.write_folder") ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyy-MM-dd"} ++ "-" ++&#10;&#10;now() as String {format: "hh-m-s"} ++ ".json"]'
 					doc:name="Set file_name"
 					doc:id="f294327c-8062-4833-951d-aaa9b8710940"
 					variableName="file_name" />
@@ -555,4 +520,304 @@ output application/json
 </when>
 		</choice>
 	</sub-flow>
+	<flow name="databaseFilling"
+		doc:id="946dfe1f-8949-4509-ab31-3eb1c329f472">
+		<http:listener doc:name="Listener"
+			doc:id="21707e4c-5686-4c4a-8bf4-edac561c8e3a"
+			config-ref="HTTP_Listener_config" path="/test" />
+		<flow-ref doc:name="variables"
+			doc:id="1e68e8de-fee0-4b50-ab5b-6cbf62bfe05c" name="variables" />
+		<choice doc:name="Choice"
+			doc:id="c3ce8653-07ba-4d41-866a-878cd8b2a0f6">
+			<when
+				expression="#[vars.offset &gt; 15 and vars.offset &lt; 468]">
+				<flow-ref doc:name="primaryDataRetrieving"
+					doc:id="409d53b6-84a5-45df-bd7c-0b51d7129fcb"
+					name="primaryDataRetrieving" />
+				<ee:transform doc:name="Formatting data to add to the database"
+					doc:id="af4fedfb-bcf3-43c6-bb09-7c4799983fc5">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[ if (sizeOf(payload."0".payload) == 0) {
+    agency: vars.name,
+    rockets: {
+      rockets_count: sizeOf(payload."2".payload),
+	  rockets_list: payload."2".payload
+	}
+  } else if (sizeOf(payload."2".payload) == 0) {
+    agency: vars.name,
+    launches: {
+      launches_count: sizeOf(payload."0".payload),
+	  launches_list: payload."0".payload
+	}
+  } else {
+    agency: vars.name,
+    launches: {
+      launches_count: sizeOf(payload."0".payload),
+	  launches_list: payload."0".payload
+	},
+    rockets: {
+      rockets_count: sizeOf(payload."2".payload),
+	  rockets_list: payload."2".payload
+	}
+  }
+]]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<when expression="#[vars.offset &gt; 468]">
+				<flow-ref doc:name="primaryDataRetrieving"
+					doc:id="694cff12-59e1-431e-aefd-c4e5aa469b8a"
+					name="primaryDataRetrieving" />
+				<choice doc:name="Choice" doc:id="a31f8a2f-9a02-4fb5-9dde-5cb88b328a13" >
+					<when expression='#[sizeOf(payload."0".payload) == 0]'>
+						<raise-error doc:name="Raise error" doc:id="aa7893ac-d392-4ab7-b14a-b7ba544d0d74" type="APP:ALL_EMPTY" description="No data to add to database."/>
+					</when>
+					<otherwise >
+						<ee:transform doc:name="Formatting data to add to the database" doc:id="8bfce8ea-2c5f-4252-80b3-54499a7229e5">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[{
+  agency: vars.name,
+  launches: {
+    launches_count: sizeOf(payload."0".payload),
+	launches_list: payload."0".payload
+  }
+}]]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+					</otherwise>
+				</choice>
+			
+</when>
+			<otherwise>
+				<flow-ref doc:name="primaryDataRetrieving"
+					doc:id="942ebb92-fc56-4d1a-8f39-eade033d5fe1"
+					name="primaryDataRetrieving" />
+				<ee:transform doc:name="Formatting data to add to the database" doc:id="6434c1b9-5aef-4731-80a0-e2c286f61a99" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[ if (sizeOf(payload."1".payload) == 0) {
+    agency: vars.name,
+    launches: {
+      launches_count: sizeOf(payload."0".payload),
+	  launches_list: payload."0".payload
+	},
+    rockets: {
+      rockets_count: sizeOf(payload."2".payload),
+	  rockets_list: payload."2".payload
+	}
+  } else if (sizeOf(payload."1".payload) == 0 and sizeOf(payload."0".payload) == 0) {
+    agency: vars.name,
+    rockets: {
+      rockets_count: sizeOf(payload."2".payload),
+	  rockets_list: payload."2".payload
+	}
+  } else if (sizeOf(payload."1".payload) == 0 and sizeOf(payload."2".payload) == 0) {
+    agency: vars.name,
+    launches: {
+      launches_count: sizeOf(payload."0".payload),
+	  launches_list: payload."0".payload
+	}
+  } else if (sizeOf(payload."0".payload) == 0) {
+    agency: vars.name,
+    stations: {
+      stations_count: sizeOf(payload."1".payload),
+	  stations_list: payload."1".payload
+	},
+    rockets: {
+      rockets_count: sizeOf(payload."2".payload),
+	  rockets_list: payload."2".payload
+	}
+  } else if (sizeOf(payload."0".payload) == 0 and sizeOf(payload."2".payload) == 0) {
+    agency: vars.name,
+    stations: {
+      stations_count: sizeOf(payload."1".payload),
+	  stations_list: payload."1".payload
+	}
+  } else if (sizeOf(payload."2".payload) == 0) {
+    agency: vars.name,
+    stations: {
+      stations_count: sizeOf(payload."1".payload),
+	  stations_list: payload."1".payload
+	},
+    launches: {
+      launches_count: sizeOf(payload."0".payload),
+	  launches_list: payload."0".payload
+	}
+  } else {
+    agency: vars.name,
+    stations: {
+      stations_count: sizeOf(payload."1".payload),
+	  stations_list: payload."1".payload
+	},
+    launches: {
+      launches_count: sizeOf(payload."0".payload),
+	  launches_list: payload."0".payload
+	},
+    rockets: {
+      rockets_count: sizeOf(payload."2".payload),
+	  rockets_list: payload."2".payload
+	}
+  }
+]]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			
+</otherwise>
+		</choice>
+		<flow-ref doc:name="setToFile"
+			doc:id="a400d360-bf68-4e44-a381-e50212f91b48" name="setToFile" />
+	</flow>
+	<flow name="implementationFlow"
+		doc:id="1a5a062e-087c-4a27-ab9b-4a0ff197df38">
+		<file:listener doc:name="On New or Updated File"
+			doc:id="2ae99eef-9b62-4793-83fe-cb28a8d16f2a"
+			config-ref="File_Config"
+			directory="${records.write_folder}"
+			autoDelete="true">
+			<scheduling-strategy>
+				<fixed-frequency frequency="5" timeUnit="SECONDS" />
+			</scheduling-strategy>
+			<file:matcher filenamePattern="*.json" />
+		</file:listener>
+		<choice doc:name="Choice" doc:id="55e50d81-1015-4e36-a734-c7c45fab2557" >
+			<when expression="#[java!org::spaceagencies::utils::FileOperations::isFileExists(Mule::p('records.dir') as String, Mule::p('records.file') as String) == false]">
+				<ee:transform doc:name="Transform Message" doc:id="2f0c015f-bde9-4313-a62b-f5d88edd57d8">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="record"><![CDATA[%dw 2.0
+output application/json
+---
+if (payload.stations == null) 
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    launches: record.launches,
+    rockets: record.rockets
+  } else if (payload.stations == null and payload.launches == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    rockets: record.rockets
+  } else if (payload.stations == null and payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    launches: record.launches
+  } else if (payload.launches == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    stations: record.stations,
+    rockets: record.rockets
+  } else if (payload.launches == null and payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    stations: record.stations
+  } else if (payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    stations: record.stations,
+    launches: record.launches
+  } else
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    stations: record.stations,
+    launches: record.launches,
+    rockets: record.rockets
+  }]]></ee:set-variable>
+
+			</ee:variables>
+		</ee:transform>
+				<file:write doc:name="Write" doc:id="f973c72d-a225-4fc9-975d-0db47f0f2449" config-ref="File_Config" path='#[Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String]' mode="CREATE_NEW">
+					<file:content ><![CDATA[#[vars.record[0].r_id as Number + 1]]]></file:content>
+				</file:write>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="0db28c11-ad62-445f-9d9e-b61bf20f56e5" >
+					<ee:message />
+					<ee:variables >
+						<ee:set-variable variableName="record" ><![CDATA[%dw 2.0
+output application/json
+var r_id = java!org::spaceagencies::utils::FileOperations::fileReader(Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String as String)
+---
+if (payload.stations == null) 
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    launches: record.launches,
+    rockets: record.rockets
+  } else if (payload.stations == null and payload.launches == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    rockets: record.rockets
+  } else if (payload.stations == null and payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    launches: record.launches
+  } else if (payload.launches == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    stations: record.stations,
+    rockets: record.rockets
+  } else if (payload.launches == null and payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    stations: record.stations
+  } else if (payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    stations: record.stations,
+    launches: record.launches
+  } else
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    stations: record.stations,
+    launches: record.launches,
+    rockets: record.rockets
+  }]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<file:write doc:name="Write" doc:id="924cd526-7149-4d1e-a417-09692dfc7a60" config-ref="File_Config" path='#[Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String]'>
+			<file:content><![CDATA[#[vars.record[0].r_id as Number + 1]]]></file:content>
+		</file:write>
+			</otherwise>
+		</choice>
+		<mongo:collection-exists
+			collectionName="#[vars.record[0].agency]"
+			doc:name="Collection exists"
+			doc:id="74f6a71b-0f9c-4965-8840-4f320e18f1bf"
+			config-ref="MongoDB_Config" />
+		<choice doc:name="Choice"
+			doc:id="54cb3b08-036c-4315-a528-082a8dc71bd1">
+			<when expression="#[payload == false]">
+				<mongo:create-collection
+					doc:name="Create collection"
+					doc:id="186d5a67-81b8-4b1f-96e4-7a280fc9ce5d"
+					config-ref="MongoDB_Config"
+					collectionName="#[vars.record[0].agency]" />
+			</when>
+		</choice>
+		<mongo:insert-documents collectionName="#[vars.record[0].agency]" doc:name="Insert documents" doc:id="cb2f3e5c-36e2-44dc-9f8b-b876337db429" config-ref="MongoDB_Config">
+			<mongo:documents><![CDATA[#[vars.record]]]></mongo:documents>
+		</mongo:insert-documents>
+	
+</flow>
 </mule>

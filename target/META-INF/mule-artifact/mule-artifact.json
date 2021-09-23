@@ -39,6 +39,7 @@
         "examples/rockets_normal_example.json",
         "examples/stations_example.json",
         "global.xml",
+        "id/r_id.txt",
         "implementation.xml",
         "inputs/general_agency_info_payload.json",
         "inputs/launch_planet_payload.json",
