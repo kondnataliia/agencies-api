@@ -36,7 +36,4 @@ http://www.mulesoft.org/schema/mule/telegram http://www.mulesoft.org/schema/mule
 	<configuration doc:name="Configuration" doc:id="bf3570b3-c5eb-49cd-b477-905af6b2b245" defaultErrorHandler-ref="global_error_handling" />
 	<file:config name="File_Config" doc:name="File Config" doc:id="bcdda69b-7b92-489b-af6e-946bb882deeb"> <file:connection workingDir="${records.write_folder}" />
 	</file:config>
-	<telegram:config name="Telegram_Connector_Config" doc:name="Telegram Connector Config" doc:id="fc073a4f-06b2-45df-9c44-31ab386600fe" >
-		<telegram:connection-provider-connection secureToken="1911354293:AAHzHyqjWSxwyz_i5VWmy2a1KJBG7PhLiD0" />
-	</telegram:config>
 </mule>
