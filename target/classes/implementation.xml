@@ -17,14 +17,14 @@ http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mo
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
-	<sub-flow name="variables" doc:id="944c896e-dce1-42a4-b2fe-ec1b7fc21cca">
+	<sub-flow name="start_log_and_variables" doc:id="944c896e-dce1-42a4-b2fe-ec1b7fc21cca">
 		<logger level="INFO" doc:name="Start log" doc:id="391c182f-a167-4b7a-bebb-9128acbca7bd" message='#["The application has been launched"]' />
 		<set-variable value="#[message.attributes.queryParams.limit default 100]" doc:name="Set limit" doc:id="51e13b5a-cae2-4a85-aafc-8d5c5768a1ee" variableName="limit" />
 		<set-variable value="#[message.attributes.queryParams.offset default -1]" doc:name="Set offset" doc:id="4f327e66-08db-4fd9-9176-f09cb7319d77" variableName="offset" />
 		<set-variable value='#[message.attributes.queryParams.name default ""]' doc:name="Set agency name" doc:id="00fe79b6-a3c0-4751-a811-d4978a3cee41" variableName="name" />
 		<choice doc:name="Choice" doc:id="f1553f30-ff0f-47af-b442-47b4d1f658cb">
-			<when expression="#[vars.offset == -1]">
-				<raise-error doc:name="MISS_OFFSET error" doc:id="583c964a-dd11-49bf-a42c-b9cbc3ab3c98" type="APP:MISS_OFFSET" description="You forgot to specify the 'offset' parameter" />
+			<when expression="#[vars.offset == Mule::p('offset_limitations.default')]">
+				<raise-error doc:name="WRONG_OFFSET error" doc:id="583c964a-dd11-49bf-a42c-b9cbc3ab3c98" type="APP:MISS_OFFSET" description="You forgot to specify the 'offset' parameter" />
 			</when>
 			<when expression='#[vars.name == ""]'>
 				<raise-error doc:name="MISS_NAME error" doc:id="1ccdaaed-7344-48a5-9b94-9e02c5b8f10a" type="APP:MISS_NAME" description="You forgot to specify the 'name' parameter" />
@@ -241,7 +241,7 @@ payload.results filter ((item, index) -> item.manufacturer.name == vars.name) ma
 		</ee:transform>
 	</sub-flow>
 	<sub-flow name="primaryDataRetrieving" doc:id="7bee803a-da23-4a94-94c4-e1c088ddd942">
-		<flow-ref doc:name="variables" doc:id="fc442cc5-ffb5-4607-8f6a-e0de95c4da68" name="variables" />
+		<flow-ref doc:name="start_log and variables" doc:id="fc442cc5-ffb5-4607-8f6a-e0de95c4da68" name="start_log_and_variables" />
 		<scatter-gather doc:name="Scatter-Gather" doc:id="5f3c3e3b-3331-4e2b-8c6c-856a7cb06ee4">
 			<route>
 				<flow-ref doc:name="getLaunchesAndPlanets" doc:id="42242f03-0978-422b-b0d7-7764fe58ea1f" name="getLaunchesAndPlanets" />
@@ -258,7 +258,7 @@ payload.results filter ((item, index) -> item.manufacturer.name == vars.name) ma
 				<raise-error doc:name="ALL_EMPTY error" doc:id="1a6b691f-ae28-433f-9897-43b5540e36cc" type="APP:ALL_EMPTY" description="${error_messaging.all_empty}" />
 			</when>
 			<otherwise>
-				<logger level="INFO" doc:name="Logger" doc:id="a0946e50-b1b3-4631-bec3-f6d01d08f955" message='#["Default block execution"]' />
+				<logger level="INFO" doc:name="Default block logger" doc:id="a0946e50-b1b3-4631-bec3-f6d01d08f955" message='#["Default block execution"]' />
 			</otherwise>
 		</choice>
 	</sub-flow>
@@ -410,8 +410,8 @@ else
 	</sub-flow>
 	<sub-flow name="launchesAndStationsByAgencyAndYear"
 		doc:id="c373dc04-0fb0-499a-bbff-bc6ebea1763f">
-		<flow-ref doc:name="variables"
-			doc:id="3450ab5a-6b4c-4846-8759-68318ef4b74f" name="variables" />
+		<flow-ref doc:name="start_log and variables"
+			doc:id="3450ab5a-6b4c-4846-8759-68318ef4b74f" name="start_log_and_variables" />
 		<set-variable value="#[message.attributes.queryParams.year]" doc:name="Set year" doc:id="0677cae9-079f-4b4c-9b2d-8384a25d0a70" variableName="year" />
 		<validation:matches-regex doc:name="Check for year validity" doc:id="3d594f44-10de-4bfc-b16f-892e1e2e4ae9" config-ref="Validation_Config" value="#[vars.year]" regex="${validation.year.regex}" message="${validation.year.message}">
 			<error-mapping sourceType="VALIDATION:MISMATCH" targetType="APP:INVALID_YEAR" />
@@ -444,17 +444,20 @@ payload filter ((item, index) -> item.launch_year == vars.year)]]></ee:set-paylo
 						<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-payload filter ((item, index) -> (item.owners contains(vars.name)) and (item.founded[0 to 3] as Number <= vars.year as Number) and ((item.deorbited == null) or (item.deorbited[0 to 3] as Number > vars.year as Number))) map ( payload01 , indexOfPayload01 ) -> {
-  name: payload01.name,
-  status: payload01.status_name,
-  "type": payload01."type",
-  founded: payload01.founded,
-  deorbited: payload01.deorbited as String default "",
-  description: payload01.description,
-  orbit: payload01.orbit,
-  owners: payload01.owners map ( owner , indexOfOwner ) -> owner,
-  image_url: payload01.image_url
-}]]></ee:set-payload>
+payload filter ((item, index) -> (item.owners contains(vars.name)) and 
+	(item.founded[0 to 3] as Number <= vars.year as Number) and 
+	((item.deorbited == null) or (item.deorbited[0 to 3] as Number > vars.year as Number))) 
+	map ( payload01 , indexOfPayload01 ) -> {
+      name: payload01.name,
+      status: payload01.status_name,
+      "type": payload01."type",
+      founded: payload01.founded,
+      deorbited: payload01.deorbited as String default "",
+      description: payload01.description,
+      orbit: payload01.orbit,
+      owners: payload01.owners map ( owner , indexOfOwner ) -> owner,
+      image_url: payload01.image_url
+    }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
 			</route>
@@ -502,35 +505,20 @@ output application/json
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
-	<sub-flow name="setToFile"
-		doc:id="ee6a7413-131b-47ab-8cbc-b238a96e4a87">
-		<choice doc:name="Choice"
-			doc:id="b34540e7-89e2-4009-b711-1061da8a8c18">
-			<when expression='#[vars.mode == "detailed"]'>
-				<set-variable
-					value='#[Mule::p("records.write_folder") ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyy-MM-dd"} ++ "-" ++&#10;&#10;now() as String {format: "hh-m-s"} ++ ".json"]'
-					doc:name="Set file_name"
-					doc:id="f294327c-8062-4833-951d-aaa9b8710940"
-					variableName="file_name" />
-				<file:write doc:name="Write"
-					doc:id="7ea4de48-437f-4f4b-a7cf-7a7141fe32b5"
-					config-ref="File_Config" path="#[vars.file_name]" mode="CREATE_NEW">
-				</file:write>
-			
-</when>
-		</choice>
-	</sub-flow>
 	<flow name="databaseFilling"
 		doc:id="946dfe1f-8949-4509-ab31-3eb1c329f472">
 		<http:listener doc:name="Listener"
 			doc:id="21707e4c-5686-4c4a-8bf4-edac561c8e3a"
 			config-ref="HTTP_Listener_config" path="/test" />
-		<flow-ref doc:name="variables"
-			doc:id="1e68e8de-fee0-4b50-ab5b-6cbf62bfe05c" name="variables" />
+		<flow-ref doc:name="start_log and variables"
+			doc:id="1e68e8de-fee0-4b50-ab5b-6cbf62bfe05c" name="start_log_and_variables" />
+		<validation:matches-regex doc:name="Check for offset validity" doc:id="7e3232df-aab0-4373-bf1e-259b5af4c3ec" regex="${validation.offset.regex}" config-ref="Validation_Config" value="#[vars.offset]" message="${validation.offset.message}">
+			<error-mapping targetType="APP:WRONG_OFFSET" />
+		</validation:matches-regex>
 		<choice doc:name="Choice"
 			doc:id="c3ce8653-07ba-4d41-866a-878cd8b2a0f6">
 			<when
-				expression="#[vars.offset &gt; 15 and vars.offset &lt; 468]">
+				expression="#[vars.offset &gt; Mule::p('offset_limitations.stations') and vars.offset &lt; Mule::p('offset_limitations.rockets')]">
 				<flow-ref doc:name="primaryDataRetrieving"
 					doc:id="409d53b6-84a5-45df-bd7c-0b51d7129fcb"
 					name="primaryDataRetrieving" />
@@ -567,7 +555,7 @@ output application/json
 					</ee:message>
 				</ee:transform>
 			</when>
-			<when expression="#[vars.offset &gt; 468]">
+			<when expression="#[vars.offset &gt;= Mule::p('offset_limitations.rockets')]">
 				<flow-ref doc:name="primaryDataRetrieving"
 					doc:id="694cff12-59e1-431e-aefd-c4e5aa469b8a"
 					name="primaryDataRetrieving" />
@@ -603,17 +591,7 @@ output application/json
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-[ if (sizeOf(payload."1".payload) == 0) {
-    agency: vars.name,
-    launches: {
-      launches_count: sizeOf(payload."0".payload),
-	  launches_list: payload."0".payload
-	},
-    rockets: {
-      rockets_count: sizeOf(payload."2".payload),
-	  rockets_list: payload."2".payload
-	}
-  } else if (sizeOf(payload."1".payload) == 0 and sizeOf(payload."0".payload) == 0) {
+[ if (sizeOf(payload."1".payload) == 0 and sizeOf(payload."0".payload) == 0) {
     agency: vars.name,
     rockets: {
       rockets_count: sizeOf(payload."2".payload),
@@ -625,6 +603,22 @@ output application/json
       launches_count: sizeOf(payload."0".payload),
 	  launches_list: payload."0".payload
 	}
+  } else if (sizeOf(payload."0".payload) == 0 and sizeOf(payload."2".payload) == 0) {
+    agency: vars.name,
+    stations: {
+      stations_count: sizeOf(payload."1".payload),
+	  stations_list: payload."1".payload
+	}
+  } else if (sizeOf(payload."1".payload) == 0) {
+    agency: vars.name,
+    launches: {
+      launches_count: sizeOf(payload."0".payload),
+	  launches_list: payload."0".payload
+	},
+    rockets: {
+      rockets_count: sizeOf(payload."2".payload),
+	  rockets_list: payload."2".payload
+	}
   } else if (sizeOf(payload."0".payload) == 0) {
     agency: vars.name,
     stations: {
@@ -634,12 +628,6 @@ output application/json
     rockets: {
       rockets_count: sizeOf(payload."2".payload),
 	  rockets_list: payload."2".payload
-	}
-  } else if (sizeOf(payload."0".payload) == 0 and sizeOf(payload."2".payload) == 0) {
-    agency: vars.name,
-    stations: {
-      stations_count: sizeOf(payload."1".payload),
-	  stations_list: payload."1".payload
 	}
   } else if (sizeOf(payload."2".payload) == 0) {
     agency: vars.name,
@@ -672,8 +660,9 @@ output application/json
 			
 </otherwise>
 		</choice>
-		<flow-ref doc:name="setToFile"
-			doc:id="a400d360-bf68-4e44-a381-e50212f91b48" name="setToFile" />
+		<set-variable value='#[Mule::p("records.write_folder") ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyy-MM-dd"} ++ "-" ++&#10;&#10;now() as String {format: "hh-m-s"} ++ ".json"]' doc:name="Set file_name" doc:id="f294327c-8062-4833-951d-aaa9b8710940" variableName="file_name" />
+		<file:write doc:name="Write payload to file" doc:id="7ea4de48-437f-4f4b-a7cf-7a7141fe32b5" config-ref="File_Config" path="#[vars.file_name]" mode="CREATE_NEW">
+				</file:write>
 	</flow>
 	<flow name="implementationFlow"
 		doc:id="1a5a062e-087c-4a27-ab9b-4a0ff197df38">
@@ -696,13 +685,7 @@ output application/json
 				<ee:set-variable variableName="record"><![CDATA[%dw 2.0
 output application/json
 ---
-if (payload.stations == null) 
-  payload map (record, index) -> {
-    r_id: 0,
-    agency: record.agency,
-    launches: record.launches,
-    rockets: record.rockets
-  } else if (payload.stations == null and payload.launches == null)
+if (payload.stations == null and payload.launches == null)
   payload map (record, index) -> {
     r_id: 0,
     agency: record.agency,
@@ -712,17 +695,23 @@ if (payload.stations == null)
     r_id: 0,
     agency: record.agency,
     launches: record.launches
+  } else if (payload.launches == null and payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    stations: record.stations
+  } else if (payload.stations == null) 
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    launches: record.launches,
+    rockets: record.rockets
   } else if (payload.launches == null)
   payload map (record, index) -> {
     r_id: 0,
     agency: record.agency,
     stations: record.stations,
     rockets: record.rockets
-  } else if (payload.launches == null and payload.rockets == null)
-  payload map (record, index) -> {
-    r_id: 0,
-    agency: record.agency,
-    stations: record.stations
   } else if (payload.rockets == null)
   payload map (record, index) -> {
     r_id: 0,
@@ -752,13 +741,7 @@ if (payload.stations == null)
 output application/json
 var r_id = java!org::spaceagencies::utils::FileOperations::fileReader(Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String as String)
 ---
-if (payload.stations == null) 
-  payload map (record, index) -> {
-    r_id: r_id,
-    agency: record.agency,
-    launches: record.launches,
-    rockets: record.rockets
-  } else if (payload.stations == null and payload.launches == null)
+if (payload.stations == null and payload.launches == null)
   payload map (record, index) -> {
     r_id: r_id,
     agency: record.agency,
@@ -768,17 +751,23 @@ if (payload.stations == null)
     r_id: r_id,
     agency: record.agency,
     launches: record.launches
+  } else if (payload.launches == null and payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    stations: record.stations
+  } else if (payload.stations == null) 
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    launches: record.launches,
+    rockets: record.rockets
   } else if (payload.launches == null)
   payload map (record, index) -> {
     r_id: r_id,
     agency: record.agency,
     stations: record.stations,
     rockets: record.rockets
-  } else if (payload.launches == null and payload.rockets == null)
-  payload map (record, index) -> {
-    r_id: r_id,
-    agency: record.agency,
-    stations: record.stations
   } else if (payload.rockets == null)
   payload map (record, index) -> {
     r_id: r_id,
