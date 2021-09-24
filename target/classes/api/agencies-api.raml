@@ -17,6 +17,7 @@ types:
   AgencyNormalMode: !include data_types/agency_normal_data_types.raml
   AgencyListMode: !include data_types/agency_list_data_types.raml
   InfoByAgencyAndYear: !include data_types/info_by_agency_n_year_data_types.raml
+  Help: !include data_types/help_data_types.raml
   
 /agencies:
   get:
@@ -54,7 +55,6 @@ types:
               {
                 message: "Invalid request"
               }
-
 /infoByAgencyAndYear:
   get:
     displayName: Get Info By Agency Name And Year
@@ -75,6 +75,49 @@ types:
           application/json:
             type: InfoByAgencyAndYear[]
             example: !include examples/info_by_agency_n_year_example.json
+      400:
+        body:
+          application/json:
+            properties:
+              message: string
+            example:
+              {
+                message: "Invalid request"
+              }
+/database:
+  get:
+    displayName: Get Info About Agency And Set To DB
+    description: Retrieves information about launches, rockets and space stations by agency name and set it to a DB
+    queryParameters:
+      name:
+        required: false
+      offset:
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            type: AgencyDetailedMode[]
+            example: !include examples/agency_detailed_example.json
+      400:
+        body:
+          application/json:
+            properties:
+              message: string
+            example:
+              {
+                message: "Invalid request"
+              }
+/help:
+  get:
+    displayName: Help Info
+    description: Provides supporting information to the user.
+    responses:
+      200:
+        body:
+          application/json:
+            type: Help
+            example: !include examples/help_example.json
       400:
         body:
           application/json:

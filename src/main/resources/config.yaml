@@ -22,7 +22,7 @@ thespacedevs:
   protocol: "HTTP"
 
 mongoDB:
-  connection: "mongodb+srv://nataliia:Taras1@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
+  connection: "mongodb+srv://<name>:<pass>@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
 
 records:
   write_folder: "C:/Users/Natalka/AnypointStudio/demo-workspace/agencies-api/src/main/resources/Write/"
@@ -42,13 +42,16 @@ validation:
     message: "You have entered an incorrect offset value. The offset can be either 0 or be divisible by 100."
 
 error_messaging:
-  all_empty: "No results were received for your query. This may be due to the following:\n
-              1. No entries were found for the specified parameters.\n
-              2. An incorrectly written or non-existent agency name is entered. 
-              Check the spelling of the agency name or refer to the help page to see a list of existing agencies.\n
-              3. There are no records with the specified launch year on the page you are viewing. 
-              Refer to the help page to find out which pages correspond to the year you are interested in and change the offset to the appropriate one."
-
+  all_empty_agencies: "No results were received for your query. This may be due to the following:\n
+                       1. No entries were found for the specified parameters.\n
+                       2. An incorrectly written or non-existent agency name is entered. 
+                       Check the spelling of the agency name or refer to the help page to see a list of existing agencies."
+  all_empty_info: "No results were received for your query. This may be due to the following:\n
+                   1. No entries were found for the specified parameters.\n
+                   2. An incorrectly written or non-existent agency name is entered. 
+                   Check the spelling of the agency name or refer to the help page to see a list of existing agencies.\n
+                   3. There are no records with the specified launch year on the page you are viewing. 
+                   Refer to the help page to find out which pages correspond to the year you are interested in and change the offset to the appropriate one."
 offset_limitations:
   default: "-1"
   stations: "0"
