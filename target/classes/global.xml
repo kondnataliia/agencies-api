@@ -2,38 +2,79 @@
 
 <mule xmlns:telegram="http://www.mulesoft.org/schema/mule/telegram"
 	xmlns:file="http://www.mulesoft.org/schema/mule/file"
-	xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
 	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd 
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
 http://www.mulesoft.org/schema/mule/telegram http://www.mulesoft.org/schema/mule/telegram/current/mule-telegram.xsd">
-	<apikit:config name="agencies-api-config" api="agencies-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c8d723b7-0100-46ea-bf2d-50ae7a2fd300" >
-		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	<apikit:config name="agencies-api-config"
+		api="agencies-api.raml" outboundHeadersMapName="outboundHeaders"
+		httpStatusVarName="httpStatus" />
+	<http:listener-config name="HTTP_Listener_config"
+		doc:name="HTTP Listener config"
+		doc:id="c8d723b7-0100-46ea-bf2d-50ae7a2fd300">
+		<http:listener-connection host="0.0.0.0"
+			port="${http.port}" />
 	</http:listener-config>
-	<http:request-config name="HTTP_Request_configuration_Launches" doc:name="HTTP Request configuration" doc:id="25dca176-af15-44a7-b451-974f92b2b8a7" basePath="${launches.basepath}">
-		<http:request-connection host="${launches.host}" port="${launches.port}" />
+	<http:request-config
+		name="HTTP_Request_configuration_Launches"
+		doc:name="HTTP Request configuration"
+		doc:id="25dca176-af15-44a7-b451-974f92b2b8a7"
+		basePath="${launches.basepath}">
+		<http:request-connection
+			host="${launches.host}" port="${launches.port}" />
 	</http:request-config>
-	<http:request-config name="HTTP_Request_configuration_Stations" doc:name="HTTP Request configuration" doc:id="a041588c-ae4a-4661-9ba4-685709c6ff57" basePath="${stations.basepath}">
-		<http:request-connection host="${stations.host}" port="${stations.port}" />
+	<http:request-config
+		name="HTTP_Request_configuration_Stations"
+		doc:name="HTTP Request configuration"
+		doc:id="a041588c-ae4a-4661-9ba4-685709c6ff57"
+		basePath="${stations.basepath}">
+		<http:request-connection
+			host="${stations.host}" port="${stations.port}" />
 	</http:request-config>
-	<configuration-properties doc:name="Configuration properties" doc:id="3ad43fb9-63be-440a-b2fa-1f00c220e257" file="config.yaml" />
-	<http:request-config name="HTTP_Request_configuration_Planets" doc:name="HTTP Request configuration" doc:id="67b8a629-6006-45fb-8354-7927a03fafcb" basePath="${planets.basepath}" >
-		<http:request-connection host="${planets.host}" port="${planets.port}" />
+	<configuration-properties
+		doc:name="Configuration properties"
+		doc:id="3ad43fb9-63be-440a-b2fa-1f00c220e257" file="config.yaml" />
+	<http:request-config
+		name="HTTP_Request_configuration_Planets"
+		doc:name="HTTP Request configuration"
+		doc:id="67b8a629-6006-45fb-8354-7927a03fafcb"
+		basePath="${planets.basepath}">
+		<http:request-connection
+			host="${planets.host}" port="${planets.port}" />
 	</http:request-config>
-	<http:request-config name="HTTP_Request_configuration_Rockets" doc:name="HTTP Request configuration" doc:id="51ca6867-f254-43f7-9300-9a06937855ae" basePath="${thespacedevs.basepath}" >
-		<http:request-connection host="${thespacedevs.host}" protocol="${thespacedevs.protocol}"/>
+	<http:request-config
+		name="HTTP_Request_configuration_Rockets"
+		doc:name="HTTP Request configuration"
+		doc:id="51ca6867-f254-43f7-9300-9a06937855ae"
+		basePath="${thespacedevs.basepath}">
+		<http:request-connection
+			host="${thespacedevs.host}" protocol="${thespacedevs.protocol}" />
 	</http:request-config>
-	<mongo:config name="MongoDB_Config" doc:name="MongoDB Config" doc:id="ee4e9311-cb5f-4fa6-b27d-d652bbfec14a" >
-		<mongo:connection-string-connection connectionString="${mongoDB.connection}"/>
-	
-</mongo:config>
-	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="633da790-bd1f-4bad-b733-12ee9e641100" />
-	<configuration doc:name="Configuration" doc:id="bf3570b3-c5eb-49cd-b477-905af6b2b245" defaultErrorHandler-ref="global_error_handling" />
-	<file:config name="File_Config" doc:name="File Config" doc:id="bcdda69b-7b92-489b-af6e-946bb882deeb"> <file:connection workingDir="${records.write_folder}" />
+	<mongo:config name="MongoDB_Config"
+		doc:name="MongoDB Config"
+		doc:id="61ccc1fd-3523-42a9-afa3-572760de0603">
+		<mongo:connection-string-connection
+			connectionString="mongodb+srv://usrRoot:zudwY4-dynteb-bymdud@cluster1.mfzwg.mongodb.net/myFirstDatabase?retryWrites=true&amp;w=majority" />
+
+	</mongo:config>
+	<validation:config name="Validation_Config"
+		doc:name="Validation Config"
+		doc:id="633da790-bd1f-4bad-b733-12ee9e641100" />
+	<configuration doc:name="Configuration"
+		doc:id="bf3570b3-c5eb-49cd-b477-905af6b2b245"
+		defaultErrorHandler-ref="global_error_handling" />
+	<file:config name="File_Config" doc:name="File Config"
+		doc:id="bcdda69b-7b92-489b-af6e-946bb882deeb">
+		<file:connection workingDir="${records.write_folder}" />
 	</file:config>
 </mule>

@@ -25,9 +25,9 @@ mongoDB:
   connection: "mongodb+srv://<name>:<pass>@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
 
 records:
-  write_folder: "C:/Users/Natalka/AnypointStudio/demo-workspace/agencies-api/src/main/resources/Write/"
-  id_folder: "C:/Users/Natalka/AnypointStudio/demo-workspace/agencies-api/src/main/resources/id/"
-  dir: "C:\\Users\\Natalka\\AnypointStudio\\demo-workspace\\agencies-api\\src\\main\\resources\\id\\"
+  write_folder: "/Users/beon/AnypointStudio/Demo-workspace/common-agencies-api/src/main/resources/Write/"
+  id_folder: "/Users/beon/AnypointStudio/Demo-workspace/common-agencies-api/src/main/resources/id/"
+  dir: "/Users/beon/AnypointStudio/Demo-workspace/common-agencies-api/src/main/resources/id/"
   file: "r_id.txt"
   
 validation:
