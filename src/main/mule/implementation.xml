@@ -32,7 +32,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 			variableName="offset" />
 		<set-variable
 			value='#[message.attributes.queryParams.name default ""]'
-			doc:name="Set agency name"
+			doc:name="Set name"
 			doc:id="00fe79b6-a3c0-4751-a811-d4978a3cee41" variableName="name" />
 		<choice doc:name="Choice"
 			doc:id="f1553f30-ff0f-47af-b442-47b4d1f658cb">
