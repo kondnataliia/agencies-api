@@ -110,11 +110,12 @@ payload.launches filter ((item, index) -> item.launch_service_provider == vars.n
 		}
 	}
 }]]></ee:set-variable>
-				<ee:set-variable variableName="launch_planet_arr"><![CDATA[%dw 2.0
+				<ee:set-variable variableName="launch_planet_arr" ><![CDATA[%dw 2.0
 output application/json
 ---
 []]]></ee:set-variable>
-			</ee:variables>
+			
+</ee:variables>
 		</ee:transform>
 		<foreach doc:name="For Each"
 			doc:id="a2eb3e74-bea9-4626-9152-6842a4b0f1b8"
@@ -546,7 +547,7 @@ payload filter ((item, index) -> (item.owners contains(vars.name)) and
 				</ee:transform>
 			</route>
 			<route>
-				<http:request method="GET" doc:name="Request"
+				<http:request method="GET" doc:name="getSolarSystemObjects"
 					doc:id="15455fb9-0856-4616-974d-81ff09417134"
 					config-ref="HTTP_Request_configuration_Planets"
 					path='#["discovery?year=" ++ vars.year]' />
@@ -596,6 +597,446 @@ output application/json
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
+	<sub-flow name="helpFlow" doc:id="3cb3089f-e931-42b7-909c-9cf2ce80a009" >
+		<ee:transform doc:name="Help Info" doc:id="278a685b-8cea-44b9-8924-763a4b30e72d">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+    "info": {
+        "endpoints": ["/api/agencies ": {
+            "1": "name",
+            "2": "mode",
+            "3": "limit",
+            "4": "offset"
+        },
+            "/api/infoByAgencyAndYear": {
+            "1": "name",
+            "2": "year",
+            "3": "limit",
+            "4": "offset"
+        },
+            "/api/database": {
+            "1": "name",
+            "2": "offset"
+        }],
+        "1": "For correct searching write the name of agency",
+        "2": "Do not repeat the same offset and limit for one agency",
+        "QueryParams:": {
+            "1": "name",
+            "2": "mode",
+            "3": "limit",
+            "4": "offset",
+            "5": "year"
+        }
+    },
+    "mode": {
+        "1": "detailed",
+        "2": "normal",
+        "3": "list"
+    },
+    "agency": {
+        "1": "1worldspace",
+        "2": "Ad Astra Rocket Company",
+        "3": "Aerojet",
+        "4": "Aeronautics and Space Research and Diffusion Center",
+        "5": "Aérospatiale",
+        "6": "Aevum",
+        "7": "Airbus Defence and Space",
+        "8": "Algerian Space Agency",
+        "9": "Alliant Techsystems",
+        "10": "AlYahSat",
+        "11": "American Rocket Company",
+        "12": "A.M. Makarov Yuzhny Machine-Building Plant",
+        "13": "Amsat",
+        "14": "Andrews Space",
+        "15": "Antrix Corporation Limited",
+        "16": "Arab Satellite Communications Organization",
+        "17": "Arianespace",
+        "18": "Armadillo Aerospace",
+        "19": "Army Ballistic Missile Agency",
+        "20": "Asia Pacific Multilateral Cooperation in Space Technology and Applications",
+        "21": "Asia-Pacific Regional Space Agency Forum",
+        "22": "Asia-Pacific Space Cooperation Organization",
+        "23": "Astra Space",
+        "24": "Astrium Satellites",
+        "25": "Astronautic Technology Sdn Bhd",
+        "26": "Austrian Space Agency",
+        "27": "Avanti Communications",
+        "28": "Avio S.p.A",
+        "29": "Axiom Space",
+        "30": "Azerbaijan National Aerospace Agency",
+        "31": "Ball Aerospace & Technologies Corp.",
+        "32": "Belarus Space Agency",
+        "33": "Belgian Institute for Space Aeronomy",
+        "34": "Bigelow Aerospace",
+        "35": "Blue Origin",
+        "36": "Boeing",
+        "37": "Bolivarian Agency for Space Activities",
+        "38": "Bolivian Space Agency",
+        "39": "Brazilian Space Agency",
+        "40": "Bristol Aerospace Company",
+        "41": "British Aerospace",
+        "42": "British Satellite Broadcasting",
+        "43": "Broadcasting Satellite System Corporation",
+        "44": "Bulgarian Space Agency",
+        "45": "Canadian Arrow",
+        "46": "Canadian Space Agency",
+        "47": "Centre for Remote Imaging, Sensing and Processing",
+        "48": "China Aerospace Corporation",
+        "49": "China Aerospace Science and Industry Corporation",
+        "50": "China Aerospace Science and Technology Corporation",
+        "51": "China Great Wall Industry Corporation",
+        "52": "China National Space Administration",
+        "53": "Chinarocket Co., Ltd.",
+        "54": "Chrysler",
+        "55": "Colombian Space Commission",
+        "56": "Comisión Nacional de Actividades Espaciales",
+        "57": "Committee on Space Research",
+        "58": "Commonwealth Scientific and Industrial Research Organisation",
+        "59": "Consultative Committee for Space Data Systems",
+        "60": "Convair",
+        "61": "Copenhagen Suborbitals",
+        "62": "Croatian Space Agency",
+        "63": "Danish National Space Center",
+        "64": "Deep Space Industries",
+        "65": "Department of Aerospace Science and Technology",
+        "66": "Digital Globe",
+        "67": "Direction générale de l'armement",
+        "68": "DirecTV",
+        "69": "EADS Astrium Space Transportation",
+        "70": "Echostar",
+        "71": "Energia",
+        "72": "Eurockot Launch Services",
+        "73": "European Launcher Development Organisation",
+        "74": "European Organisation for the Exploitation of Meteorological Satellites",
+        "75": "European Space Agency",
+        "76": "European Space Research Organisation",
+        "78": "Eutelsat",
+        "79": "EXOS Aerospace",
+        "80": "ExPace",
+        "81": "Fairchild Space and Electronics Division",
+        "82": "FCT Space Office",
+        "83": "Firefly Aerospace",
+        "84": "Fokker Space & Systems",
+        "85": "French Armed Forces",
+        "86": "Galactic Energy",
+        "87": "General Dynamics",
+        "88": "General Electric",
+        "89": "Geo-Informatics and Space Technology Development Agency",
+        "90": "GeoOptics",
+        "91": "German Aerospace Center",
+        "92": "Gilmour Space Technologies",
+        "93": "GK Launch Services",
+        "94": "Globalstar",
+        "95": "Hawker Siddeley Dynamics",
+        "96": "Hisdesat",
+        "97": "HispaSat",
+        "98": "Hughes",
+        "99": "Hughes Aircraft",
+        "100": "Hungarian Space Office",
+        "101": "IHI Corporation",
+        "102": "Indian Space Research Organization",
+        "103": "Inmarsat",
+        "104": "Institute for Space Applications and Remote Sensing",
+        "105": "Institute of Space and Astronautical Science",
+        "106": "Instituto Nacional de Técnica Aeroespacial",
+        "107": "Intelsat",
+        "108": "International Launch Services",
+        "109": "Interorbital Systems",
+        "110": "Interstellar Technologies",
+        "111": "INVAP",
+        "112": "Iranian Space Agency",
+        "113": "Iridium Communications",
+        "114": "ISC Kosmotras",
+        "115": "iSpace",
+        "116": "Israel Aerospace Industries",
+        "117": "Israeli Space Agency",
+        "118": "Italian Space Agency",
+        "119": "Japan Aerospace Exploration Agency",
+        "120": "JSC Information Satellite Systems",
+        "121": "Kazakh Space Research Institute",
+        "122": "KB Mashinostroyeniya",
+        "123": "Khrunichev State Research and Production Space Center",
+        "124": "Kongsberg Defence & Aerospace",
+        "125": "Korea Aerospace Research Institute",
+        "126": "Korean Astronaut Program",
+        "127": "Korean Committee of Space Technology",
+        "128": "Land Launch",
+        "129": "LandSpace",
+        "130": "Lithuanian Space Association",
+        "131": "Lockheed Martin",
+        "132": "Lockheed Martin Space Operations",
+        "133": "Lockheed Space Operations Company",
+        "134": "Makeyev Rocket Design Bureau",
+        "135": "Malaysian National Space Agency",
+        "136": "Martin Marietta",
+        "137": "Masten Space Systems",
+        "138": "McDonnell Douglas",
+        "139": "MEASAT Satellite Systems",
+        "140": "Mexican Satellite System",
+        "141": "Mexican Space Agency",
+        "142": "Ministry of Defence of the Russian Federation",
+        "143": "Ministry of Transport of the Czech Republic - Space Technologies and Satellite Systems Department",
+        "144": "Missile Defense Agency",
+        "145": "Mitsubishi Heavy Industries",
+        "146": "Mohammed bin Rashid Space Centre",
+        "147": "Moscow Institute of Thermal Technology",
+        "148": "National Aeronautics and Space Administration",
+        "149": "National Authority for Remote Sensing and Space Sciences",
+        "150": "National Center of Space Research",
+        "151": "National Commission for Aerospace Research and Development",
+        "152": "National Commission for Space Research",
+        "153": "National Institute of Aeronautics and Space",
+        "154": "National Oceanic and Atmospheric Administration",
+        "155": "National Reconnaissance Office",
+        "156": "National Remote Sensing Center of Mongolia",
+        "157": "National Remote Sensing Center of Tunisia",
+        "158": "National Research Council",
+        "159": "National Security Agency",
+        "160": "National Space Activities Commission",
+        "161": "National Space Agency (KazCosmos)",
+        "162": "National Space Agency of the Republic of Kazakhstan",
+        "163": "National Space Agency of Ukraine",
+        "164": "National Space Development Agency of Japan",
+        "165": "National Space Organization",
+        "166": "National Space Research and Development Agency",
+        "167": "Netherlands Institute for Space Research",
+        "168": "North American Aviation",
+        "169": "Northrop Grumman Innovation Systems",
+        "170": "Northrop Grumman Space Technology",
+        "171": "Norwegian Space Centre",
+        "172": "NPO Lavochkin",
+        "173": "OHB System",
+        "174": "OneSpace",
+        "175": "Optus",
+        "176": "Orbital ATK",
+        "177": "Orbital Sciences Corporation",
+        "178": "Pakistan Space and Upper Atmosphere Research Commission",
+        "179": "PanAmSat",
+        "180": "Paradigm Secure Communications",
+        "181": "People's Liberation Army",
+        "182": "Philco Ford",
+        "183": "Planetary Resources",
+        "184": "Planet Labs",
+        "185": "PlanetSpace",
+        "186": "Polish Space Agency",
+        "187": "Production Corporation Polyot",
+        "188": "Progress Rocket Space Center",
+        "189": "ProtoStar",
+        "190": "PT Telkom",
+        "191": "Reaction Engines Ltd.",
+        "192": "Regional African Satellite Communication Organization",
+        "193": "Relativity Space",
+        "194": "RKK Energiya",
+        "195": "Robotics Institute",
+        "196": "Rocketdyne",
+        "197": "Rocket Lab Ltd",
+        "198": "Rockwell International",
+        "199": "Romanian Space Agency",
+        "200": "Royal Aircraft Establishment",
+        "201": "Royal Australian Air Force",
+        "202": "Royal Centre for Remote Sensing",
+        "203": "RUAG Space",
+        "204": "Russian Aerospace Defence Forces",
+        "205": "Russian Federal Space Agency (ROSCOSMOS)",
+        "206": "Russian Space Forces",
+        "207": "Sandia National Laboratories",
+        "208": "Satmex",
+        "209": "Scaled Composites",
+        "210": "Science and Engineering Research Council",
+        "211": "Scorpius Space Launch Company",
+        "212": "Sea Launch",
+        "213": "SES",
+        "214": "Sierra Nevada Corporation",
+        "215": "SKY Perfect JSAT Group",
+        "216": "Snecma",
+        "217": "Société d'étude et de réalisation d'engins balistiques",
+        "218": "South African National Space Agency",
+        "219": "Southern Launch",
+        "220": "Soviet Space Program",
+        "221": "Space Adventures",
+        "222": "SpaceDev",
+        "223": "Spaceflight Launch Services",
+        "224": "Space Florida",
+        "225": "SpaceQuest, Ltd.",
+        "226": "Space Research and Remote Sensing Organization",
+        "227": "Space Research Centre",
+        "228": "Space Research Institute of Saudi Arabia",
+        "229": "Space Services Inc.",
+        "230": "Space Systems/Loral",
+        "231": "SpaceX",
+        "232": "SPAR Aerospace",
+        "233": "Spire Global",
+        "234": "Sri Lanka Space Agency",
+        "235": "Star One",
+        "236": "Starsem SA",
+        "237": "Strategic Missile Troops",
+        "238": "Surrey Satellite Technology Ltd",
+        "239": "Swales Aerospace",
+        "240": "Swedish National Space Board",
+        "241": "Swedish Space Corp",
+        "242": "Swiss Space Office",
+        "243": "Technical University of Denmark - National Space Institute",
+        "244": "Telesat",
+        "245": "Tethers Unlimited, Inc.",
+        "246": "Thaicom",
+        "247": "Thales Alenia Space",
+        "248": "TiSPACE",
+        "249": "TRW",
+        "250": "TUBITAK Space Technologies Research Institute",
+        "251": "Turkish Aerospace Industries",
+        "252": "Turkmenistan National Space Agency",
+        "253": "Türksat",
+        "254": "UK Ministry Of Defence",
+        "255": "UK Space Agency",
+        "256": "United Launch Alliance",
+        "257": "United Nations Committee on the Peaceful Uses of Outer Space",
+        "258": "United Nations Office for Outer Space Affairs",
+        "259": "United Space Alliance",
+        "260": "United States Air Force",
+        "261": "United States Departement of Defense",
+        "262": "UP Aerospace",
+        "263": "US Army",
+        "264": "US Navy",
+        "265": "Uzbek State Space Research Agency (UzbekCosmos)",
+        "266": "Vector",
+        "267": "Vietnam Posts and Telecommunications Group",
+        "268": "Virgin Galactic",
+        "269": "Virgin Orbit",
+        "270": "Vought",
+        "271": "Weapons Research Establishment",
+        "272": "WildBlue",
+        "273": "XCOR  Aerospace",
+        "274": "XTAR LLC",
+        "275": "Yuzhnoye Design Bureau"
+    }
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<flow name="setToDB" doc:id="b0bcf273-d7d4-464b-93f5-836d437bdbbd" >
+		<file:listener doc:name="On New or Updated File" doc:id="d9448635-5362-4ab6-83a1-65274489956c" config-ref="File_Config" directory="${records.write_folder}" autoDelete="true">
+			<scheduling-strategy >
+				<fixed-frequency frequency="5" timeUnit="SECONDS" />
+			</scheduling-strategy>
+			<file:matcher filenamePattern="*.json" />
+		</file:listener>
+		<choice doc:name="Choice" doc:id="19c97036-740e-48a5-b812-82398353e1a0">
+			<when expression="#[java!org::spaceagencies::utils::FileOperations::isFileExists(Mule::p('records.dir') as String, Mule::p('records.file') as String) == false]">
+				<ee:transform doc:name="DB object representation" doc:id="65935a6f-2471-4e72-bb10-8ba9aa39be0f">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="record"><![CDATA[%dw 2.0
+output application/json
+---
+if ( payload.stations == null and payload.launches == null ) payload map (record, index) -> {
+	r_id: 0,
+	agency: record.agency,
+	rockets: record.rockets
+} else if ( payload.stations == null and payload.rockets == null ) payload map (record, index) -> {
+	r_id: 0,
+	agency: record.agency,
+	launches: record.launches
+} else if ( payload.launches == null and payload.rockets == null ) payload map (record, index) -> {
+	r_id: 0,
+	agency: record.agency,
+	stations: record.stations
+} else if ( payload.stations == null ) payload map (record, index) -> {
+	r_id: 0,
+	agency: record.agency,
+	launches: record.launches,
+	rockets: record.rockets
+} else if ( payload.launches == null ) payload map (record, index) -> {
+	r_id: 0,
+	agency: record.agency,
+	stations: record.stations,
+	rockets: record.rockets
+} else if ( payload.rockets == null ) payload map (record, index) -> {
+	r_id: 0,
+	agency: record.agency,
+	stations: record.stations,
+	launches: record.launches
+} else
+  payload map (record, index) -> {
+	r_id: 0,
+	agency: record.agency,
+	stations: record.stations,
+	launches: record.launches,
+	rockets: record.rockets
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<file:write doc:name="Write id" doc:id="feb1188c-7490-4ca8-a17c-c85b94842817" config-ref="File_Config" path='#[Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String]' mode="CREATE_NEW">
+					<file:content><![CDATA[#[vars.record[0].r_id as Number + 1]]]></file:content>
+				</file:write>
+			</when>
+					<otherwise>
+				<ee:transform doc:name="DB object representation" doc:id="adc37c48-2f60-4ee5-9cea-5c2c690f9da3">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="record"><![CDATA[%dw 2.0
+output application/json
+var r_id = java!org::spaceagencies::utils::FileOperations::fileReader(Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String as String)
+---
+if ( payload.stations == null and payload.launches == null ) payload map (record, index) -> {
+	r_id: r_id,
+	agency: record.agency,
+	rockets: record.rockets
+} else if ( payload.stations == null and payload.rockets == null ) payload map (record, index) -> {
+	r_id: r_id,
+	agency: record.agency,
+	launches: record.launches
+} else if ( payload.launches == null and payload.rockets == null ) payload map (record, index) -> {
+	r_id: r_id,
+	agency: record.agency,
+	stations: record.stations
+} else if ( payload.stations == null ) payload map (record, index) -> {
+	r_id: r_id,
+	agency: record.agency,
+	launches: record.launches,
+	rockets: record.rockets
+} else if ( payload.launches == null ) payload map (record, index) -> {
+	r_id: r_id,
+	agency: record.agency,
+	stations: record.stations,
+	rockets: record.rockets
+} else if ( payload.rockets == null ) payload map (record, index) -> {
+	r_id: r_id,
+	agency: record.agency,
+	stations: record.stations,
+	launches: record.launches
+} else
+  payload map (record, index) -> {
+	r_id: r_id,
+	agency: record.agency,
+	stations: record.stations,
+	launches: record.launches,
+	rockets: record.rockets
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<file:write doc:name="Write id" doc:id="ef09dcfc-f682-4483-9f94-6f0aeeee3229" config-ref="File_Config" path='#[Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String]'>
+					<file:content><![CDATA[#[vars.record[0].r_id as Number + 1]]]></file:content>
+				</file:write>
+			</otherwise>
+		</choice>
+		<mongo:collection-exists doc:name="Collection exists" doc:id="c5c48364-a762-42f1-a7fa-99e9e7ee67ae" config-ref="MongoDB_Config" collectionName="#[vars.record[0].agency]" />
+		<choice doc:name="Choice" doc:id="b859d791-57ef-4f3b-8b6c-9428a5b2e91b">
+			<when expression="#[payload==false]">
+				<mongo:create-collection doc:name="Create collection" doc:id="eb0750bf-6002-4e69-8c52-c23721de8b2a" config-ref="MongoDB_Config" collectionName="#[vars.record[0].agency]" />
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Collection already exists logger" doc:id="51a821c4-1d80-4554-8fd5-ff501bf0a3a2" message="Collection already exists"/>
+			</otherwise>
+		
+</choice>
+		<mongo:insert-documents collectionName="#[vars.record[0].agency]" doc:name="Insert documents" doc:id="6827e0d2-c33c-47a9-8e3e-2d4d5295be86" config-ref="MongoDB_Config">
+			<mongo:documents><![CDATA[#[vars.record]]]></mongo:documents>
+		</mongo:insert-documents>
+	</flow>
 	<sub-flow name="databaseFilling" doc:id="cfa6f628-dfdd-46d4-a793-a3dda03f9c24">
 		<flow-ref doc:name="start_log and variables" doc:id="1e68e8de-fee0-4b50-ab5b-6cbf62bfe05c" name="start_log_and_variables" />
 		<validation:matches-regex doc:name="Check for offset validity" doc:id="7e3232df-aab0-4373-bf1e-259b5af4c3ec" regex="${validation.offset.regex}" config-ref="Validation_Config" value="#[vars.offset]" message="${validation.offset.message}">
@@ -733,163 +1174,8 @@ output application/json
 				</ee:transform>
 			</otherwise>
 		</choice>
-		<logger level="INFO" doc:name="Logger" doc:id="93c71be3-314b-4834-9e06-8728c63eb8fd" message="прпрпррп"/>
 		<set-variable value='#[Mule::p("records.write_folder") ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyy-MM-dd"} ++ "-" ++&#10;&#10;now() as String {format: "hh-m-s"} ++ ".json"]' doc:name="Set file_name" doc:id="2073bf49-733f-42c4-9494-65ef1a76e1f0" variableName="file_name" />
         <file:write doc:name="Write payload to file" doc:id="a128965e-96f5-4521-89a3-0747a6cff68b" config-ref="File_Config" path="#[vars.file_name]" mode="CREATE_NEW">
         </file:write>
 	</sub-flow>
-	<flow name="setToDB"
-		doc:id="70da48b3-e427-4803-b3cc-3f944a57ce52">
-		<file:listener doc:name="On New or Updated File" doc:id="7e1b40c0-da6a-42e9-86c0-beed22928ebc" config-ref="File_Config" directory="${records.write_folder}" autoDelete="true">
-      <scheduling-strategy>
-        <fixed-frequency frequency="5" timeUnit="SECONDS" />
-      </scheduling-strategy>
-      <file:matcher filenamePattern="*.json" />
-    </file:listener>
-		<choice doc:name="Choice"
-			doc:id="44bc4f26-048a-4580-bb12-ad8e8e40385f">
-			<when
-				expression="#[java!org::spaceagencies::utils::FileOperations::isFileExists(Mule::p('records.dir') as String, Mule::p('records.file') as String) == false]">
-				<ee:transform doc:name="Transform Message"
-					doc:id="cb9c8b69-d48e-492c-afb5-642e017ff333">
-					<ee:message>
-					</ee:message>
-					<ee:variables>
-						<ee:set-variable variableName="record"><![CDATA[%dw 2.0
-output application/json
----
-if (payload.stations == null and payload.launches == null)
-  payload map (record, index) -> {
-    r_id: 0,
-    agency: record.agency,
-    rockets: record.rockets
-  } else if (payload.stations == null and payload.rockets == null)
-  payload map (record, index) -> {
-    r_id: 0,
-    agency: record.agency,
-    launches: record.launches
-  } else if (payload.launches == null and payload.rockets == null)
-  payload map (record, index) -> {
-    r_id: 0,
-    agency: record.agency,
-    stations: record.stations
-  } else if (payload.stations == null) 
-  payload map (record, index) -> {
-    r_id: 0,
-    agency: record.agency,
-    launches: record.launches,
-    rockets: record.rockets
-  } else if (payload.launches == null)
-  payload map (record, index) -> {
-    r_id: 0,
-    agency: record.agency,
-    stations: record.stations,
-    rockets: record.rockets
-  } else if (payload.rockets == null)
-  payload map (record, index) -> {
-    r_id: 0,
-    agency: record.agency,
-    stations: record.stations,
-    launches: record.launches
-  } else
-  payload map (record, index) -> {
-    r_id: 0,
-    agency: record.agency,
-    stations: record.stations,
-    launches: record.launches,
-    rockets: record.rockets
-  }]]></ee:set-variable>
-
-					</ee:variables>
-				</ee:transform>
-				<file:write doc:name="Write"
-					doc:id="6fb825f7-bf0d-4f5b-995c-c9cfe52ae1f2"
-					config-ref="File_Config"
-					path='#[Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String]'
-					mode="CREATE_NEW">
-					<file:content><![CDATA[#[vars.record[0].r_id as Number + 1]]]></file:content>
-				</file:write>
-			</when>
-			<otherwise>
-				<ee:transform doc:name="Transform Message"
-					doc:id="e36cfb27-1ba0-4291-9424-98c489694e16">
-					<ee:message />
-					<ee:variables>
-						<ee:set-variable variableName="record"><![CDATA[%dw 2.0
-output application/json
-var r_id = java!org::spaceagencies::utils::FileOperations::fileReader(Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String as String)
----
-if (payload.stations == null and payload.launches == null)
-  payload map (record, index) -> {
-    r_id: r_id,
-    agency: record.agency,
-    rockets: record.rockets
-  } else if (payload.stations == null and payload.rockets == null)
-  payload map (record, index) -> {
-    r_id: r_id,
-    agency: record.agency,
-    launches: record.launches
-  } else if (payload.launches == null and payload.rockets == null)
-  payload map (record, index) -> {
-    r_id: r_id,
-    agency: record.agency,
-    stations: record.stations
-  } else if (payload.stations == null) 
-  payload map (record, index) -> {
-    r_id: r_id,
-    agency: record.agency,
-    launches: record.launches,
-    rockets: record.rockets
-  } else if (payload.launches == null)
-  payload map (record, index) -> {
-    r_id: r_id,
-    agency: record.agency,
-    stations: record.stations,
-    rockets: record.rockets
-  } else if (payload.rockets == null)
-  payload map (record, index) -> {
-    r_id: r_id,
-    agency: record.agency,
-    stations: record.stations,
-    launches: record.launches
-  } else
-  payload map (record, index) -> {
-    r_id: r_id,
-    agency: record.agency,
-    stations: record.stations,
-    launches: record.launches,
-    rockets: record.rockets
-  }]]></ee:set-variable>
-					</ee:variables>
-				</ee:transform>
-				<file:write doc:name="Write"
-					doc:id="c9910d14-1a32-4b09-b6fe-2cf193633436"
-					config-ref="File_Config"
-					path='#[Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String]'>
-					<file:content><![CDATA[#[vars.record[0].r_id as Number + 1]]]></file:content>
-				</file:write>
-			</otherwise>
-		</choice>
-		<mongo:collection-exists
-			collectionName="#[vars.record[0].agency]"
-			doc:name="Collection exists"
-			doc:id="e0dfe491-a6d4-4828-87f1-4a449f7b3f5d"
-			config-ref="MongoDB_Config" />
-		<choice doc:name="Choice"
-			doc:id="5aefa436-1fdf-433b-88f5-dcd9d661a266">
-			<when expression="#[payload == false]">
-				<mongo:create-collection
-					doc:name="Create collection"
-					doc:id="f45e10c0-8bf8-4100-a52f-a276cf173e9d"
-					config-ref="MongoDB_Config"
-					collectionName="#[vars.record[0].agency]" />
-			</when>
-		</choice>
-		<mongo:insert-documents
-			collectionName="#[vars.record[0].agency]" doc:name="Insert documents"
-			doc:id="c3ef6e15-bdef-45a6-be62-0a96cbca75dc"
-			config-ref="MongoDB_Config">
-			<mongo:documents><![CDATA[#[vars.record]]]></mongo:documents>
-		</mongo:insert-documents>
-	</flow>
 </mule>

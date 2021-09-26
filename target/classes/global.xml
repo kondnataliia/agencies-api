@@ -64,7 +64,7 @@ http://www.mulesoft.org/schema/mule/telegram http://www.mulesoft.org/schema/mule
 		doc:name="MongoDB Config"
 		doc:id="61ccc1fd-3523-42a9-afa3-572760de0603">
 		<mongo:connection-string-connection
-			connectionString="mongodb+srv://usrRoot:zudwY4-dynteb-bymdud@cluster1.mfzwg.mongodb.net/myFirstDatabase?retryWrites=true&amp;w=majority" />
+			connectionString="${mongoDB.connection}" />
 
 	</mongo:config>
 	<validation:config name="Validation_Config"

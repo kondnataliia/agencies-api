@@ -124,7 +124,7 @@ output application/json
 		<flow-ref doc:name="databaseFilling" doc:id="59a78358-96ed-4669-8c42-c1d982460949" name="databaseFilling"/>
     </flow>
     <flow name="get:\help:agencies-api-config">
-		<flow-ref doc:name="Flow Reference" doc:id="64b559c9-e067-4f87-98e4-1eb50c96fe5e" name="helpFlow"/>
+		<flow-ref doc:name="helpFlow" doc:id="64b559c9-e067-4f87-98e4-1eb50c96fe5e" name="helpFlow"/>
     </flow>
     <flow name="get:\infoByAgencyAndYear:agencies-api-config">
 		<flow-ref doc:name="launchesAndStationsByAgencyAndYear" doc:id="d48ce3a9-4019-4069-a8c9-13f0b55eca75" name="launchesAndStationsByAgencyAndYear"/>
