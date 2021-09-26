@@ -22,13 +22,14 @@ thespacedevs:
   protocol: "HTTP"
 
 mongoDB:
-  connection: "mongodb+srv://<name>:<pass>@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
+  connection: "mongodb+srv://nataliia:Taras1@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
 
 records:
   write_folder: "C:/Users/Natalka/AnypointStudio/demo-workspace/agencies-api/src/main/resources/Write/"
   id_folder: "C:/Users/Natalka/AnypointStudio/demo-workspace/agencies-api/src/main/resources/id/"
   dir: "C:\\Users\\Natalka\\AnypointStudio\\demo-workspace\\agencies-api\\src\\main\\resources\\id\\"
   file: "r_id.txt"
+  offset_file: "offset.json"
   
 validation:
   mode:

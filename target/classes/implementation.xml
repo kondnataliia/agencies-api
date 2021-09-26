@@ -601,9 +601,9 @@ output application/json
 		<validation:matches-regex doc:name="Check for offset validity" doc:id="7e3232df-aab0-4373-bf1e-259b5af4c3ec" regex="${validation.offset.regex}" config-ref="Validation_Config" value="#[vars.offset]" message="${validation.offset.message}">
 			<error-mapping targetType="APP:WRONG_OFFSET" />
 		</validation:matches-regex>
+		<flow-ref doc:name="primaryDataRetrieving" doc:id="409d53b6-84a5-45df-bd7c-0b51d7129fcb" name="primaryDataRetrieving" />
 		<choice doc:name="Choice" doc:id="c3ce8653-07ba-4d41-866a-878cd8b2a0f6">
 			<when expression="#[vars.offset &gt; Mule::p('offset_limitations.stations') and vars.offset &lt; Mule::p('offset_limitations.rockets')]">
-				<flow-ref doc:name="primaryDataRetrieving" doc:id="409d53b6-84a5-45df-bd7c-0b51d7129fcb" name="primaryDataRetrieving" />
 				<ee:transform doc:name="Formatting data to add to the database" doc:id="af4fedfb-bcf3-43c6-bb09-7c4799983fc5">
 					<ee:message>
 						<ee:set-payload><![CDATA[%dw 2.0
@@ -637,7 +637,6 @@ output application/json
 				</ee:transform>
 			</when>
 			<when expression="#[vars.offset &gt;= Mule::p('offset_limitations.rockets')]">
-				<flow-ref doc:name="primaryDataRetrieving" doc:id="694cff12-59e1-431e-aefd-c4e5aa469b8a" name="primaryDataRetrieving" />
 				<choice doc:name="Choice" doc:id="a31f8a2f-9a02-4fb5-9dde-5cb88b328a13">
 					<when expression='#[sizeOf(payload."0".payload) == 0]'>
 						<raise-error doc:name="Raise error" doc:id="aa7893ac-d392-4ab7-b14a-b7ba544d0d74" type="APP:ALL_EMPTY" description="No data to add to database." />
@@ -661,7 +660,6 @@ output application/json
 				</choice>
 			</when>
 			<otherwise>
-				<flow-ref doc:name="primaryDataRetrieving" doc:id="942ebb92-fc56-4d1a-8f39-eade033d5fe1" name="primaryDataRetrieving" />
 				<ee:transform doc:name="Formatting data to add to the database" doc:id="6434c1b9-5aef-4731-80a0-e2c286f61a99">
 					<ee:message>
 						<ee:set-payload><![CDATA[%dw 2.0
@@ -735,8 +733,163 @@ output application/json
 				</ee:transform>
 			</otherwise>
 		</choice>
-		<set-variable value='#[Mule::p("records.write_folder") ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyy-MM-dd"} ++ "-" ++&#10;&#10;now() as String {format: "hh-m-s"} ++ ".json"]' doc:name="Set file_name" doc:id="f294327c-8062-4833-951d-aaa9b8710940" variableName="file_name" />
-		<file:write doc:name="Write payload to file" doc:id="7ea4de48-437f-4f4b-a7cf-7a7141fe32b5" config-ref="File_Config" path="#[vars.file_name]" mode="CREATE_NEW">
-		</file:write>
+		<logger level="INFO" doc:name="Logger" doc:id="93c71be3-314b-4834-9e06-8728c63eb8fd" message="прпрпррп"/>
+		<set-variable value='#[Mule::p("records.write_folder") ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyy-MM-dd"} ++ "-" ++&#10;&#10;now() as String {format: "hh-m-s"} ++ ".json"]' doc:name="Set file_name" doc:id="2073bf49-733f-42c4-9494-65ef1a76e1f0" variableName="file_name" />
+        <file:write doc:name="Write payload to file" doc:id="a128965e-96f5-4521-89a3-0747a6cff68b" config-ref="File_Config" path="#[vars.file_name]" mode="CREATE_NEW">
+        </file:write>
 	</sub-flow>
+	<flow name="setToDB"
+		doc:id="70da48b3-e427-4803-b3cc-3f944a57ce52">
+		<file:listener doc:name="On New or Updated File" doc:id="7e1b40c0-da6a-42e9-86c0-beed22928ebc" config-ref="File_Config" directory="${records.write_folder}" autoDelete="true">
+      <scheduling-strategy>
+        <fixed-frequency frequency="5" timeUnit="SECONDS" />
+      </scheduling-strategy>
+      <file:matcher filenamePattern="*.json" />
+    </file:listener>
+		<choice doc:name="Choice"
+			doc:id="44bc4f26-048a-4580-bb12-ad8e8e40385f">
+			<when
+				expression="#[java!org::spaceagencies::utils::FileOperations::isFileExists(Mule::p('records.dir') as String, Mule::p('records.file') as String) == false]">
+				<ee:transform doc:name="Transform Message"
+					doc:id="cb9c8b69-d48e-492c-afb5-642e017ff333">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="record"><![CDATA[%dw 2.0
+output application/json
+---
+if (payload.stations == null and payload.launches == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    rockets: record.rockets
+  } else if (payload.stations == null and payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    launches: record.launches
+  } else if (payload.launches == null and payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    stations: record.stations
+  } else if (payload.stations == null) 
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    launches: record.launches,
+    rockets: record.rockets
+  } else if (payload.launches == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    stations: record.stations,
+    rockets: record.rockets
+  } else if (payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    stations: record.stations,
+    launches: record.launches
+  } else
+  payload map (record, index) -> {
+    r_id: 0,
+    agency: record.agency,
+    stations: record.stations,
+    launches: record.launches,
+    rockets: record.rockets
+  }]]></ee:set-variable>
+
+					</ee:variables>
+				</ee:transform>
+				<file:write doc:name="Write"
+					doc:id="6fb825f7-bf0d-4f5b-995c-c9cfe52ae1f2"
+					config-ref="File_Config"
+					path='#[Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String]'
+					mode="CREATE_NEW">
+					<file:content><![CDATA[#[vars.record[0].r_id as Number + 1]]]></file:content>
+				</file:write>
+			</when>
+			<otherwise>
+				<ee:transform doc:name="Transform Message"
+					doc:id="e36cfb27-1ba0-4291-9424-98c489694e16">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="record"><![CDATA[%dw 2.0
+output application/json
+var r_id = java!org::spaceagencies::utils::FileOperations::fileReader(Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String as String)
+---
+if (payload.stations == null and payload.launches == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    rockets: record.rockets
+  } else if (payload.stations == null and payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    launches: record.launches
+  } else if (payload.launches == null and payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    stations: record.stations
+  } else if (payload.stations == null) 
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    launches: record.launches,
+    rockets: record.rockets
+  } else if (payload.launches == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    stations: record.stations,
+    rockets: record.rockets
+  } else if (payload.rockets == null)
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    stations: record.stations,
+    launches: record.launches
+  } else
+  payload map (record, index) -> {
+    r_id: r_id,
+    agency: record.agency,
+    stations: record.stations,
+    launches: record.launches,
+    rockets: record.rockets
+  }]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<file:write doc:name="Write"
+					doc:id="c9910d14-1a32-4b09-b6fe-2cf193633436"
+					config-ref="File_Config"
+					path='#[Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String]'>
+					<file:content><![CDATA[#[vars.record[0].r_id as Number + 1]]]></file:content>
+				</file:write>
+			</otherwise>
+		</choice>
+		<mongo:collection-exists
+			collectionName="#[vars.record[0].agency]"
+			doc:name="Collection exists"
+			doc:id="e0dfe491-a6d4-4828-87f1-4a449f7b3f5d"
+			config-ref="MongoDB_Config" />
+		<choice doc:name="Choice"
+			doc:id="5aefa436-1fdf-433b-88f5-dcd9d661a266">
+			<when expression="#[payload == false]">
+				<mongo:create-collection
+					doc:name="Create collection"
+					doc:id="f45e10c0-8bf8-4100-a52f-a276cf173e9d"
+					config-ref="MongoDB_Config"
+					collectionName="#[vars.record[0].agency]" />
+			</when>
+		</choice>
+		<mongo:insert-documents
+			collectionName="#[vars.record[0].agency]" doc:name="Insert documents"
+			doc:id="c3ef6e15-bdef-45a6-be62-0a96cbca75dc"
+			config-ref="MongoDB_Config">
+			<mongo:documents><![CDATA[#[vars.record]]]></mongo:documents>
+		</mongo:insert-documents>
+	</flow>
 </mule>

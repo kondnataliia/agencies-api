@@ -49,9 +49,7 @@
         "inputs/rockets_payload.json",
         "inputs/stations_payload.json",
         "interface.xml",
-        "log4j2.xml",
-        "Write/National Aeronautics and Space Administration-2021-09-24-08-28-9.json",
-        "Write/National Aeronautics and Space Administration-2021-09-24-08-34-8.json"
+        "log4j2.xml"
       ]
     }
   },
