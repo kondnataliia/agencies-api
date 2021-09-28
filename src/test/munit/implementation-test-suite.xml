@@ -1,0 +1,4041 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <munit:config name="implementation-test-suite.xml" />
+	<munit:test name="agencyWithStationAndLaunches_test_with_planet_info" doc:id="d6abb8ab-b5d9-499d-be9c-aa2eb3aa6189" description="Test">
+		<munit:behavior >
+			<ee:transform doc:name="Result variables" doc:id="7edd44f0-5412-4d5c-a9f9-cd5bda21b475" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="launches_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"launch_count": 100,
+	"launches": [{
+		"id": "e3df2ecd-c239-472f-95e4-2b89b4f75800",
+		"slug": "sputnik-8k74ps-sputnik-1",
+		"name": "Sputnik 8K74PS | Sputnik 1",
+		"status": "Success",
+		"launch_year": "1957",
+		"failreason": "",
+		"launch_service_provider": "Soviet Space Program",
+		"rocket": {
+			"name": "Sputnik 8K74PS",
+			"family": "Sputnik",
+			"full_name": "Sputnik 8K74PS",
+			"variant": "8K74PS"
+		},
+		"mission": {
+			"name": "Sputnik 1",
+			"description": "First artificial satellite consisting of a 58 cm pressurized aluminium shell containing two 1 W transmitters for a total mass of 83.6 kg.",
+			"type": "Test Flight",
+			"orbit": "Low Earth Orbit"
+		},
+		"pad": {
+			"name": "1/5",
+			"location": {
+				"name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+				"country_code": "KAZ",
+				"total_launch_count": 1523,
+				"total_landing_count": 0
+			}
+		}
+	},
+        {
+		"id": "fdb56feb-e46f-41ba-80c8-c84be17c1888",
+		"slug": "little-joe-lj-1",
+		"name": "Little Joe | LJ-1",
+		"status": "Failure",
+		"launch_year": "1959",
+		"failreason": "",
+		"launch_service_provider": "National Aeronautics and Space Administration",
+		"rocket": {
+			"name": "Little Joe",
+			"family": "Little Joe",
+			"full_name": "Little Joe",
+			"variant": ""
+		},
+		"mission": {
+			"name": "LJ-1",
+			"description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+			"type": "Test Flight",
+			"orbit": "Suborbital"
+		},
+		"pad": {
+			"name": "Launch Area 1",
+			"location": {
+				"name": "Wallops Island, Virginia, USA",
+				"country_code": "USA",
+				"total_launch_count": 71,
+				"total_landing_count": 0
+			}
+		}
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="stations_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"id": 4,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+	"name": "International Space Station",
+	"status_id": "1",
+	"status_name": "Active",
+	"type": "Government",
+	"founded": "1998-11-20",
+	"deorbited": null,
+	"description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Canadian Space Agency",
+            "European Space Agency",
+            "Japan Aerospace Exploration Agency",
+            "National Aeronautics and Space Administration",
+            "Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+},
+    {
+	"id": 5,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/5/",
+	"name": "Mir",
+	"status_id": "2",
+	"status_name": "De-Orbited",
+	"type": "Government",
+	"founded": "1986-02-20",
+	"deorbited": "2001-03-23",
+	"description": "Mir was a space station that operated in low Earth orbit from 1986 to 2001, operated by the Soviet Union and later by Russia. Mir was the first modular space station and was assembled in orbit from 1986 to 1996.\r\n\r\nThe station served as a microgravity research laboratory in which crews conducted experiments in biology, human biology, physics, astronomy, meteorology and spacecraft systems with a goal of developing technologies required for permanent occupation of space.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/mir_image_20190218204938.jpeg"
+}]]]></ee:set-variable>
+					<ee:set-variable variableName="rockets_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"count": 468,
+	"next": "https://lldev.thespacedevs.com/2.2.0/config/launcher/?limit=100&offset=100",
+	"previous": null,
+	"results": [{
+		"id": 136,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/136/",
+		"name": "Angara 1.2",
+		"manufacturer": {
+			"id": 118,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/118/",
+			"name": "International Launch Services",
+			"featured": false,
+			"type": "Commercial",
+			"country_code": "USA",
+			"abbrev": "ILS",
+			"description": "International Launch Services, Inc. (ILS) is a joint venture with exclusive rights to the worldwide sale of commercial Angara and Proton rocket launch services. Proton launches take place at the Baikonur Cosmodrome in Kazakhstan while Angara is planned to launch from the Plesetsk and Vostochny Cosmodromes in Russia.",
+			"administrator": "Kirk Pysher",
+			"founding_year": "1995",
+			"launchers": "",
+			"spacecraft": "",
+			"parent": "Khrunichev State Research and Production Space Center",
+			"image_url": null
+		},
+		"program": [],
+		"family": "Angara",
+		"full_name": "Angara 1.2",
+		"variant": "1.2",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/angara25201.2_image_20190224012254.jpeg",
+		"info_url": "http://www.ilslaunch.com/node/4680",
+		"wiki_url": "https://en.wikipedia.org/wiki/Angara_(rocket_family)#Angara_1.2"
+	},
+        {
+		"id": 126,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/126/",
+		"name": "Ares I-X",
+		"manufacturer": {
+			"id": 44,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/44/",
+			"name": "National Aeronautics and Space Administration",
+			"featured": true,
+			"type": "Government",
+			"country_code": "USA",
+			"abbrev": "NASA",
+			"description": "The National Aeronautics and Space Administration is an independent agency of the executive branch of the United States federal government responsible for the civilian space program, as well as aeronautics and aerospace research. NASA have many launch facilities but most are inactive. The most commonly used pad will be LC-39B at Kennedy Space Center in Florida.",
+			"administrator": "Administrator: Bill Nelson",
+			"founding_year": "1958",
+			"launchers": "Space Shuttle | SLS",
+			"spacecraft": "Orion",
+			"parent": null,
+			"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/agency_images/national2520aeronautics2520and2520space2520administration_image_20190207032448.jpeg"
+		},
+		"program": [],
+		"family": "Ares",
+		"full_name": "Ares I-X",
+		"variant": "I-X",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/ares2520i-x_image_20190222030444.jpeg",
+		"info_url": null,
+		"wiki_url": "https://en.wikipedia.org/wiki/Ares_I"
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="planet_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "name": "Mercury",
+        "isPlanet": true,
+        "moons": null,
+        "semimajorAxis": 57909227,
+        "perihelion": 46001200,
+        "aphelion": 69816900,
+        "eccentricity": 0.20560,
+        "inclination": 7.00000,
+        "mass": {
+            "massValue": 3.30114,
+            "massExponent": 23
+        },
+        "density": 5.42910,
+        "gravity": 3.70000,
+        "escape": 4250.00000,
+        "meanRadius": 2439.40000,
+        "equaRadius": 2440.53000,
+        "polarRadius": 2439.70000,
+        "flattening": 0.00000,
+        "dimension": "",
+        "sideralOrbit": 87.96900,
+        "sideralRotation": 1407.60000,
+        "discoveredBy": "",
+        "discoveryDate": "",
+        "alternativeName": "",
+        "axialTilt": 0.0352,
+        "avgTemp": 0,
+        "mainAnomaly": 174.79600,
+        "argPeriapsis": 29.02200,
+        "longAscNode": 48.37800
+    }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:mock-when doc:name="Call to launches resource" doc:id="c6574237-495c-4efd-aa5e-e64804daea21" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getLaunches" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="33edb96d-bfdb-4eab-9f50-609278864808" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.launches_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to stations resource" doc:id="58c04ac2-19a1-4fb9-9242-154b8502372a" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.stations_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to rockets resource" doc:id="bb6febd3-b7bf-4b58-a96d-4af36665f1ca" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getRockets" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="9d5934e9-c4b8-4d25-9588-2e12dd167033" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.rockets_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to planets resource" doc:id="c85938b8-af5d-4fc1-a46c-3b38b1bd075f" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getPlanet" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="f90465f9-31db-49bb-99c7-17a429dc13c9" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.planet_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Variables used" doc:id="ffae1958-8933-412e-ac44-edeb3f6c175a" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {name: "National Aeronautics and Space Administration", mode: "detailed", limit: 100, offset: 0}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to agencyWithStationAndLaunches" doc:id="65cfa850-620a-4a8f-8486-d0dd784d53e5" name="agencyWithStationAndLaunches"/>
+			<ee:transform doc:name="Expected result" doc:id="7a0e0dde-0672-4ab8-9d00-358789b5d233" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="general_agency_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "agency": "National Aeronautics and Space Administration",
+        "stations": {
+            "stations_count": 1,
+            "stations_list": [
+                {
+                    "id": 4,
+                    "url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+                    "name": "International Space Station",
+                    "status_id": "1",
+                    "status_name": "Active",
+                    "type": "Government",
+                    "founded": "1998-11-20",
+                    "deorbited": null,
+                    "description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+                    "orbit": "Low Earth Orbit",
+                    "owners": [
+                        "Canadian Space Agency",
+                        "European Space Agency",
+                        "Japan Aerospace Exploration Agency",
+                        "National Aeronautics and Space Administration",
+                        "Russian Federal Space Agency (ROSCOSMOS)"
+                    ],
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+                }
+            ]
+        },
+        "launches": {
+            "launches_count": 1,
+            "launches_list": [
+                {
+                    "name": "Little Joe | LJ-1",
+                    "status": "Failure",
+                    "launch_year": "",
+                    "failreason": "",
+                    "rocket": {
+                        "name": "Little Joe",
+                        "family": "Little Joe",
+                        "full_name": "Little Joe",
+                        "variant": ""
+                    },
+                    "mission": {
+                        "name": "LJ-1",
+                        "description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+                        "type": "Test Flight",
+                        "orbit": "Suborbital",
+                        "planet_of_interest": {
+                            "name": "Mercury",
+                            "moons": [],
+                            "semimajorAxis": 57909227,
+                            "perihelion": 46001200,
+                            "aphelion": 69816900,
+                            "eccentricity": 0.20560,
+                            "inclination": 7.00000,
+                            "mass": 3.30114,
+                            "density": 5.42910,
+                            "gravity": 3.70000,
+                            "meanRadius": 2439.40000,
+                            "polarRadius": 2439.70000,
+                            "discoveredBy": "",
+                            "discoveryDate": "",
+                            "alternativeName": "",
+                            "axialTilt": 0.0352,
+                            "avgTemp": 0
+                        }
+                    },
+                    "pad": {
+                        "name": "Launch Area 1",
+                        "location": {
+                            "name": "Wallops Island, Virginia, USA",
+                            "country_code": "USA",
+                            "total_launch_count": 71,
+                            "total_landing_count": 0
+                        }
+                    }
+                }
+            ]
+        },
+        "rockets": {
+            "rockets_count": 1,
+            "rockets_list": [
+                {
+                    "name": "Ares I-X",
+                    "manufacturer": {
+                        "name": "National Aeronautics and Space Administration",
+                        "type": "Government",
+                        "country_code": "USA",
+                        "description": "The National Aeronautics and Space Administration is an independent agency of the executive branch of the United States federal government responsible for the civilian space program, as well as aeronautics and aerospace research. NASA have many launch facilities but most are inactive. The most commonly used pad will be LC-39B at Kennedy Space Center in Florida.",
+                        "founding_year": "1958",
+                        "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/agency_images/national2520aeronautics2520and2520space2520administration_image_20190207032448.jpeg"
+                    },
+                    "program": [],
+                    "family": "Ares",
+                    "full_name": "Ares I-X",
+                    "variant": "I-X",
+                    "reusable": false,
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/ares2520i-x_image_20190222030444.jpeg",
+                    "wiki_url": "https://en.wikipedia.org/wiki/Ares_I"
+                }
+            ]
+        }
+    }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Event content equality" doc:id="a63b42d1-1d66-40b1-bfd3-6ef79e2a6799" is="#[MunitTools::equalTo(vars.general_agency_result)]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="launchesAndStationsByAgencyAndYear_test" doc:id="ec157d84-9182-4b6e-84ff-a35a57483e3b" description="Test">
+		<munit:behavior >
+			<ee:transform doc:name="Result variables" doc:id="9f35b7c0-411a-4d05-91b3-2272edf5d1ed" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="launches_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"launch_count": 100,
+	"launches": [{
+		"id": "de10ff0e-af02-4343-b70d-fd3524b9040f",
+		"slug": "space-shuttle-discovery-ov-103-sts-103",
+		"name": "Space Shuttle Discovery / OV-103 | STS-103",
+		"status": "Success",
+		"launch_year": "1999",
+		"failreason": "",
+		"launch_service_provider": "National Aeronautics and Space Administration",
+		"rocket": {
+			"name": "Space Shuttle Discovery OV-103",
+			"family": "Space Shuttle",
+			"full_name": "Space Shuttle Discovery OV-103",
+			"variant": "OV-103"
+		},
+		"mission": {
+			"name": "STS-103",
+			"description": "STS-103 was a Hubble Space Telescope servicing mission by Space Shuttle Discovery. The mission launched from Kennedy Space Center, Florida, on 19 December 1999 and returned on 27 December 1999.",
+			"type": "Astrophysics",
+			"orbit": "Low Earth Orbit"
+		},
+		"pad": {
+			"name": "Launch Complex 39A",
+			"location": {
+				"name": "Kennedy Space Center, FL, USA",
+				"country_code": "USA",
+				"total_launch_count": 191,
+				"total_landing_count": 0
+			}
+		}
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="stations_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"id": 4,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+	"name": "International Space Station",
+	"status_id": "1",
+	"status_name": "Active",
+	"type": "Government",
+	"founded": "1998-11-20",
+	"deorbited": null,
+	"description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Canadian Space Agency",
+            "European Space Agency",
+            "Japan Aerospace Exploration Agency",
+            "National Aeronautics and Space Administration",
+            "Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+},
+    {
+	"id": 5,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/5/",
+	"name": "Mir",
+	"status_id": "2",
+	"status_name": "De-Orbited",
+	"type": "Government",
+	"founded": "1986-02-20",
+	"deorbited": "2001-03-23",
+	"description": "Mir was a space station that operated in low Earth orbit from 1986 to 2001, operated by the Soviet Union and later by Russia. Mir was the first modular space station and was assembled in orbit from 1986 to 1996.\r\n\r\nThe station served as a microgravity research laboratory in which crews conducted experiments in biology, human biology, physics, astronomy, meteorology and spacecraft systems with a goal of developing technologies required for permanent occupation of space.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/mir_image_20190218204938.jpeg"
+}]]]></ee:set-variable>
+					<ee:set-variable variableName="ss_objects_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"name": "Callirrhoe",
+	"isPlanet": false,
+	"moons": 0,
+	"perihelion": 0,
+	"aphelion": 0,
+	"eccentricity": 0.28300,
+	"inclination": 147.10000,
+	"mass": 8.70000,
+	"density": 1.00000,
+	"gravity": 0.00310,
+	"flattening": 0.00000,
+	"dimension": "",
+	"aroundPlanet": "jupiter",
+	"discoveredBy": "J.V. Scott",
+	"discoveryDate": "06/10/1999",
+	"alternativeName": "S/1999 J 1",
+	"axialTilt": 0,
+	"avgTemp": 0
+}]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:mock-when doc:name="Call to launches resource" doc:id="534aafb0-e3f8-4890-9fa2-220cdd4398ac" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getLaunches" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="33edb96d-bfdb-4eab-9f50-609278864808" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.launches_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to stations resource" doc:id="8102d37d-2cfc-4ee0-a516-d6dd7d03b154" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.stations_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to planets resource" doc:id="d4717949-82d8-4b53-a081-21cb15a60836" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getSolarSystemObjects" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="15455fb9-0856-4616-974d-81ff09417134" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.ss_objects_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="a20b99e2-3803-4aa1-a56c-dbfedcc3af81" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {name: "National Aeronautics and Space Administration", year: "1999", offset: 4350, limit: 100}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to launchesAndStationsByAgencyAndYear" doc:id="a5631d17-0091-420a-a650-ed4d9dd39161" name="launchesAndStationsByAgencyAndYear"/>
+			<ee:transform doc:name="Expected result" doc:id="8926cc3e-0ed5-4bad-b053-41908e58342c" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="general_agency_year_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "agency": "National Aeronautics and Space Administration",
+        "launches": {
+            "launches_count": 1,
+            "launches_list": [
+                {
+                    "name": "Space Shuttle Discovery / OV-103 | STS-103",
+                    "status": "Success",
+                    "launch_year": "1999",
+                    "failreason": "",
+                    "rocket": {
+                        "name": "Space Shuttle Discovery OV-103",
+                        "family": "Space Shuttle",
+                        "full_name": "Space Shuttle Discovery OV-103",
+                        "variant": "OV-103"
+                    },
+                    "mission": {
+                        "name": "STS-103",
+                        "description": "STS-103 was a Hubble Space Telescope servicing mission by Space Shuttle Discovery. The mission launched from Kennedy Space Center, Florida, on 19 December 1999 and returned on 27 December 1999.",
+                        "type": "Astrophysics",
+                        "orbit": "Low Earth Orbit",
+                        "planet_of_interest": ""
+                    },
+                    "pad": {
+                        "name": "Launch Complex 39A",
+                        "location": {
+                            "name": "Kennedy Space Center, FL, USA",
+                            "country_code": "USA",
+                            "total_launch_count": 191,
+                            "total_landing_count": 0
+                        }
+                    }
+                }
+            ]
+        },
+        "stations": {
+            "stations_count": 1,
+            "stations_list": [
+                {
+                    "name": "International Space Station",
+                    "status": "Active",
+                    "type": "Government",
+                    "founded": "1998-11-20",
+                    "deorbited": "",
+                    "description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+                    "orbit": "Low Earth Orbit",
+                    "owners": [
+                        "Canadian Space Agency",
+                        "European Space Agency",
+                        "Japan Aerospace Exploration Agency",
+                        "National Aeronautics and Space Administration",
+                        "Russian Federal Space Agency (ROSCOSMOS)"
+                    ],
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+                }
+            ]
+        },
+        "discovered_objects": {
+            "objects_count": 1,
+            "objects_list": [
+                {
+                    "name": "Callirrhoe",
+                    "isPlanet": false,
+                    "moons": 0,
+                    "perihelion": 0,
+                    "aphelion": 0,
+                    "eccentricity": 0.28300,
+                    "inclination": 147.10000,
+                    "mass": 8.70000,
+                    "density": 1.00000,
+                    "gravity": 0.00310,
+                    "flattening": 0.00000,
+                    "dimension": "",
+                    "aroundPlanet": "jupiter",
+                    "discoveredBy": "J.V. Scott",
+                    "discoveryDate": "06/10/1999",
+                    "alternativeName": "S/1999 J 1",
+                    "axialTilt": 0,
+                    "avgTemp": 0
+                }
+            ]
+        }
+    }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Event content equality" doc:id="e8418bcc-827c-4557-a16a-92e1c9ebc808" is="#[MunitTools::equalTo(vars.general_agency_year_result)]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="agencyWithStationAndLaunches_test_without_planet_info" doc:id="12ebbd51-a552-418b-8675-bd6893d32589" description="Test">
+			<munit:behavior>
+				<ee:transform doc:name="Result variables" doc:id="05f5c505-c255-43e9-a9b3-1d8cddc94c44">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="launches_result"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"launch_count": 100,
+	"launches": [{
+            "id": "e83eac3f-29eb-4fac-b826-247261bd170d",
+            "slug": "juno-ii-pioneer-3",
+            "name": "Juno II | Pioneer 3",
+            "status": "Success",
+            "launch_year": "1958",
+            "failreason": "",
+            "launch_service_provider": "National Aeronautics and Space Administration",
+            "rocket": {
+                "name": "Juno II",
+                "family": "Juno",
+                "full_name": "Juno II",
+                "variant": ""
+            },
+            "mission": {
+                "name": "Pioneer 3",
+                "description": "Pioneer 3 was a spin-stabilized spacecraft intended as a lunar probe but failed to perform a lunar flyby as planned. Its mission was revised to measure radiation in the outer Van Allen radiation belts.",
+                "type": "Lunar Exploration",
+                "orbit": "Lunar flyby"
+            },
+            "pad": {
+                "name": "Space Launch Complex 5",
+                "location": {
+                    "name": "Cape Canaveral, FL, USA",
+                    "country_code": "USA",
+                    "total_launch_count": 825,
+                    "total_landing_count": 21
+                }
+            }
+        },
+        {
+		"id": "1e564ecb-b4cf-40f3-905a-8555abc47810",
+		"slug": "thor-agena-a-discoverer-6",
+		"name": "Thor Agena A | Discoverer 6",
+		"status": "Success",
+		"launch_year": "1959",
+		"failreason": "",
+		"launch_service_provider": "United States Air Force",
+		"rocket": {
+			"name": "Thor Agena A",
+			"family": "Thor",
+			"full_name": "Thor Agena A",
+			"variant": "Agena A"
+		},
+		"mission": {
+			"name": "Discoverer 6",
+			"description": "Discoverer 6 was the sixth in a series of reconnaissance satellites, however, it failed to return its capsule when the retrorocket failed to deorbit the capsule.",
+			"type": "Government/Top Secret",
+			"orbit": "Polar Orbit"
+		},
+		"pad": {
+			"name": "Space Launch Complex 1E",
+			"location": {
+				"name": "Vandenberg SFB, CA, USA",
+				"country_code": "USA",
+				"total_launch_count": 690,
+				"total_landing_count": 3
+			}
+		}
+	}]
+}]]></ee:set-variable>
+						<ee:set-variable variableName="stations_result"><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"id": 4,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+	"name": "International Space Station",
+	"status_id": "1",
+	"status_name": "Active",
+	"type": "Government",
+	"founded": "1998-11-20",
+	"deorbited": null,
+	"description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Canadian Space Agency",
+            "European Space Agency",
+            "Japan Aerospace Exploration Agency",
+            "National Aeronautics and Space Administration",
+            "Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+},
+    {
+	"id": 5,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/5/",
+	"name": "Mir",
+	"status_id": "2",
+	"status_name": "De-Orbited",
+	"type": "Government",
+	"founded": "1986-02-20",
+	"deorbited": "2001-03-23",
+	"description": "Mir was a space station that operated in low Earth orbit from 1986 to 2001, operated by the Soviet Union and later by Russia. Mir was the first modular space station and was assembled in orbit from 1986 to 1996.\r\n\r\nThe station served as a microgravity research laboratory in which crews conducted experiments in biology, human biology, physics, astronomy, meteorology and spacecraft systems with a goal of developing technologies required for permanent occupation of space.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/mir_image_20190218204938.jpeg"
+}]]]></ee:set-variable>
+						<ee:set-variable variableName="rockets_result"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"count": 468,
+	"next": "https://lldev.thespacedevs.com/2.2.0/config/launcher/?limit=100&offset=100",
+	"previous": null,
+	"results": [{
+		"id": 136,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/136/",
+		"name": "Angara 1.2",
+		"manufacturer": {
+			"id": 118,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/118/",
+			"name": "International Launch Services",
+			"featured": false,
+			"type": "Commercial",
+			"country_code": "USA",
+			"abbrev": "ILS",
+			"description": "International Launch Services, Inc. (ILS) is a joint venture with exclusive rights to the worldwide sale of commercial Angara and Proton rocket launch services. Proton launches take place at the Baikonur Cosmodrome in Kazakhstan while Angara is planned to launch from the Plesetsk and Vostochny Cosmodromes in Russia.",
+			"administrator": "Kirk Pysher",
+			"founding_year": "1995",
+			"launchers": "",
+			"spacecraft": "",
+			"parent": "Khrunichev State Research and Production Space Center",
+			"image_url": null
+		},
+		"program": [],
+		"family": "Angara",
+		"full_name": "Angara 1.2",
+		"variant": "1.2",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/angara25201.2_image_20190224012254.jpeg",
+		"info_url": "http://www.ilslaunch.com/node/4680",
+		"wiki_url": "https://en.wikipedia.org/wiki/Angara_(rocket_family)#Angara_1.2"
+	},
+        {
+		"id": 126,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/126/",
+		"name": "Ares I-X",
+		"manufacturer": {
+			"id": 44,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/44/",
+			"name": "National Aeronautics and Space Administration",
+			"featured": true,
+			"type": "Government",
+			"country_code": "USA",
+			"abbrev": "NASA",
+			"description": "The National Aeronautics and Space Administration is an independent agency of the executive branch of the United States federal government responsible for the civilian space program, as well as aeronautics and aerospace research. NASA have many launch facilities but most are inactive. The most commonly used pad will be LC-39B at Kennedy Space Center in Florida.",
+			"administrator": "Administrator: Bill Nelson",
+			"founding_year": "1958",
+			"launchers": "Space Shuttle | SLS",
+			"spacecraft": "Orion",
+			"parent": null,
+			"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/agency_images/national2520aeronautics2520and2520space2520administration_image_20190207032448.jpeg"
+		},
+		"program": [],
+		"family": "Ares",
+		"full_name": "Ares I-X",
+		"variant": "I-X",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/ares2520i-x_image_20190222030444.jpeg",
+		"info_url": null,
+		"wiki_url": "https://en.wikipedia.org/wiki/Ares_I"
+	}]
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<munit-tools:mock-when doc:name="Call to launches resource" doc:id="4cd64431-ecf5-4c61-a10b-6db527ae0556" processor="http:request">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="getLaunches" attributeName="doc:name" />
+						<munit-tools:with-attribute whereValue="33edb96d-bfdb-4eab-9f50-609278864808" attributeName="doc:id" />
+					</munit-tools:with-attributes>
+					<munit-tools:then-return>
+						<munit-tools:payload value="#[vars.launches_result]" mediaType="application/json" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+				<munit-tools:mock-when doc:name="Call to stations resource" doc:id="471fbd1e-4f4c-459b-8e1d-75c7418bea55" processor="http:request">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+						<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+					</munit-tools:with-attributes>
+					<munit-tools:then-return>
+						<munit-tools:payload value="#[vars.stations_result]" mediaType="application/json" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+				<munit-tools:mock-when doc:name="Call to rockets resource" doc:id="f0438b56-7afe-4fa6-bb30-a2288938bbff" processor="http:request">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="getRockets" attributeName="doc:name" />
+						<munit-tools:with-attribute whereValue="9d5934e9-c4b8-4d25-9588-2e12dd167033" attributeName="doc:id" />
+					</munit-tools:with-attributes>
+					<munit-tools:then-return>
+						<munit-tools:payload value="#[vars.rockets_result]" mediaType="application/json" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="Variables used" doc:id="c0a8c04c-7fa2-421a-9f9b-e34c72fa123a" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {name: "National Aeronautics and Space Administration", mode: "detailed", limit: 100, offset: 0}}]' />
+
+				</munit:set-event>
+				<flow-ref doc:name="Flow-ref to agencyWithStationAndLaunches" doc:id="6c92c377-9acc-456e-b10a-176760c05b3f" name="agencyWithStationAndLaunches" />
+				<ee:transform doc:name="Expected result" doc:id="8c07d03b-2ccf-4181-b666-bb089521327f">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="general_agency_result"><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "agency": "National Aeronautics and Space Administration",
+        "stations": {
+            "stations_count": 1,
+            "stations_list": [
+                {
+                    "id": 4,
+                    "url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+                    "name": "International Space Station",
+                    "status_id": "1",
+                    "status_name": "Active",
+                    "type": "Government",
+                    "founded": "1998-11-20",
+                    "deorbited": null,
+                    "description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+                    "orbit": "Low Earth Orbit",
+                    "owners": [
+                        "Canadian Space Agency",
+                        "European Space Agency",
+                        "Japan Aerospace Exploration Agency",
+                        "National Aeronautics and Space Administration",
+                        "Russian Federal Space Agency (ROSCOSMOS)"
+                    ],
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+                }
+            ]
+        },
+        "launches": {
+            "launches_count": 1,
+            "launches_list": [
+                {
+                    "name": "Juno II | Pioneer 3",
+                    "status": "Success",
+                    "launch_year": "1958",
+                    "failreason": "",
+                    "rocket": {
+                        "name": "Juno II",
+                        "family": "Juno",
+                        "full_name": "Juno II",
+                        "variant": ""
+                    },
+                    "mission": {
+                        "name": "Pioneer 3",
+                        "description": "Pioneer 3 was a spin-stabilized spacecraft intended as a lunar probe but failed to perform a lunar flyby as planned. Its mission was revised to measure radiation in the outer Van Allen radiation belts.",
+                        "type": "Lunar Exploration",
+                        "orbit": "Lunar flyby",
+                        "planet_of_interest": ""
+                    },
+                    "pad": {
+                        "name": "Space Launch Complex 5",
+                        "location": {
+                            "name": "Cape Canaveral, FL, USA",
+                            "country_code": "USA",
+                            "total_launch_count": 825,
+                            "total_landing_count": 21
+                        }
+                    }
+                }
+            ]
+        },
+        "rockets": {
+            "rockets_count": 1,
+            "rockets_list": [
+                {
+                    "name": "Ares I-X",
+                    "manufacturer": {
+                        "name": "National Aeronautics and Space Administration",
+                        "type": "Government",
+                        "country_code": "USA",
+                        "description": "The National Aeronautics and Space Administration is an independent agency of the executive branch of the United States federal government responsible for the civilian space program, as well as aeronautics and aerospace research. NASA have many launch facilities but most are inactive. The most commonly used pad will be LC-39B at Kennedy Space Center in Florida.",
+                        "founding_year": "1958",
+                        "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/agency_images/national2520aeronautics2520and2520space2520administration_image_20190207032448.jpeg"
+                    },
+                    "program": [],
+                    "family": "Ares",
+                    "full_name": "Ares I-X",
+                    "variant": "I-X",
+                    "reusable": false,
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/ares2520i-x_image_20190222030444.jpeg",
+                    "wiki_url": "https://en.wikipedia.org/wiki/Ares_I"
+                }
+            ]
+        }
+    }
+]]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-that doc:name="Event content equality" doc:id="e336bdb8-8d81-4955-85db-943264ad8b79" is="#[MunitTools::equalTo(vars.general_agency_result)]" expression="#[payload]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="databaseFilling_test_with_offset_0" doc:id="db7f1add-35e9-430d-88ae-3dc0cd1012b8" description="Test">
+		<munit:behavior >
+			<ee:transform doc:name="Result variables" doc:id="7fce8129-a0fd-4aa3-b92d-5b1f038abc5c" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="launches_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"launch_count": 100,
+	"launches": [{
+		"id": "e3df2ecd-c239-472f-95e4-2b89b4f75800",
+		"slug": "sputnik-8k74ps-sputnik-1",
+		"name": "Sputnik 8K74PS | Sputnik 1",
+		"status": "Success",
+		"launch_year": "1957",
+		"failreason": "",
+		"launch_service_provider": "Soviet Space Program",
+		"rocket": {
+			"name": "Sputnik 8K74PS",
+			"family": "Sputnik",
+			"full_name": "Sputnik 8K74PS",
+			"variant": "8K74PS"
+		},
+		"mission": {
+			"name": "Sputnik 1",
+			"description": "First artificial satellite consisting of a 58 cm pressurized aluminium shell containing two 1 W transmitters for a total mass of 83.6 kg.",
+			"type": "Test Flight",
+			"orbit": "Low Earth Orbit"
+		},
+		"pad": {
+			"name": "1/5",
+			"location": {
+				"name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+				"country_code": "KAZ",
+				"total_launch_count": 1523,
+				"total_landing_count": 0
+			}
+		}
+	},
+        {
+		"id": "1e564ecb-b4cf-40f3-905a-8555abc47810",
+		"slug": "thor-agena-a-discoverer-6",
+		"name": "Thor Agena A | Discoverer 6",
+		"status": "Success",
+		"launch_year": "1959",
+		"failreason": "",
+		"launch_service_provider": "United States Air Force",
+		"rocket": {
+			"name": "Thor Agena A",
+			"family": "Thor",
+			"full_name": "Thor Agena A",
+			"variant": "Agena A"
+		},
+		"mission": {
+			"name": "Discoverer 6",
+			"description": "Discoverer 6 was the sixth in a series of reconnaissance satellites, however, it failed to return its capsule when the retrorocket failed to deorbit the capsule.",
+			"type": "Government/Top Secret",
+			"orbit": "Polar Orbit"
+		},
+		"pad": {
+			"name": "Space Launch Complex 1E",
+			"location": {
+				"name": "Vandenberg SFB, CA, USA",
+				"country_code": "USA",
+				"total_launch_count": 690,
+				"total_landing_count": 3
+			}
+		}
+	},
+        {
+		"id": "fdb56feb-e46f-41ba-80c8-c84be17c1888",
+		"slug": "little-joe-lj-1",
+		"name": "Little Joe | LJ-1",
+		"status": "Failure",
+		"launch_year": "1959",
+		"failreason": "",
+		"launch_service_provider": "National Aeronautics and Space Administration",
+		"rocket": {
+			"name": "Little Joe",
+			"family": "Little Joe",
+			"full_name": "Little Joe",
+			"variant": ""
+		},
+		"mission": {
+			"name": "LJ-1",
+			"description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+			"type": "Test Flight",
+			"orbit": "Suborbital"
+		},
+		"pad": {
+			"name": "Launch Area 1",
+			"location": {
+				"name": "Wallops Island, Virginia, USA",
+				"country_code": "USA",
+				"total_launch_count": 71,
+				"total_landing_count": 0
+			}
+		}
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="stations_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"id": 4,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+	"name": "International Space Station",
+	"status_id": "1",
+	"status_name": "Active",
+	"type": "Government",
+	"founded": "1998-11-20",
+	"deorbited": null,
+	"description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Canadian Space Agency",
+            "European Space Agency",
+            "Japan Aerospace Exploration Agency",
+            "National Aeronautics and Space Administration",
+            "Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+},
+    {
+	"id": 5,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/5/",
+	"name": "Mir",
+	"status_id": "2",
+	"status_name": "De-Orbited",
+	"type": "Government",
+	"founded": "1986-02-20",
+	"deorbited": "2001-03-23",
+	"description": "Mir was a space station that operated in low Earth orbit from 1986 to 2001, operated by the Soviet Union and later by Russia. Mir was the first modular space station and was assembled in orbit from 1986 to 1996.\r\n\r\nThe station served as a microgravity research laboratory in which crews conducted experiments in biology, human biology, physics, astronomy, meteorology and spacecraft systems with a goal of developing technologies required for permanent occupation of space.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/mir_image_20190218204938.jpeg"
+}]]]></ee:set-variable>
+					<ee:set-variable variableName="rockets_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"count": 468,
+	"next": "https://lldev.thespacedevs.com/2.2.0/config/launcher/?limit=100&offset=100",
+	"previous": null,
+	"results": [{
+		"id": 136,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/136/",
+		"name": "Angara 1.2",
+		"manufacturer": {
+			"id": 118,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/118/",
+			"name": "International Launch Services",
+			"featured": false,
+			"type": "Commercial",
+			"country_code": "USA",
+			"abbrev": "ILS",
+			"description": "International Launch Services, Inc. (ILS) is a joint venture with exclusive rights to the worldwide sale of commercial Angara and Proton rocket launch services. Proton launches take place at the Baikonur Cosmodrome in Kazakhstan while Angara is planned to launch from the Plesetsk and Vostochny Cosmodromes in Russia.",
+			"administrator": "Kirk Pysher",
+			"founding_year": "1995",
+			"launchers": "",
+			"spacecraft": "",
+			"parent": "Khrunichev State Research and Production Space Center",
+			"image_url": null
+		},
+		"program": [],
+		"family": "Angara",
+		"full_name": "Angara 1.2",
+		"variant": "1.2",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/angara25201.2_image_20190224012254.jpeg",
+		"info_url": "http://www.ilslaunch.com/node/4680",
+		"wiki_url": "https://en.wikipedia.org/wiki/Angara_(rocket_family)#Angara_1.2"
+	},
+        {
+		"id": 126,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/126/",
+		"name": "Ares I-X",
+		"manufacturer": {
+			"id": 44,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/44/",
+			"name": "National Aeronautics and Space Administration",
+			"featured": true,
+			"type": "Government",
+			"country_code": "USA",
+			"abbrev": "NASA",
+			"description": "The National Aeronautics and Space Administration is an independent agency of the executive branch of the United States federal government responsible for the civilian space program, as well as aeronautics and aerospace research. NASA have many launch facilities but most are inactive. The most commonly used pad will be LC-39B at Kennedy Space Center in Florida.",
+			"administrator": "Administrator: Bill Nelson",
+			"founding_year": "1958",
+			"launchers": "Space Shuttle | SLS",
+			"spacecraft": "Orion",
+			"parent": null,
+			"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/agency_images/national2520aeronautics2520and2520space2520administration_image_20190207032448.jpeg"
+		},
+		"program": [],
+		"family": "Ares",
+		"full_name": "Ares I-X",
+		"variant": "I-X",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/ares2520i-x_image_20190222030444.jpeg",
+		"info_url": null,
+		"wiki_url": "https://en.wikipedia.org/wiki/Ares_I"
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="planet_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "name": "Mercury",
+        "isPlanet": true,
+        "moons": null,
+        "semimajorAxis": 57909227,
+        "perihelion": 46001200,
+        "aphelion": 69816900,
+        "eccentricity": 0.20560,
+        "inclination": 7.00000,
+        "mass": {
+            "massValue": 3.30114,
+            "massExponent": 23
+        },
+        "density": 5.42910,
+        "gravity": 3.70000,
+        "escape": 4250.00000,
+        "meanRadius": 2439.40000,
+        "equaRadius": 2440.53000,
+        "polarRadius": 2439.70000,
+        "flattening": 0.00000,
+        "dimension": "",
+        "sideralOrbit": 87.96900,
+        "sideralRotation": 1407.60000,
+        "discoveredBy": "",
+        "discoveryDate": "",
+        "alternativeName": "",
+        "axialTilt": 0.0352,
+        "avgTemp": 0,
+        "mainAnomaly": 174.79600,
+        "argPeriapsis": 29.02200,
+        "longAscNode": 48.37800
+    }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:mock-when doc:name="Call to launches resource" doc:id="188535c9-f59c-4776-bfb4-5708a3ea053f" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getLaunches" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="33edb96d-bfdb-4eab-9f50-609278864808" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.launches_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to stations resource" doc:id="ed825822-0718-4228-9fd4-d5b5f9158117" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.stations_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to rockets resource" doc:id="2ccca4bb-34cd-4526-88a2-98d4dc223c25" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getRockets" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="9d5934e9-c4b8-4d25-9588-2e12dd167033" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.rockets_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to planets resource" doc:id="0fe2fab8-f4f0-4e42-8621-a540b3ce0092" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getPlanet" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="f90465f9-31db-49bb-99c7-17a429dc13c9" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.planet_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Variables used" doc:id="7d6bf165-fc1f-4fb6-a24f-f2a929db34f6" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {name: "National Aeronautics and Space Administration", offset: 0}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to databaseFilling" doc:id="c6f024f0-8aab-485d-a56a-27a972ea0a60" name="databaseFilling"/>
+			<ee:transform doc:name="Expected result" doc:id="7afc0e36-3d36-409a-8706-ce42830c3a2f" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="general_agency_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "agency": "National Aeronautics and Space Administration",
+        "stations": {
+            "stations_count": 1,
+            "stations_list": [
+                {
+                    "id": 4,
+                    "url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+                    "name": "International Space Station",
+                    "status_id": "1",
+                    "status_name": "Active",
+                    "type": "Government",
+                    "founded": "1998-11-20",
+                    "deorbited": null,
+                    "description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+                    "orbit": "Low Earth Orbit",
+                    "owners": [
+                        "Canadian Space Agency",
+                        "European Space Agency",
+                        "Japan Aerospace Exploration Agency",
+                        "National Aeronautics and Space Administration",
+                        "Russian Federal Space Agency (ROSCOSMOS)"
+                    ],
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+                }
+            ]
+        },
+        "launches": {
+            "launches_count": 1,
+            "launches_list": [
+                {
+                    "name": "Little Joe | LJ-1",
+                    "status": "Failure",
+                    "launch_year": "",
+                    "failreason": "",
+                    "rocket": {
+                        "name": "Little Joe",
+                        "family": "Little Joe",
+                        "full_name": "Little Joe",
+                        "variant": ""
+                    },
+                    "mission": {
+                        "name": "LJ-1",
+                        "description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+                        "type": "Test Flight",
+                        "orbit": "Suborbital",
+                        "planet_of_interest": {
+                            "name": "Mercury",
+                            "moons": [],
+                            "semimajorAxis": 57909227,
+                            "perihelion": 46001200,
+                            "aphelion": 69816900,
+                            "eccentricity": 0.20560,
+                            "inclination": 7.00000,
+                            "mass": 3.30114,
+                            "density": 5.42910,
+                            "gravity": 3.70000,
+                            "meanRadius": 2439.40000,
+                            "polarRadius": 2439.70000,
+                            "discoveredBy": "",
+                            "discoveryDate": "",
+                            "alternativeName": "",
+                            "axialTilt": 0.0352,
+                            "avgTemp": 0
+                        }
+                    },
+                    "pad": {
+                        "name": "Launch Area 1",
+                        "location": {
+                            "name": "Wallops Island, Virginia, USA",
+                            "country_code": "USA",
+                            "total_launch_count": 71,
+                            "total_landing_count": 0
+                        }
+                    }
+                }
+            ]
+        },
+        "rockets": {
+            "rockets_count": 1,
+            "rockets_list": [
+                {
+                    "name": "Ares I-X",
+                    "manufacturer": {
+                        "name": "National Aeronautics and Space Administration",
+                        "type": "Government",
+                        "country_code": "USA",
+                        "description": "The National Aeronautics and Space Administration is an independent agency of the executive branch of the United States federal government responsible for the civilian space program, as well as aeronautics and aerospace research. NASA have many launch facilities but most are inactive. The most commonly used pad will be LC-39B at Kennedy Space Center in Florida.",
+                        "founding_year": "1958",
+                        "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/agency_images/national2520aeronautics2520and2520space2520administration_image_20190207032448.jpeg"
+                    },
+                    "program": [],
+                    "family": "Ares",
+                    "full_name": "Ares I-X",
+                    "variant": "I-X",
+                    "reusable": false,
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/ares2520i-x_image_20190222030444.jpeg",
+                    "wiki_url": "https://en.wikipedia.org/wiki/Ares_I"
+                }
+            ]
+        }
+    }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Event content equality" doc:id="3e319b53-0c58-428a-ab91-3968f8ee0a3b" is="#[MunitTools::equalTo(vars.general_agency_result)]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="databaseFilling_test_with_offset_100" doc:id="1ed348c6-269c-4d30-89a1-1fe8d2bb7dcf" description="Test">
+		<munit:behavior >
+			<ee:transform doc:name="Result variables" doc:id="3dfee47a-55f3-44e2-9a94-f6c8c9102ff9" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="launches_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"launch_count": 100,
+	"launches": [{
+		"id": "e3df2ecd-c239-472f-95e4-2b89b4f75800",
+		"slug": "sputnik-8k74ps-sputnik-1",
+		"name": "Sputnik 8K74PS | Sputnik 1",
+		"status": "Success",
+		"launch_year": "1957",
+		"failreason": "",
+		"launch_service_provider": "Soviet Space Program",
+		"rocket": {
+			"name": "Sputnik 8K74PS",
+			"family": "Sputnik",
+			"full_name": "Sputnik 8K74PS",
+			"variant": "8K74PS"
+		},
+		"mission": {
+			"name": "Sputnik 1",
+			"description": "First artificial satellite consisting of a 58 cm pressurized aluminium shell containing two 1 W transmitters for a total mass of 83.6 kg.",
+			"type": "Test Flight",
+			"orbit": "Low Earth Orbit"
+		},
+		"pad": {
+			"name": "1/5",
+			"location": {
+				"name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+				"country_code": "KAZ",
+				"total_launch_count": 1523,
+				"total_landing_count": 0
+			}
+		}
+	},
+        {
+		"id": "1e564ecb-b4cf-40f3-905a-8555abc47810",
+		"slug": "thor-agena-a-discoverer-6",
+		"name": "Thor Agena A | Discoverer 6",
+		"status": "Success",
+		"launch_year": "1959",
+		"failreason": "",
+		"launch_service_provider": "United States Air Force",
+		"rocket": {
+			"name": "Thor Agena A",
+			"family": "Thor",
+			"full_name": "Thor Agena A",
+			"variant": "Agena A"
+		},
+		"mission": {
+			"name": "Discoverer 6",
+			"description": "Discoverer 6 was the sixth in a series of reconnaissance satellites, however, it failed to return its capsule when the retrorocket failed to deorbit the capsule.",
+			"type": "Government/Top Secret",
+			"orbit": "Polar Orbit"
+		},
+		"pad": {
+			"name": "Space Launch Complex 1E",
+			"location": {
+				"name": "Vandenberg SFB, CA, USA",
+				"country_code": "USA",
+				"total_launch_count": 690,
+				"total_landing_count": 3
+			}
+		}
+	},
+        {
+		"id": "fdb56feb-e46f-41ba-80c8-c84be17c1888",
+		"slug": "little-joe-lj-1",
+		"name": "Little Joe | LJ-1",
+		"status": "Failure",
+		"launch_year": "1959",
+		"failreason": "",
+		"launch_service_provider": "National Aeronautics and Space Administration",
+		"rocket": {
+			"name": "Little Joe",
+			"family": "Little Joe",
+			"full_name": "Little Joe",
+			"variant": ""
+		},
+		"mission": {
+			"name": "LJ-1",
+			"description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+			"type": "Test Flight",
+			"orbit": "Suborbital"
+		},
+		"pad": {
+			"name": "Launch Area 1",
+			"location": {
+				"name": "Wallops Island, Virginia, USA",
+				"country_code": "USA",
+				"total_launch_count": 71,
+				"total_landing_count": 0
+			}
+		}
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="stations_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"id": 4,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+	"name": "International Space Station",
+	"status_id": "1",
+	"status_name": "Active",
+	"type": "Government",
+	"founded": "1998-11-20",
+	"deorbited": null,
+	"description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Canadian Space Agency",
+            "European Space Agency",
+            "Japan Aerospace Exploration Agency",
+            "National Aeronautics and Space Administration",
+            "Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+},
+    {
+	"id": 5,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/5/",
+	"name": "Mir",
+	"status_id": "2",
+	"status_name": "De-Orbited",
+	"type": "Government",
+	"founded": "1986-02-20",
+	"deorbited": "2001-03-23",
+	"description": "Mir was a space station that operated in low Earth orbit from 1986 to 2001, operated by the Soviet Union and later by Russia. Mir was the first modular space station and was assembled in orbit from 1986 to 1996.\r\n\r\nThe station served as a microgravity research laboratory in which crews conducted experiments in biology, human biology, physics, astronomy, meteorology and spacecraft systems with a goal of developing technologies required for permanent occupation of space.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/mir_image_20190218204938.jpeg"
+}]]]></ee:set-variable>
+					<ee:set-variable variableName="rockets_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"count": 468,
+	"next": "https://lldev.thespacedevs.com/2.2.0/config/launcher/?limit=100&offset=100",
+	"previous": null,
+	"results": [{
+		"id": 136,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/136/",
+		"name": "Angara 1.2",
+		"manufacturer": {
+			"id": 118,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/118/",
+			"name": "International Launch Services",
+			"featured": false,
+			"type": "Commercial",
+			"country_code": "USA",
+			"abbrev": "ILS",
+			"description": "International Launch Services, Inc. (ILS) is a joint venture with exclusive rights to the worldwide sale of commercial Angara and Proton rocket launch services. Proton launches take place at the Baikonur Cosmodrome in Kazakhstan while Angara is planned to launch from the Plesetsk and Vostochny Cosmodromes in Russia.",
+			"administrator": "Kirk Pysher",
+			"founding_year": "1995",
+			"launchers": "",
+			"spacecraft": "",
+			"parent": "Khrunichev State Research and Production Space Center",
+			"image_url": null
+		},
+		"program": [],
+		"family": "Angara",
+		"full_name": "Angara 1.2",
+		"variant": "1.2",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/angara25201.2_image_20190224012254.jpeg",
+		"info_url": "http://www.ilslaunch.com/node/4680",
+		"wiki_url": "https://en.wikipedia.org/wiki/Angara_(rocket_family)#Angara_1.2"
+	},
+        {
+		"id": 126,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/126/",
+		"name": "Ares I-X",
+		"manufacturer": {
+			"id": 44,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/44/",
+			"name": "National Aeronautics and Space Administration",
+			"featured": true,
+			"type": "Government",
+			"country_code": "USA",
+			"abbrev": "NASA",
+			"description": "The National Aeronautics and Space Administration is an independent agency of the executive branch of the United States federal government responsible for the civilian space program, as well as aeronautics and aerospace research. NASA have many launch facilities but most are inactive. The most commonly used pad will be LC-39B at Kennedy Space Center in Florida.",
+			"administrator": "Administrator: Bill Nelson",
+			"founding_year": "1958",
+			"launchers": "Space Shuttle | SLS",
+			"spacecraft": "Orion",
+			"parent": null,
+			"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/agency_images/national2520aeronautics2520and2520space2520administration_image_20190207032448.jpeg"
+		},
+		"program": [],
+		"family": "Ares",
+		"full_name": "Ares I-X",
+		"variant": "I-X",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/ares2520i-x_image_20190222030444.jpeg",
+		"info_url": null,
+		"wiki_url": "https://en.wikipedia.org/wiki/Ares_I"
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="planet_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "name": "Mercury",
+        "isPlanet": true,
+        "moons": null,
+        "semimajorAxis": 57909227,
+        "perihelion": 46001200,
+        "aphelion": 69816900,
+        "eccentricity": 0.20560,
+        "inclination": 7.00000,
+        "mass": {
+            "massValue": 3.30114,
+            "massExponent": 23
+        },
+        "density": 5.42910,
+        "gravity": 3.70000,
+        "escape": 4250.00000,
+        "meanRadius": 2439.40000,
+        "equaRadius": 2440.53000,
+        "polarRadius": 2439.70000,
+        "flattening": 0.00000,
+        "dimension": "",
+        "sideralOrbit": 87.96900,
+        "sideralRotation": 1407.60000,
+        "discoveredBy": "",
+        "discoveryDate": "",
+        "alternativeName": "",
+        "axialTilt": 0.0352,
+        "avgTemp": 0,
+        "mainAnomaly": 174.79600,
+        "argPeriapsis": 29.02200,
+        "longAscNode": 48.37800
+    }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:mock-when doc:name="Call to launches resource" doc:id="784f0323-286e-4019-b6a4-225312d2b136" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getLaunches" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="33edb96d-bfdb-4eab-9f50-609278864808" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.launches_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to stations resource" doc:id="1b6ff8c0-e9c5-48d1-b27e-51715edc7100" processor="http:request">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[vars.stations_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to rockets resource" doc:id="e9dd09d3-701a-4999-afab-c17f8ebd187c" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getRockets" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="9d5934e9-c4b8-4d25-9588-2e12dd167033" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.rockets_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to planets resource" doc:id="db2e2ad6-d22d-4313-8bb7-4391e6273e09" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getPlanet" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="f90465f9-31db-49bb-99c7-17a429dc13c9" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.planet_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Variables used" doc:id="6d55608a-cc2e-4c57-beb9-eeb49db3a1cc" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {name: "National Aeronautics and Space Administration", offset: 100}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to databaseFilling" doc:id="d2994885-4beb-4b88-a7cc-f9677674843e" name="databaseFilling"/>
+			<ee:transform doc:name="Expected result" doc:id="4026dc6d-c582-400a-9424-6176f9b0e62e" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="general_agency_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "agency": "National Aeronautics and Space Administration",
+        "launches": {
+            "launches_count": 1,
+            "launches_list": [
+                {
+                    "name": "Little Joe | LJ-1",
+                    "status": "Failure",
+                    "launch_year": "",
+                    "failreason": "",
+                    "rocket": {
+                        "name": "Little Joe",
+                        "family": "Little Joe",
+                        "full_name": "Little Joe",
+                        "variant": ""
+                    },
+                    "mission": {
+                        "name": "LJ-1",
+                        "description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+                        "type": "Test Flight",
+                        "orbit": "Suborbital",
+                        "planet_of_interest": {
+                            "name": "Mercury",
+                            "moons": [],
+                            "semimajorAxis": 57909227,
+                            "perihelion": 46001200,
+                            "aphelion": 69816900,
+                            "eccentricity": 0.20560,
+                            "inclination": 7.00000,
+                            "mass": 3.30114,
+                            "density": 5.42910,
+                            "gravity": 3.70000,
+                            "meanRadius": 2439.40000,
+                            "polarRadius": 2439.70000,
+                            "discoveredBy": "",
+                            "discoveryDate": "",
+                            "alternativeName": "",
+                            "axialTilt": 0.0352,
+                            "avgTemp": 0
+                        }
+                    },
+                    "pad": {
+                        "name": "Launch Area 1",
+                        "location": {
+                            "name": "Wallops Island, Virginia, USA",
+                            "country_code": "USA",
+                            "total_launch_count": 71,
+                            "total_landing_count": 0
+                        }
+                    }
+                }
+            ]
+        },
+        "rockets": {
+            "rockets_count": 1,
+            "rockets_list": [
+                {
+                    "name": "Ares I-X",
+                    "manufacturer": {
+                        "name": "National Aeronautics and Space Administration",
+                        "type": "Government",
+                        "country_code": "USA",
+                        "description": "The National Aeronautics and Space Administration is an independent agency of the executive branch of the United States federal government responsible for the civilian space program, as well as aeronautics and aerospace research. NASA have many launch facilities but most are inactive. The most commonly used pad will be LC-39B at Kennedy Space Center in Florida.",
+                        "founding_year": "1958",
+                        "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/agency_images/national2520aeronautics2520and2520space2520administration_image_20190207032448.jpeg"
+                    },
+                    "program": [],
+                    "family": "Ares",
+                    "full_name": "Ares I-X",
+                    "variant": "I-X",
+                    "reusable": false,
+                    "image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/ares2520i-x_image_20190222030444.jpeg",
+                    "wiki_url": "https://en.wikipedia.org/wiki/Ares_I"
+                }
+            ]
+        }
+    }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Event content equality" doc:id="562e678e-4c9b-41da-8ff2-e12fa7a19380" is="#[MunitTools::equalTo(vars.general_agency_result)]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="databaseFilling_test_with_offset_600" doc:id="c68227d6-f0b2-463f-909b-ebab219f9330" description="Test">
+		<munit:behavior >
+			<ee:transform doc:name="Result variables" doc:id="b9306800-b1cf-4c91-8603-1f280de58e20" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="launches_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"launch_count": 100,
+	"launches": [{
+		"id": "e3df2ecd-c239-472f-95e4-2b89b4f75800",
+		"slug": "sputnik-8k74ps-sputnik-1",
+		"name": "Sputnik 8K74PS | Sputnik 1",
+		"status": "Success",
+		"launch_year": "1957",
+		"failreason": "",
+		"launch_service_provider": "Soviet Space Program",
+		"rocket": {
+			"name": "Sputnik 8K74PS",
+			"family": "Sputnik",
+			"full_name": "Sputnik 8K74PS",
+			"variant": "8K74PS"
+		},
+		"mission": {
+			"name": "Sputnik 1",
+			"description": "First artificial satellite consisting of a 58 cm pressurized aluminium shell containing two 1 W transmitters for a total mass of 83.6 kg.",
+			"type": "Test Flight",
+			"orbit": "Low Earth Orbit"
+		},
+		"pad": {
+			"name": "1/5",
+			"location": {
+				"name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+				"country_code": "KAZ",
+				"total_launch_count": 1523,
+				"total_landing_count": 0
+			}
+		}
+	},
+        {
+		"id": "1e564ecb-b4cf-40f3-905a-8555abc47810",
+		"slug": "thor-agena-a-discoverer-6",
+		"name": "Thor Agena A | Discoverer 6",
+		"status": "Success",
+		"launch_year": "1959",
+		"failreason": "",
+		"launch_service_provider": "United States Air Force",
+		"rocket": {
+			"name": "Thor Agena A",
+			"family": "Thor",
+			"full_name": "Thor Agena A",
+			"variant": "Agena A"
+		},
+		"mission": {
+			"name": "Discoverer 6",
+			"description": "Discoverer 6 was the sixth in a series of reconnaissance satellites, however, it failed to return its capsule when the retrorocket failed to deorbit the capsule.",
+			"type": "Government/Top Secret",
+			"orbit": "Polar Orbit"
+		},
+		"pad": {
+			"name": "Space Launch Complex 1E",
+			"location": {
+				"name": "Vandenberg SFB, CA, USA",
+				"country_code": "USA",
+				"total_launch_count": 690,
+				"total_landing_count": 3
+			}
+		}
+	},
+        {
+		"id": "fdb56feb-e46f-41ba-80c8-c84be17c1888",
+		"slug": "little-joe-lj-1",
+		"name": "Little Joe | LJ-1",
+		"status": "Failure",
+		"launch_year": "1959",
+		"failreason": "",
+		"launch_service_provider": "National Aeronautics and Space Administration",
+		"rocket": {
+			"name": "Little Joe",
+			"family": "Little Joe",
+			"full_name": "Little Joe",
+			"variant": ""
+		},
+		"mission": {
+			"name": "LJ-1",
+			"description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+			"type": "Test Flight",
+			"orbit": "Suborbital"
+		},
+		"pad": {
+			"name": "Launch Area 1",
+			"location": {
+				"name": "Wallops Island, Virginia, USA",
+				"country_code": "USA",
+				"total_launch_count": 71,
+				"total_landing_count": 0
+			}
+		}
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="stations_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"id": 4,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+	"name": "International Space Station",
+	"status_id": "1",
+	"status_name": "Active",
+	"type": "Government",
+	"founded": "1998-11-20",
+	"deorbited": null,
+	"description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Canadian Space Agency",
+            "European Space Agency",
+            "Japan Aerospace Exploration Agency",
+            "National Aeronautics and Space Administration",
+            "Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+},
+    {
+	"id": 5,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/5/",
+	"name": "Mir",
+	"status_id": "2",
+	"status_name": "De-Orbited",
+	"type": "Government",
+	"founded": "1986-02-20",
+	"deorbited": "2001-03-23",
+	"description": "Mir was a space station that operated in low Earth orbit from 1986 to 2001, operated by the Soviet Union and later by Russia. Mir was the first modular space station and was assembled in orbit from 1986 to 1996.\r\n\r\nThe station served as a microgravity research laboratory in which crews conducted experiments in biology, human biology, physics, astronomy, meteorology and spacecraft systems with a goal of developing technologies required for permanent occupation of space.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/mir_image_20190218204938.jpeg"
+}]]]></ee:set-variable>
+					<ee:set-variable variableName="rockets_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"count": 468,
+	"next": "https://lldev.thespacedevs.com/2.2.0/config/launcher/?limit=100&offset=100",
+	"previous": null,
+	"results": [{
+		"id": 136,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/136/",
+		"name": "Angara 1.2",
+		"manufacturer": {
+			"id": 118,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/118/",
+			"name": "International Launch Services",
+			"featured": false,
+			"type": "Commercial",
+			"country_code": "USA",
+			"abbrev": "ILS",
+			"description": "International Launch Services, Inc. (ILS) is a joint venture with exclusive rights to the worldwide sale of commercial Angara and Proton rocket launch services. Proton launches take place at the Baikonur Cosmodrome in Kazakhstan while Angara is planned to launch from the Plesetsk and Vostochny Cosmodromes in Russia.",
+			"administrator": "Kirk Pysher",
+			"founding_year": "1995",
+			"launchers": "",
+			"spacecraft": "",
+			"parent": "Khrunichev State Research and Production Space Center",
+			"image_url": null
+		},
+		"program": [],
+		"family": "Angara",
+		"full_name": "Angara 1.2",
+		"variant": "1.2",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/angara25201.2_image_20190224012254.jpeg",
+		"info_url": "http://www.ilslaunch.com/node/4680",
+		"wiki_url": "https://en.wikipedia.org/wiki/Angara_(rocket_family)#Angara_1.2"
+	},
+        {
+		"id": 126,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/126/",
+		"name": "Ares I-X",
+		"manufacturer": {
+			"id": 44,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/44/",
+			"name": "National Aeronautics and Space Administration",
+			"featured": true,
+			"type": "Government",
+			"country_code": "USA",
+			"abbrev": "NASA",
+			"description": "The National Aeronautics and Space Administration is an independent agency of the executive branch of the United States federal government responsible for the civilian space program, as well as aeronautics and aerospace research. NASA have many launch facilities but most are inactive. The most commonly used pad will be LC-39B at Kennedy Space Center in Florida.",
+			"administrator": "Administrator: Bill Nelson",
+			"founding_year": "1958",
+			"launchers": "Space Shuttle | SLS",
+			"spacecraft": "Orion",
+			"parent": null,
+			"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/agency_images/national2520aeronautics2520and2520space2520administration_image_20190207032448.jpeg"
+		},
+		"program": [],
+		"family": "Ares",
+		"full_name": "Ares I-X",
+		"variant": "I-X",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/ares2520i-x_image_20190222030444.jpeg",
+		"info_url": null,
+		"wiki_url": "https://en.wikipedia.org/wiki/Ares_I"
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="planet_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "name": "Mercury",
+        "isPlanet": true,
+        "moons": null,
+        "semimajorAxis": 57909227,
+        "perihelion": 46001200,
+        "aphelion": 69816900,
+        "eccentricity": 0.20560,
+        "inclination": 7.00000,
+        "mass": {
+            "massValue": 3.30114,
+            "massExponent": 23
+        },
+        "density": 5.42910,
+        "gravity": 3.70000,
+        "escape": 4250.00000,
+        "meanRadius": 2439.40000,
+        "equaRadius": 2440.53000,
+        "polarRadius": 2439.70000,
+        "flattening": 0.00000,
+        "dimension": "",
+        "sideralOrbit": 87.96900,
+        "sideralRotation": 1407.60000,
+        "discoveredBy": "",
+        "discoveryDate": "",
+        "alternativeName": "",
+        "axialTilt": 0.0352,
+        "avgTemp": 0,
+        "mainAnomaly": 174.79600,
+        "argPeriapsis": 29.02200,
+        "longAscNode": 48.37800
+    }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:mock-when doc:name="Call to launches resource" doc:id="2e66d1d1-f2ef-4dea-ad53-3b6c82542441" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getLaunches" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="33edb96d-bfdb-4eab-9f50-609278864808" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.launches_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to stations resource" doc:id="db2214d6-e2d5-4acf-b6aa-488346bad47e" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.stations_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to rockets resource" doc:id="8203f288-39d3-4f47-9426-113a0e1acf05" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getRockets" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="9d5934e9-c4b8-4d25-9588-2e12dd167033" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.rockets_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to planets resource" doc:id="e2fa4eea-7ade-4287-b78a-e98d372a46f4" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getPlanet" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="f90465f9-31db-49bb-99c7-17a429dc13c9" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.planet_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Variables used" doc:id="68afc90b-a3c1-4ffb-a187-8b87d885134c" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {name: "National Aeronautics and Space Administration", offset: 600}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to databaseFilling" doc:id="ac3d3a48-9b13-4a46-a376-8f81fe7393a0" name="databaseFilling"/>
+			<ee:transform doc:name="Expected result" doc:id="9c64ff71-2000-4d2e-aff1-fc2ed760b6fa" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="general_agency_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "agency": "National Aeronautics and Space Administration",
+        "launches": {
+            "launches_count": 1,
+            "launches_list": [
+                {
+                    "name": "Little Joe | LJ-1",
+                    "status": "Failure",
+                    "launch_year": "",
+                    "failreason": "",
+                    "rocket": {
+                        "name": "Little Joe",
+                        "family": "Little Joe",
+                        "full_name": "Little Joe",
+                        "variant": ""
+                    },
+                    "mission": {
+                        "name": "LJ-1",
+                        "description": "Little Joe 1 (LJ-1) was a failed launch of a Little Joe by NASA, a solid fuel rocket that was designed for a Max Q abort and Launch Escape System test for Mercury capsule. The objective was to determine how well the escape rocket would function under the most severe dynamic loading conditions anticipated during a Mercury-Atlas launching.",
+                        "type": "Test Flight",
+                        "orbit": "Suborbital",
+                        "planet_of_interest": {
+                            "name": "Mercury",
+                            "moons": [],
+                            "semimajorAxis": 57909227,
+                            "perihelion": 46001200,
+                            "aphelion": 69816900,
+                            "eccentricity": 0.20560,
+                            "inclination": 7.00000,
+                            "mass": 3.30114,
+                            "density": 5.42910,
+                            "gravity": 3.70000,
+                            "meanRadius": 2439.40000,
+                            "polarRadius": 2439.70000,
+                            "discoveredBy": "",
+                            "discoveryDate": "",
+                            "alternativeName": "",
+                            "axialTilt": 0.0352,
+                            "avgTemp": 0
+                        }
+                    },
+                    "pad": {
+                        "name": "Launch Area 1",
+                        "location": {
+                            "name": "Wallops Island, Virginia, USA",
+                            "country_code": "USA",
+                            "total_launch_count": 71,
+                            "total_landing_count": 0
+                        }
+                    }
+                }
+            ]
+        }
+    }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Event content equality" doc:id="ebc0a396-12db-4f4d-8aef-350940a8dc0d" is="#[MunitTools::equalTo(vars.general_agency_result)]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="agencyWithStationAndLaunches_test_MISS_NAME_error" doc:id="4dc5c6be-394d-4e6f-8503-19f4a850a822" description="Test" expectedErrorType="APP:MISS_NAME">
+		<munit:execution >
+			<munit:set-event doc:name="Variables used" doc:id="f2defbc6-4ded-43e5-932f-e694909b2162" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {mode: "detailed", limit: 100, offset: 0}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to agencyWithStationAndLaunches" doc:id="e67358c6-ea57-4e1d-92d4-81d7b92fb3ee" name="agencyWithStationAndLaunches"/>
+			<ee:transform doc:name="Expected result" doc:id="2a44642c-f7bd-45f6-8b4b-54dfbe441b22" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="exp_response" ><![CDATA[output text/plain
+---
+"You forgot to specify the 'name' parameter"]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Event content equality" doc:id="a1624611-11ec-4c20-ba43-20fb96c0ce43" is="#[MunitTools::equalTo(vars.exp_response)]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="agencyWithStationAndLaunches_test_WRONG_OFFSET_error" doc:id="dcb10316-a2d0-44e1-a80e-a1f756e3c631" description="Test" expectedErrorType="APP:WRONG_OFFSET">
+		<munit:execution >
+			<munit:set-event doc:name="Variables used" doc:id="255e9d2a-6a20-476e-8295-9c289d67ddf8" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {name: "National Aeronautics and Space Administration", mode: "detailed", limit: 100}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to agencyWithStationAndLaunches" doc:id="cd07909f-37ac-418e-9d50-9fa4893bb6ec" name="agencyWithStationAndLaunches"/>
+			<ee:transform doc:name="Expected result" doc:id="d8edbfc0-57a2-4806-84cd-2882d67327ba" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="exp_response" ><![CDATA[output text/plain
+---
+"You forgot to specify the 'offset' parameter"]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Event content equality" doc:id="5a79cc02-e80d-47ae-bf50-47b738468a5f" is="#[MunitTools::equalTo(vars.exp_response)]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="agencyWithStationAndLaunches_test_ALL_EMPTY_error" doc:id="ec01570f-6af6-41e0-8bf3-fb5c55e797c6" description="Test" expectedErrorType="APP:ALL_EMPTY">
+		<munit:behavior >
+			<ee:transform doc:name="Result variables" doc:id="4027f8de-52cc-4eb2-a809-a13b6f07c2fa" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="launches_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"launch_count": 100,
+	"launches": [{
+		"id": "5445c077-7e2f-4850-a860-19875cef425b",
+		"slug": "r-36o-8k69m-ogch-23",
+		"name": "R-36O 8K69M | OGCh 23",
+		"status": "Success",
+		"launch_year": "1970",
+		"failreason": "",
+		"launch_service_provider": "Soviet Space Program",
+		"rocket": {
+			"name": "R-36O 8K69M",
+			"family": "R-36O",
+			"full_name": "R-36O 8K69M",
+			"variant": "8K69M"
+		},
+		"mission": {
+			"name": "OGCh 23",
+			"description": "Missile equipped with the 8F021 warhead",
+			"type": "Government/Top Secret",
+			"orbit": "Low Earth Orbit"
+		},
+		"pad": {
+			"name": "191/66",
+			"location": {
+				"name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+				"country_code": "KAZ",
+				"total_launch_count": 1523,
+				"total_landing_count": 0
+			}
+		}
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="stations_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"id": 4,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+	"name": "International Space Station",
+	"status_id": "1",
+	"status_name": "Active",
+	"type": "Government",
+	"founded": "1998-11-20",
+	"deorbited": null,
+	"description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Canadian Space Agency",
+            "European Space Agency",
+            "Japan Aerospace Exploration Agency",
+            "National Aeronautics and Space Administration",
+            "Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+}]]]></ee:set-variable>
+					<ee:set-variable variableName="rockets_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"count": 468,
+	"next": "https://lldev.thespacedevs.com/2.2.0/config/launcher/?limit=100&offset=100",
+	"previous": null,
+	"results": [{
+		"id": 136,
+		"url": "https://lldev.thespacedevs.com/2.2.0/config/launcher/136/",
+		"name": "Angara 1.2",
+		"manufacturer": {
+			"id": 118,
+			"url": "https://lldev.thespacedevs.com/2.2.0/agencies/118/",
+			"name": "International Launch Services",
+			"featured": false,
+			"type": "Commercial",
+			"country_code": "USA",
+			"abbrev": "ILS",
+			"description": "International Launch Services, Inc. (ILS) is a joint venture with exclusive rights to the worldwide sale of commercial Angara and Proton rocket launch services. Proton launches take place at the Baikonur Cosmodrome in Kazakhstan while Angara is planned to launch from the Plesetsk and Vostochny Cosmodromes in Russia.",
+			"administrator": "Kirk Pysher",
+			"founding_year": "1995",
+			"launchers": "",
+			"spacecraft": "",
+			"parent": "Khrunichev State Research and Production Space Center",
+			"image_url": null
+		},
+		"program": [],
+		"family": "Angara",
+		"full_name": "Angara 1.2",
+		"variant": "1.2",
+		"reusable": false,
+		"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/launcher_images/angara25201.2_image_20190224012254.jpeg",
+		"info_url": "http://www.ilslaunch.com/node/4680",
+		"wiki_url": "https://en.wikipedia.org/wiki/Angara_(rocket_family)#Angara_1.2"
+	}]
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:mock-when doc:name="Call to launches resource" doc:id="ce54c0eb-4a7a-4304-919c-bbfb0ec0d99c" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getLaunches" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="33edb96d-bfdb-4eab-9f50-609278864808" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.launches_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to stations resource" doc:id="8277e6db-2da7-41e3-a6c4-d1619e1581fd" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.stations_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to rockets resource" doc:id="0c27c1c7-3e68-4cc4-a087-8467b44d6436" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getRockets" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="9d5934e9-c4b8-4d25-9588-2e12dd167033" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.rockets_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Variables used" doc:id="80fab74e-4054-441a-815c-5ac99f1aa008" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {name: "Ad Astra Rocket Company", mode: "detailed", limit: 100, offset: 0}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to agencyWithStationAndLaunches" doc:id="f1adacbd-9d7a-4cee-86fe-f098430f8902" name="agencyWithStationAndLaunches"/>
+			<ee:transform doc:name="Expected results" doc:id="e072ddd9-9b2f-4538-92b3-fc4796bf7980" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="exp_response" ><![CDATA[output text/plain
+---
+"No results were received for your query. This may be due to the following:
+ 1. No entries were found for the specified parameters.
+ 2. An incorrectly written or non-existent agency name is entered. Check the spelling of the agency name or refer to the help page to see a list of existing agencies."]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Event content equality" doc:id="cbdcf958-022e-41f1-8558-0aa534553a42" is="#[MunitTools::equalTo(vars.exp_response)]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="launchesAndStationsByAgencyAndYear_test_ALL_EMPTY_error" doc:id="578f273d-8b2b-4b6c-be83-17d338b6758c" description="Test" expectedErrorType="APP:ALL_EMPTY">
+		<munit:behavior >
+			<ee:transform doc:name="Result variables" doc:id="fa08e0d1-9430-4993-b39a-fc0bd155822a" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="launches_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"launch_count": 100,
+	"launches": [{
+		"id": "e3df2ecd-c239-472f-95e4-2b89b4f75800",
+		"slug": "sputnik-8k74ps-sputnik-1",
+		"name": "Sputnik 8K74PS | Sputnik 1",
+		"status": "Success",
+		"launch_year": "1957",
+		"failreason": "",
+		"launch_service_provider": "Soviet Space Program",
+		"rocket": {
+			"name": "Sputnik 8K74PS",
+			"family": "Sputnik",
+			"full_name": "Sputnik 8K74PS",
+			"variant": "8K74PS"
+		},
+		"mission": {
+			"name": "Sputnik 1",
+			"description": "First artificial satellite consisting of a 58 cm pressurized aluminium shell containing two 1 W transmitters for a total mass of 83.6 kg.",
+			"type": "Test Flight",
+			"orbit": "Low Earth Orbit"
+		},
+		"pad": {
+			"name": "1/5",
+			"location": {
+				"name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+				"country_code": "KAZ",
+				"total_launch_count": 1523,
+				"total_landing_count": 0
+			}
+		}
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="stations_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"id": 4,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+	"name": "International Space Station",
+	"status_id": "1",
+	"status_name": "Active",
+	"type": "Government",
+	"founded": "1998-11-20",
+	"deorbited": null,
+	"description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Canadian Space Agency",
+            "European Space Agency",
+            "Japan Aerospace Exploration Agency",
+            "National Aeronautics and Space Administration",
+            "Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+}]]]></ee:set-variable>
+					<ee:set-variable variableName="rockets_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"count": 468,
+	"next": "https://lldev.thespacedevs.com/2.2.0/config/launcher/?limit=100&offset=100",
+	"previous": null,
+	"results": []
+}]]></ee:set-variable>
+					<ee:set-variable variableName="ss_objects_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "name": "2867 Šteins",
+        "isPlanet": false,
+        "moons": 0,
+        "perihelion": 0,
+        "aphelion": 0,
+        "eccentricity": 0.00000,
+        "inclination": 0.00000,
+        "mass": 2.40000,
+        "density": 1.00000,
+        "gravity": 0.00000,
+        "flattening": 0.00000,
+        "dimension": "39×37×25",
+        "aroundPlanet": null,
+        "discoveredBy": "N. S. Tchernykh",
+        "discoveryDate": "04/11/1969",
+        "alternativeName": "1969 VC - 1954 QL",
+        "axialTilt": 0,
+        "avgTemp": 0
+    }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:mock-when doc:name="Call to launches resource" doc:id="480a7996-e5fc-4093-8db3-6e7da21990b5" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getLaunches" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="33edb96d-bfdb-4eab-9f50-609278864808" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.launches_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to stations resource" doc:id="c019007a-56ab-488b-8206-6fd8c4b4f501" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.stations_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to solar system objects resource" doc:id="5fc1a4fb-f1a3-4b34-a60d-2d5c8c3e3b46" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getSolarSystemObjects" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="15455fb9-0856-4616-974d-81ff09417134" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.ss_objects_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Variables used" doc:id="1ec9ca3d-2a1c-49ac-bb50-61f54882e1e5" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {name: "Ad Astra Rocket Company", limit: 100, offset: 1200, year: "1969"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to launchesAndStationsByAgencyAndYear" doc:id="97868ab9-4472-46e6-a173-225f67f3e252" name="launchesAndStationsByAgencyAndYear"/>
+			<ee:transform doc:name="Expected results" doc:id="e2f4eaa4-c791-4e19-a041-eca0c09e33e2" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="exp_response" ><![CDATA[output text/plain
+---
+"No results were received for your query. This may be due to the following:
+ 1. No entries were found for the specified parameters.
+ 2. An incorrectly written or non-existent agency name is entered. Check the spelling of the agency name or refer to the help page to see a list of existing agencies.
+ 3. There are no records with the specified launch year on the page you are viewing. Refer to the help page to find out which pages correspond to the year you are interested in and change the offset to the appropriate one."]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Event content equality" doc:id="395ff2e2-5009-4881-a9d2-b75e2930d2fe" is="#[MunitTools::equalTo(vars.exp_response)]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="databaseFilling_test_ALL_EMPTY_error" doc:id="6b02ed62-c7b0-43bb-8fd5-3d825081037d" description="Test" expectedErrorType="APP:ALL_EMPTY">
+		<munit:behavior >
+			<ee:transform doc:name="Result variables" doc:id="44cfc0e7-00ec-4e5f-85dd-fec4174bd3f8" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="launches_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"launch_count": 100,
+	"launches": [{
+		"id": "e3df2ecd-c239-472f-95e4-2b89b4f75800",
+		"slug": "sputnik-8k74ps-sputnik-1",
+		"name": "Sputnik 8K74PS | Sputnik 1",
+		"status": "Success",
+		"launch_year": "1957",
+		"failreason": "",
+		"launch_service_provider": "Soviet Space Program",
+		"rocket": {
+			"name": "Sputnik 8K74PS",
+			"family": "Sputnik",
+			"full_name": "Sputnik 8K74PS",
+			"variant": "8K74PS"
+		},
+		"mission": {
+			"name": "Sputnik 1",
+			"description": "First artificial satellite consisting of a 58 cm pressurized aluminium shell containing two 1 W transmitters for a total mass of 83.6 kg.",
+			"type": "Test Flight",
+			"orbit": "Low Earth Orbit"
+		},
+		"pad": {
+			"name": "1/5",
+			"location": {
+				"name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+				"country_code": "KAZ",
+				"total_launch_count": 1523,
+				"total_landing_count": 0
+			}
+		}
+	}]
+}]]></ee:set-variable>
+					<ee:set-variable variableName="stations_result" ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"id": 4,
+	"url": "https://lldev.thespacedevs.com/2.2.0/spacestation/4/",
+	"name": "International Space Station",
+	"status_id": "1",
+	"status_name": "Active",
+	"type": "Government",
+	"founded": "1998-11-20",
+	"deorbited": null,
+	"description": "The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles.",
+	"orbit": "Low Earth Orbit",
+	"owners": ["Canadian Space Agency",
+            "European Space Agency",
+            "Japan Aerospace Exploration Agency",
+            "National Aeronautics and Space Administration",
+            "Russian Federal Space Agency (ROSCOSMOS)"],
+	"image_url": "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/spacestation_images/international2520space2520station_image_20190220215716.jpeg"
+}]]]></ee:set-variable>
+					<ee:set-variable variableName="rockets_result" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"count": 468,
+	"next": "https://lldev.thespacedevs.com/2.2.0/config/launcher/?limit=100&offset=100",
+	"previous": null,
+	"results": []
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:mock-when doc:name="Call to launches resource" doc:id="9cb9ba76-567a-4a92-8be0-36f84748370c" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getLaunches" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="33edb96d-bfdb-4eab-9f50-609278864808" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.launches_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to stations resource" doc:id="eb3fe242-59bf-437a-bdc5-a1138738e89f" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getStations" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c66dd9e8-1c9f-45c9-a86e-500b387bea61" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.stations_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Call to rockets resource" doc:id="6614de2f-a776-4896-a178-2b4f2bd4f168" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="getRockets" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="9d5934e9-c4b8-4d25-9588-2e12dd167033" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.rockets_result]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Variables used" doc:id="8baac6b9-f297-4cb1-b19a-09ba70e4f302" cloneOriginalEvent="true">
+				<munit:attributes value='#[{queryParams: {name: "Ad Astra Rocket Company", offset: 600}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to databaseFilling" doc:id="c2b879d3-1c61-4163-8793-539827b5b79f" name="databaseFilling"/>
+			<ee:transform doc:name="Expected results" doc:id="c90f0c6a-5435-4a9e-a326-843004cda413" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="exp_response" ><![CDATA[output text/plain
+---
+"No data to add to database."]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Event content equality" doc:id="59d302b9-184a-4d22-9e2d-381a60d1aeaf" is="#[MunitTools::equalTo(vars.exp_response)]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APP:INVALID_MODE_error_handling_test" doc:id="9d0ef026-c97d-4539-a88c-a63e327a765d" expectedErrorType="APP:INVALID_MODE">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock when" doc:id="016d05da-c555-4612-926e-0615abc55c89" processor="flow-ref">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="agencyWithStationAndLaunches" attributeName="doc:name" />
+						<munit-tools:with-attribute whereValue="af5ef739-acd5-4d7c-a337-953fb1e99ebd" attributeName="doc:id" />
+					</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APP:INVALID_MODE" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="get:\agencies" doc:id="a8aa676b-9e93-412a-9cfd-58a63fe1ce43" name="get:\agencies:agencies-api-config" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="httpStatus equality" doc:id="2261bf22-1250-4b9c-8818-d7d7d18beb9e" actual="#[vars.httpStatus]" expected="#[400]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="APP:INVALID_YEAR_error_handling_test" doc:id="2c95adc0-6f93-4cf2-ad05-424c23b1a07a" expectedErrorType="APP:INVALID_YEAR">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="6d21360a-4eac-466d-a2d6-832083abfad9" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="launchesAndStationsByAgencyAndYear" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="d48ce3a9-4019-4069-a8c9-13f0b55eca75" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APP:INVALID_YEAR" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="get:\infoByAgencyAndYear" doc:id="6583872d-6767-4e23-9531-55e854668084" name="get:\infoByAgencyAndYear:agencies-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="httpStatus equality" doc:id="9c645641-616f-4e63-b1d4-60a42311f74f" actual="#[vars.httpStatus]" expected="#[400]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APP:WRONG_OFFSET_error_handling_test" doc:id="5ab8a076-ee3b-4f2b-8f45-0f5fbcd35462" expectedErrorType="APP:WRONG_OFFSET">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="9e8da6c5-a758-467f-83e9-c79a4759b2ca" processor="flow-ref">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="agencyWithStationAndLaunches" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="af5ef739-acd5-4d7c-a337-953fb1e99ebd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="APP:WRONG_OFFSET" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="get:\agencies" doc:id="bfae5657-7a74-44b5-a972-53a100c896ed" name="get:\agencies:agencies-api-config" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="httpStatus equality" doc:id="61927444-1df9-4876-858b-5276b7db9eb3" actual="#[vars.httpStatus]" expected="#[400]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APP:MISS_NAME_error_handling_test" doc:id="2f39b679-b8be-48cd-b816-fbeb8c0db998" expectedErrorType="APP:MISS_NAME">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="4f8a0d19-ee79-4cf8-8d8f-0260c9de1747" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="agencyWithStationAndLaunches" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="af5ef739-acd5-4d7c-a337-953fb1e99ebd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APP:MISS_NAME" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="get:\agencies" doc:id="68745b35-523e-4baf-a965-c43655fc586c" name="get:\agencies:agencies-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="httpStatus equality" doc:id="f647acff-3db6-4f5c-acff-a930172ef793" actual="#[vars.httpStatus]" expected="#[400]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APP:ALL_EMPTY_error_handling_test" doc:id="c43e4e0b-3605-42be-92bc-753da1f3c7f7" expectedErrorType="APP:ALL_EMPTY">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="ad5ec111-0611-47c2-bafe-facfde1142c8" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="databaseFilling" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="59a78358-96ed-4669-8c42-c1d982460949" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APP:ALL_EMPTY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="get:\database" doc:id="7c21e3f8-ae23-4e47-a7bb-9f95ca5e435e" name="get:\database:agencies-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="httpStatus equality" doc:id="da04b15b-be80-4a8a-87c8-8ea2bb61b5c2" actual="#[vars.httpStatus]" expected="#[404]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:BAD_REQUEST_error_handling_test" doc:id="a219a31f-b8c8-4f9d-8f8c-e6804e8cfc36" expectedErrorType="APIKIT:BAD_REQUEST">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="878f3d7c-9d62-405f-9abf-8523ec108bb8" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="agencies-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="agencies-api-main" doc:id="3c76184b-14ba-4bc6-b09c-889823598cff" name="agencies-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="htpStatus equality" doc:id="cd226d94-47bf-4e13-9caf-499ed0b3d6a4" actual="#[vars.httpStatus]" expected="#[400]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:NOT_FOUND_error_handling_test" doc:id="5e539a1f-aacc-4e1e-82b3-08ccac09bd39" expectedErrorType="APIKIT:NOT_FOUND">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock when" doc:id="e2f0177e-02cf-442c-aaa2-ee3a9fb96383" processor="apikit:router">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="agencies-api-config" attributeName="config-ref" />
+					</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="agencies-api-main" doc:id="3aa5bc24-9ced-40f9-8b60-045e72fc6743" name="agencies-api-main" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="htpStatus equality" doc:id="357acb63-bd5e-4cbf-a720-1a41489baa6a" actual="#[vars.httpStatus]" expected="#[404]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="APIKIT:METHOD_NOT_ALLOWED_error_handling_test" doc:id="b9a42871-c642-4a0f-a86c-ac4fa3693fa9" expectedErrorType="APIKIT:METHOD_NOT_ALLOWED">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock when" doc:id="3adbb7be-0f7c-4ec6-9569-fc2bc2d445ce" processor="apikit:router">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="agencies-api-config" attributeName="config-ref" />
+					</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="agencies-api-main" doc:id="abe56eb7-80e3-46dc-a007-7787e969ec0f" name="agencies-api-main" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="htpStatus equality" doc:id="7ce6fb95-3e2c-4a38-b3d7-7dfcb159aa99" actual="#[vars.httpStatus]" expected="#[405]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="APIKIT:NOT_ACCEPTABLE_error_handling_test" doc:id="0dcf4cc8-ceb1-4e23-8f55-ebf176c2c017" expectedErrorType="APIKIT:NOT_ACCEPTABLE">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock when" doc:id="55582580-4713-47c7-924c-bd38649f01a7" processor="apikit:router">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="agencies-api-config" attributeName="config-ref" />
+					</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="agencies-api-main" doc:id="c5c657a5-58ed-4e2d-8f6a-393d43601c59" name="agencies-api-main" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="htpStatus equality" doc:id="7b8209d5-777e-4ab8-a334-940cf3825472" actual="#[vars.httpStatus]" expected="#[406]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="APIKIT:UNSUPPORTED_MEDIA_TYPE_error_handling_test" doc:id="2c5ed1d4-b17b-47eb-8637-a4ad71876bd5" expectedErrorType="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock when" doc:id="67da8e4e-8c7f-4f24-a1cc-85789d13ee37" processor="apikit:router">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="agencies-api-config" attributeName="config-ref" />
+					</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="agencies-api-main" doc:id="92fd8513-f6ef-410b-b585-4a3408fd06e7" name="agencies-api-main" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="htpStatus equality" doc:id="71b9d9d8-230f-4e17-804d-f7de96aa9b3b" actual="#[vars.httpStatus]" expected="#[415]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="APIKIT:NOT_IMPLEMENTED_error_handling_test" doc:id="9075dbb9-fc9e-4f66-84f0-2da171ad52ac" expectedErrorType="APIKIT:NOT_IMPLEMENTED">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock when" doc:id="54048d81-86bc-4df8-8f16-376657e40997" processor="apikit:router">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="agencies-api-config" attributeName="config-ref" />
+					</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="agencies-api-main" doc:id="7cf965f6-2098-4d86-b861-293a6d11b8fa" name="agencies-api-main" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="htpStatus equality" doc:id="f6b0a552-08c5-4b0f-8770-ba1d6e425e8c" actual="#[vars.httpStatus]" expected="#[501]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="APIKIT:NOT_FOUND_console_error_handling_test" doc:id="da9958da-2d4d-4a54-8b4a-f9b9fe7c31bf" expectedErrorType="APIKIT:NOT_FOUND">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock when" doc:id="032cd2ec-418c-4b75-87b8-82ac0994465d" processor="apikit:console">
+					<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="agencies-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="agencies-api-main" doc:id="86c24647-b10b-4cdc-8ddb-82e34009a676" name="agencies-api-console" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="htpStatus equality" doc:id="7cf449fb-12ec-4b76-91a4-f5be43eb2976" actual="#[vars.httpStatus]" expected="#[404]" />
+			</munit:validation>
+		</munit:test>
+		<munit:test name="implementation-test-suite-setToDBTest"
+		doc:id="85d5731c-e631-43e9-81a0-df6380d7e13b" description="Test">
+		<munit:behavior>
+
+			<ee:transform doc:name="Transform Message" doc:id="c4b042ea-e2db-4ee7-a586-2301d856914c" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="InputPayload" ><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    "agency": "Soviet Space Program",
+    "launches": {
+      "launches_count": 19,
+      "launches_list": [
+        {
+          "name": "Sputnik 8K74PS | Sputnik 1",
+          "status": "Success",
+          "launch_year": "1957",
+          "failreason": "",
+          "rocket": {
+            "name": "Sputnik 8K74PS",
+            "family": "Sputnik",
+            "full_name": "Sputnik 8K74PS",
+            "variant": "8K74PS"
+          },
+          "mission": {
+            "name": "Sputnik 1",
+            "description": "First artificial satellite consisting of a 58 cm pressurized aluminium shell containing two 1 W transmitters for a total mass of 83.6 kg.",
+            "type": "Test Flight",
+            "orbit": "Low Earth Orbit",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Sputnik 8K74PS | Sputnik 2",
+          "status": "Success",
+          "launch_year": "1957",
+          "failreason": "",
+          "rocket": {
+            "name": "Sputnik 8K74PS",
+            "family": "Sputnik",
+            "full_name": "Sputnik 8K74PS",
+            "variant": "8K74PS"
+          },
+          "mission": {
+            "name": "Sputnik 2",
+            "description": "Second artificial satellite and first to carry an animal into orbit.",
+            "type": "Test Flight",
+            "orbit": "Low Earth Orbit",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Sputnik 8A91 | D-1 1",
+          "status": "Failure",
+          "launch_year": "1958",
+          "failreason": "",
+          "rocket": {
+            "name": "Sputnik 8A91",
+            "family": "Sputnik",
+            "full_name": "Sputnik 8A91",
+            "variant": "8A91"
+          },
+          "mission": {
+            "name": "D-1 1",
+            "description": "First complex scientific satellite with 12 experiments and a total mass of1327 kg. It failed to reach orbit due to a launch vehicle failure.",
+            "type": "Earth Science",
+            "orbit": "Low Earth Orbit",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Sputnik 8A91 | D1- 2",
+          "status": "Success",
+          "launch_year": "1958",
+          "failreason": "",
+          "rocket": {
+            "name": "Sputnik 8A91",
+            "family": "Sputnik",
+            "full_name": "Sputnik 8A91",
+            "variant": "8A91"
+          },
+          "mission": {
+            "name": "D1- 2",
+            "description": "First complex scientific satellite to reach orbit.",
+            "type": "Earth Science",
+            "orbit": "Low Earth Orbit",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok-L 8K72 | Luna-1a",
+          "status": "Failure",
+          "launch_year": "1958",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok-L 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok-L 8K72",
+            "variant": "L 8K72"
+          },
+          "mission": {
+            "name": "Luna-1a",
+            "description": "Luna E-1 number 1 was a Soviet spacecraft intended to impact the moon, however, was lost in a launch failure.",
+            "type": "Lunar Exploration",
+            "orbit": "Lunar Impactor",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok-L 8K72 | Luna-1b",
+          "status": "Failure",
+          "launch_year": "1958",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok-L 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok-L 8K72",
+            "variant": "L 8K72"
+          },
+          "mission": {
+            "name": "Luna-1b",
+            "description": "Luna E-1 number 2 was a Soviet spacecraft intended to impact the moon, however, was lost in a launch failure.",
+            "type": "Lunar Exploration",
+            "orbit": "Lunar Impactor",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok-L 8K72 | Luna-1c",
+          "status": "Failure",
+          "launch_year": "1958",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok-L 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok-L 8K72",
+            "variant": "L 8K72"
+          },
+          "mission": {
+            "name": "Luna-1c",
+            "description": "Luna E-1 number 3 was a Soviet spacecraft intended to impact the moon but was lost in a launch failure.",
+            "type": "Lunar Exploration",
+            "orbit": "Lunar Impactor",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok-L 8K72 | Luna-1",
+          "status": "Success",
+          "launch_year": "1959",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok-L 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok-L 8K72",
+            "variant": "L 8K72"
+          },
+          "mission": {
+            "name": "Luna-1",
+            "description": "Luna 1 was the first spacecraft to reach the vicinity of the Earth's Moon. Intended to be an impactor it was launched as part of the Soviet Luna programme. Due to an incorrectly timed upper stage burn during launch it missed the Moon.",
+            "type": "Lunar Exploration",
+            "orbit": "Lunar Impactor",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok-L 8K72 | Luna-2a",
+          "status": "Failure",
+          "launch_year": "1959",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok-L 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok-L 8K72",
+            "variant": "L 8K72"
+          },
+          "mission": {
+            "name": "Luna-2a",
+            "description": "Luna E-1 number 5 was a Soviet spacecraft intended to impact the moon but was lost in a launch failure.",
+            "type": "Lunar Exploration",
+            "orbit": "Lunar Impactor",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok-L 8K72 | Luna-2",
+          "status": "Success",
+          "launch_year": "1959",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok-L 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok-L 8K72",
+            "variant": "L 8K72"
+          },
+          "mission": {
+            "name": "Luna-2",
+            "description": "Luna 2 successfully impacted the Moon's surface making it the first spacecraft to reach the surface of the Moon and the first human-made object to make contact with another celestial body.",
+            "type": "Lunar Exploration",
+            "orbit": "Lunar Impactor",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok-L 8K72 | Luna-3",
+          "status": "Success",
+          "launch_year": "1959",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok-L 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok-L 8K72",
+            "variant": "L 8K72"
+          },
+          "mission": {
+            "name": "Luna-3",
+            "description": "Luna 3 was a Soviet spacecraft and was the first ever mission to photograph the far side of the moon.",
+            "type": "Lunar Exploration",
+            "orbit": "Lunar flyby",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok-L 8K72 | Luna-4a",
+          "status": "Failure",
+          "launch_year": "1960",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok-L 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok-L 8K72",
+            "variant": "L 8K72"
+          },
+          "mission": {
+            "name": "Luna-4a",
+            "description": "Luna 1960A was the second Soviet attempt to photograph the far side of the Moon. The first being the highly successful Luna 3 mission. Luna 1960A was designed to duplicate the Luna 3 mission, but with higher resolution cameras and a closer approach to the Moon.",
+            "type": "Lunar Exploration",
+            "orbit": "Lunar flyby",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok-L 8K72 | Luna-4b",
+          "status": "Failure",
+          "launch_year": "1960",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok-L 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok-L 8K72",
+            "variant": "L 8K72"
+          },
+          "mission": {
+            "name": "Luna-4b",
+            "description": "Luna 1960B was the third Soviet attempt to photograph the far side of the Moon, the first being the highly successful Luna 3 mission and the second being the unsuccessful Luna 1960A. Luna 1960B was launched on April 16, 1960. It was designed to duplicate the Luna 3 mission, but with higher resolution cameras and a closer approach to the Moon.",
+            "type": "Lunar Exploration",
+            "orbit": "Lunar flyby",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok 8K72 | Korabl'-Sputnik-1",
+          "status": "Success",
+          "launch_year": "1960",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok 8K72",
+            "variant": "8K72"
+          },
+          "mission": {
+            "name": "Korabl'-Sputnik-1",
+            "description": "Korabl-Sputnik was the first test flight of the Vostok programme and the first Vostok spacecraft.",
+            "type": "Test Flight",
+            "orbit": "Low Earth Orbit",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok 8K72 | Korabl-Sputnik (2)",
+          "status": "Failure",
+          "launch_year": "1960",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok 8K72",
+            "variant": "8K72"
+          },
+          "mission": {
+            "name": "Korabl-Sputnik (2)",
+            "description": "A test of the Vostok capsule carrying a pair of dogs. Unfortunately this failed after a failure of the booster.",
+            "type": "Test Flight",
+            "orbit": "Low Earth Orbit",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok 8K72 | Korabl'-Sputnik-2",
+          "status": "Success",
+          "launch_year": "1960",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok 8K72",
+            "variant": "8K72"
+          },
+          "mission": {
+            "name": "Korabl'-Sputnik-2",
+            "description": "A test of the Vostok capsule which carried dogs Belka and Stelka (amonst other animals) the flight was successful and all animals were recovered successfully.",
+            "type": "Test Flight",
+            "orbit": "Low Earth Orbit",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Molniya 8K78 | Mars-1a",
+          "status": "Failure",
+          "launch_year": "",
+          "failreason": "",
+          "rocket": {
+            "name": "Molniya 8K78",
+            "family": "Molniya",
+            "full_name": "Molniya 8K78",
+            "variant": "8K78"
+          },
+          "mission": {
+            "name": "Mars-1a",
+            "description": "A Russian mars flyby probe intended to photograph Mars.  The second stage failed.",
+            "type": "Planetary Science",
+            "orbit": "Mars flyby",
+            "planet_of_interest": {
+              "name": "Mars",
+              "moons": [
+                "Phobos",
+                "Deïmos"
+              ],
+              "semimajorAxis": 227943824,
+              "perihelion": 206700000,
+              "aphelion": 249200000,
+              "eccentricity": 0.09350,
+              "inclination": 1.85000,
+              "mass": 6.41712,
+              "density": 3.93410,
+              "gravity": 3.71000,
+              "meanRadius": 3389.50000,
+              "polarRadius": 3376.20000,
+              "discoveredBy": "",
+              "discoveryDate": "",
+              "alternativeName": "",
+              "axialTilt": 25.19,
+              "avgTemp": 0
+            }
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Molniya 8K78 | Mars-1b",
+          "status": "Failure",
+          "launch_year": "",
+          "failreason": "",
+          "rocket": {
+            "name": "Molniya 8K78",
+            "family": "Molniya",
+            "full_name": "Molniya 8K78",
+            "variant": "8K78"
+          },
+          "mission": {
+            "name": "Mars-1b",
+            "description": "A Russian mars flyby probe intended to photograph Mars.  The third stage failed to ignite.",
+            "type": "Planetary Science",
+            "orbit": "Mars flyby",
+            "planet_of_interest": {
+              "name": "Mars",
+              "moons": [
+                "Phobos",
+                "Deïmos"
+              ],
+              "semimajorAxis": 227943824,
+              "perihelion": 206700000,
+              "aphelion": 249200000,
+              "eccentricity": 0.09350,
+              "inclination": 1.85000,
+              "mass": 6.41712,
+              "density": 3.93410,
+              "gravity": 3.71000,
+              "meanRadius": 3389.50000,
+              "polarRadius": 3376.20000,
+              "discoveredBy": "",
+              "discoveryDate": "",
+              "alternativeName": "",
+              "axialTilt": 25.19,
+              "avgTemp": 0
+            }
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        },
+        {
+          "name": "Vostok 8K72 | Korabl'-Sputnik-3",
+          "status": "Success",
+          "launch_year": "1960",
+          "failreason": "",
+          "rocket": {
+            "name": "Vostok 8K72",
+            "family": "Vostok",
+            "full_name": "Vostok 8K72",
+            "variant": "8K72"
+          },
+          "mission": {
+            "name": "Korabl'-Sputnik-3",
+            "description": "Another test of the Vostok capsule which had a successful flight into orbit but during re-entry the engine failed to cut off and burned to completion resulting in an incorrect entry trajectory. The vehicle was destroyed in order to ensure the vehicle didn't fall into enemy hands.",
+            "type": "Test Flight",
+            "orbit": "Low Earth Orbit",
+            "planet_of_interest": ""
+          },
+          "pad": {
+            "name": "1/5",
+            "location": {
+              "name": "Baikonur Cosmodrome, Republic of Kazakhstan",
+              "country_code": "KAZ",
+              "total_launch_count": 1523,
+              "total_landing_count": 0
+            }
+          }
+        }
+      ]
+    }
+  }
+]]]></ee:set-variable>
+					<ee:set-variable variableName="CheckFalse" ><![CDATA[%dw 2.0
+output application/java
+---
+false]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:mock-when doc:name="SetVariable" doc:id="387d0a2d-6868-4095-a132-8dec986e9a32" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="c8219833-41e6-4dc2-92da-efe9f35029e8" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="checkIdFile" value='#["false"]' mediaType="application/java" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="1Choice1Write" doc:id="8a94e2fc-28aa-438e-b16b-13f52efe6c23" processor="file:write">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="feb1188c-7490-4ca8-a17c-c85b94842817" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="ColExcist" doc:id="8dd99a9d-b644-41e7-8135-af9a2f312ab9" processor="mongo:collection-exists">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="c5c48364-a762-42f1-a7fa-99e9e7ee67ae" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="InsertDoc" doc:id="51803bee-64bf-4a29-9202-928d4c43551d" processor="mongo:insert-documents">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="6827e0d2-c33c-47a9-8e3e-2d4d5295be86" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<set-payload doc:name="Set Payload" doc:id="784fd426-0258-4e36-9f3b-c99eabad4bd8" value="#[vars.InputPayload]"/>
+			<flow-ref doc:name="Flow-ref to setToDB" doc:id="61ddeeb7-25f9-440d-889e-b23a2d4082dc" name="setToDB"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="cd3cad37-29ff-43a7-bac6-e303be4bf7a8" is="#[MunitTools::nullValue()]" expression="#[payload.id]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="helpFlowTest" doc:id="3f01eacf-fcd8-4e29-868b-7e3c374259b2" description="Test">
+		<munit:behavior >
+			<ee:transform doc:name="Transform Message" doc:id="c21f6ab2-740b-422c-ae38-2a59cdae3bf6" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="payload" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    "info": {
+        "endpoints": [
+            {
+                "/api/agencies ": {
+                    "1": "name",
+                    "2": "mode",
+                    "3": "limit",
+                    "4": "offset"
+                }
+            },
+            {
+                "/api/infoByAgencyAndYear": {
+                    "1": "name",
+                    "2": "year",
+                    "3": "limit",
+                    "4": "offset"
+                }
+            },
+            {
+                "/api/database": {
+                    "1": "name",
+                    "2": "offset"
+                }
+            }
+        ],
+        "1": "For correct searching write the name of agency",
+        "2": "Do not repeat the same offset and limit for one agency",
+        "QueryParams:": {
+            "1": "name",
+            "2": "mode",
+            "3": "limit",
+            "4": "offset",
+            "5": "year"
+        }
+    },
+    "mode": {
+        "1": "detailed",
+        "2": "normal",
+        "3": "list"
+    },
+    "agency": {
+        "1": "1worldspace",
+        "2": "Ad Astra Rocket Company",
+        "3": "Aerojet",
+        "4": "Aeronautics and Space Research and Diffusion Center",
+        "5": "Aérospatiale",
+        "6": "Aevum",
+        "7": "Airbus Defence and Space",
+        "8": "Algerian Space Agency",
+        "9": "Alliant Techsystems",
+        "10": "AlYahSat",
+        "11": "American Rocket Company",
+        "12": "A.M. Makarov Yuzhny Machine-Building Plant",
+        "13": "Amsat",
+        "14": "Andrews Space",
+        "15": "Antrix Corporation Limited",
+        "16": "Arab Satellite Communications Organization",
+        "17": "Arianespace",
+        "18": "Armadillo Aerospace",
+        "19": "Army Ballistic Missile Agency",
+        "20": "Asia Pacific Multilateral Cooperation in Space Technology and Applications",
+        "21": "Asia-Pacific Regional Space Agency Forum",
+        "22": "Asia-Pacific Space Cooperation Organization",
+        "23": "Astra Space",
+        "24": "Astrium Satellites",
+        "25": "Astronautic Technology Sdn Bhd",
+        "26": "Austrian Space Agency",
+        "27": "Avanti Communications",
+        "28": "Avio S.p.A",
+        "29": "Axiom Space",
+        "30": "Azerbaijan National Aerospace Agency",
+        "31": "Ball Aerospace & Technologies Corp.",
+        "32": "Belarus Space Agency",
+        "33": "Belgian Institute for Space Aeronomy",
+        "34": "Bigelow Aerospace",
+        "35": "Blue Origin",
+        "36": "Boeing",
+        "37": "Bolivarian Agency for Space Activities",
+        "38": "Bolivian Space Agency",
+        "39": "Brazilian Space Agency",
+        "40": "Bristol Aerospace Company",
+        "41": "British Aerospace",
+        "42": "British Satellite Broadcasting",
+        "43": "Broadcasting Satellite System Corporation",
+        "44": "Bulgarian Space Agency",
+        "45": "Canadian Arrow",
+        "46": "Canadian Space Agency",
+        "47": "Centre for Remote Imaging, Sensing and Processing",
+        "48": "China Aerospace Corporation",
+        "49": "China Aerospace Science and Industry Corporation",
+        "50": "China Aerospace Science and Technology Corporation",
+        "51": "China Great Wall Industry Corporation",
+        "52": "China National Space Administration",
+        "53": "Chinarocket Co., Ltd.",
+        "54": "Chrysler",
+        "55": "Colombian Space Commission",
+        "56": "Comisión Nacional de Actividades Espaciales",
+        "57": "Committee on Space Research",
+        "58": "Commonwealth Scientific and Industrial Research Organisation",
+        "59": "Consultative Committee for Space Data Systems",
+        "60": "Convair",
+        "61": "Copenhagen Suborbitals",
+        "62": "Croatian Space Agency",
+        "63": "Danish National Space Center",
+        "64": "Deep Space Industries",
+        "65": "Department of Aerospace Science and Technology",
+        "66": "Digital Globe",
+        "67": "Direction générale de l'armement",
+        "68": "DirecTV",
+        "69": "EADS Astrium Space Transportation",
+        "70": "Echostar",
+        "71": "Energia",
+        "72": "Eurockot Launch Services",
+        "73": "European Launcher Development Organisation",
+        "74": "European Organisation for the Exploitation of Meteorological Satellites",
+        "75": "European Space Agency",
+        "76": "European Space Research Organisation",
+        "78": "Eutelsat",
+        "79": "EXOS Aerospace",
+        "80": "ExPace",
+        "81": "Fairchild Space and Electronics Division",
+        "82": "FCT Space Office",
+        "83": "Firefly Aerospace",
+        "84": "Fokker Space & Systems",
+        "85": "French Armed Forces",
+        "86": "Galactic Energy",
+        "87": "General Dynamics",
+        "88": "General Electric",
+        "89": "Geo-Informatics and Space Technology Development Agency",
+        "90": "GeoOptics",
+        "91": "German Aerospace Center",
+        "92": "Gilmour Space Technologies",
+        "93": "GK Launch Services",
+        "94": "Globalstar",
+        "95": "Hawker Siddeley Dynamics",
+        "96": "Hisdesat",
+        "97": "HispaSat",
+        "98": "Hughes",
+        "99": "Hughes Aircraft",
+        "100": "Hungarian Space Office",
+        "101": "IHI Corporation",
+        "102": "Indian Space Research Organization",
+        "103": "Inmarsat",
+        "104": "Institute for Space Applications and Remote Sensing",
+        "105": "Institute of Space and Astronautical Science",
+        "106": "Instituto Nacional de Técnica Aeroespacial",
+        "107": "Intelsat",
+        "108": "International Launch Services",
+        "109": "Interorbital Systems",
+        "110": "Interstellar Technologies",
+        "111": "INVAP",
+        "112": "Iranian Space Agency",
+        "113": "Iridium Communications",
+        "114": "ISC Kosmotras",
+        "115": "iSpace",
+        "116": "Israel Aerospace Industries",
+        "117": "Israeli Space Agency",
+        "118": "Italian Space Agency",
+        "119": "Japan Aerospace Exploration Agency",
+        "120": "JSC Information Satellite Systems",
+        "121": "Kazakh Space Research Institute",
+        "122": "KB Mashinostroyeniya",
+        "123": "Khrunichev State Research and Production Space Center",
+        "124": "Kongsberg Defence & Aerospace",
+        "125": "Korea Aerospace Research Institute",
+        "126": "Korean Astronaut Program",
+        "127": "Korean Committee of Space Technology",
+        "128": "Land Launch",
+        "129": "LandSpace",
+        "130": "Lithuanian Space Association",
+        "131": "Lockheed Martin",
+        "132": "Lockheed Martin Space Operations",
+        "133": "Lockheed Space Operations Company",
+        "134": "Makeyev Rocket Design Bureau",
+        "135": "Malaysian National Space Agency",
+        "136": "Martin Marietta",
+        "137": "Masten Space Systems",
+        "138": "McDonnell Douglas",
+        "139": "MEASAT Satellite Systems",
+        "140": "Mexican Satellite System",
+        "141": "Mexican Space Agency",
+        "142": "Ministry of Defence of the Russian Federation",
+        "143": "Ministry of Transport of the Czech Republic - Space Technologies and Satellite Systems Department",
+        "144": "Missile Defense Agency",
+        "145": "Mitsubishi Heavy Industries",
+        "146": "Mohammed bin Rashid Space Centre",
+        "147": "Moscow Institute of Thermal Technology",
+        "148": "National Aeronautics and Space Administration",
+        "149": "National Authority for Remote Sensing and Space Sciences",
+        "150": "National Center of Space Research",
+        "151": "National Commission for Aerospace Research and Development",
+        "152": "National Commission for Space Research",
+        "153": "National Institute of Aeronautics and Space",
+        "154": "National Oceanic and Atmospheric Administration",
+        "155": "National Reconnaissance Office",
+        "156": "National Remote Sensing Center of Mongolia",
+        "157": "National Remote Sensing Center of Tunisia",
+        "158": "National Research Council",
+        "159": "National Security Agency",
+        "160": "National Space Activities Commission",
+        "161": "National Space Agency (KazCosmos)",
+        "162": "National Space Agency of the Republic of Kazakhstan",
+        "163": "National Space Agency of Ukraine",
+        "164": "National Space Development Agency of Japan",
+        "165": "National Space Organization",
+        "166": "National Space Research and Development Agency",
+        "167": "Netherlands Institute for Space Research",
+        "168": "North American Aviation",
+        "169": "Northrop Grumman Innovation Systems",
+        "170": "Northrop Grumman Space Technology",
+        "171": "Norwegian Space Centre",
+        "172": "NPO Lavochkin",
+        "173": "OHB System",
+        "174": "OneSpace",
+        "175": "Optus",
+        "176": "Orbital ATK",
+        "177": "Orbital Sciences Corporation",
+        "178": "Pakistan Space and Upper Atmosphere Research Commission",
+        "179": "PanAmSat",
+        "180": "Paradigm Secure Communications",
+        "181": "People's Liberation Army",
+        "182": "Philco Ford",
+        "183": "Planetary Resources",
+        "184": "Planet Labs",
+        "185": "PlanetSpace",
+        "186": "Polish Space Agency",
+        "187": "Production Corporation Polyot",
+        "188": "Progress Rocket Space Center",
+        "189": "ProtoStar",
+        "190": "PT Telkom",
+        "191": "Reaction Engines Ltd.",
+        "192": "Regional African Satellite Communication Organization",
+        "193": "Relativity Space",
+        "194": "RKK Energiya",
+        "195": "Robotics Institute",
+        "196": "Rocketdyne",
+        "197": "Rocket Lab Ltd",
+        "198": "Rockwell International",
+        "199": "Romanian Space Agency",
+        "200": "Royal Aircraft Establishment",
+        "201": "Royal Australian Air Force",
+        "202": "Royal Centre for Remote Sensing",
+        "203": "RUAG Space",
+        "204": "Russian Aerospace Defence Forces",
+        "205": "Russian Federal Space Agency (ROSCOSMOS)",
+        "206": "Russian Space Forces",
+        "207": "Sandia National Laboratories",
+        "208": "Satmex",
+        "209": "Scaled Composites",
+        "210": "Science and Engineering Research Council",
+        "211": "Scorpius Space Launch Company",
+        "212": "Sea Launch",
+        "213": "SES",
+        "214": "Sierra Nevada Corporation",
+        "215": "SKY Perfect JSAT Group",
+        "216": "Snecma",
+        "217": "Société d'étude et de réalisation d'engins balistiques",
+        "218": "South African National Space Agency",
+        "219": "Southern Launch",
+        "220": "Soviet Space Program",
+        "221": "Space Adventures",
+        "222": "SpaceDev",
+        "223": "Spaceflight Launch Services",
+        "224": "Space Florida",
+        "225": "SpaceQuest, Ltd.",
+        "226": "Space Research and Remote Sensing Organization",
+        "227": "Space Research Centre",
+        "228": "Space Research Institute of Saudi Arabia",
+        "229": "Space Services Inc.",
+        "230": "Space Systems/Loral",
+        "231": "SpaceX",
+        "232": "SPAR Aerospace",
+        "233": "Spire Global",
+        "234": "Sri Lanka Space Agency",
+        "235": "Star One",
+        "236": "Starsem SA",
+        "237": "Strategic Missile Troops",
+        "238": "Surrey Satellite Technology Ltd",
+        "239": "Swales Aerospace",
+        "240": "Swedish National Space Board",
+        "241": "Swedish Space Corp",
+        "242": "Swiss Space Office",
+        "243": "Technical University of Denmark - National Space Institute",
+        "244": "Telesat",
+        "245": "Tethers Unlimited, Inc.",
+        "246": "Thaicom",
+        "247": "Thales Alenia Space",
+        "248": "TiSPACE",
+        "249": "TRW",
+        "250": "TUBITAK Space Technologies Research Institute",
+        "251": "Turkish Aerospace Industries",
+        "252": "Turkmenistan National Space Agency",
+        "253": "Türksat",
+        "254": "UK Ministry Of Defence",
+        "255": "UK Space Agency",
+        "256": "United Launch Alliance",
+        "257": "United Nations Committee on the Peaceful Uses of Outer Space",
+        "258": "United Nations Office for Outer Space Affairs",
+        "259": "United Space Alliance",
+        "260": "United States Air Force",
+        "261": "United States Departement of Defense",
+        "262": "UP Aerospace",
+        "263": "US Army",
+        "264": "US Navy",
+        "265": "Uzbek State Space Research Agency (UzbekCosmos)",
+        "266": "Vector",
+        "267": "Vietnam Posts and Telecommunications Group",
+        "268": "Virgin Galactic",
+        "269": "Virgin Orbit",
+        "270": "Vought",
+        "271": "Weapons Research Establishment",
+        "272": "WildBlue",
+        "273": "XCOR  Aerospace",
+        "274": "XTAR LLC",
+        "275": "Yuzhnoye Design Bureau"
+    }
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="e91e1d81-ab47-4136-8e23-4a69f56735c4" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="helpFlow" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[vars.payload]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to helpFlow" doc:id="7c79747a-32e9-4bf8-9fb1-2141dd91f37e" name="helpFlow"/>
+			<ee:transform doc:name="Transform Message" doc:id="dde61a2b-26b4-4e60-b0fc-a67cb2e66435" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="expected" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    "info": {
+        "endpoints": [
+            {
+                "/api/agencies ": {
+                    "1": "name",
+                    "2": "mode",
+                    "3": "limit",
+                    "4": "offset"
+                }
+            },
+            {
+                "/api/infoByAgencyAndYear": {
+                    "1": "name",
+                    "2": "year",
+                    "3": "limit",
+                    "4": "offset"
+                }
+            },
+            {
+                "/api/database": {
+                    "1": "name",
+                    "2": "offset"
+                }
+            }
+        ],
+        "1": "For correct searching write the name of agency",
+        "2": "Do not repeat the same offset and limit for one agency",
+        "QueryParams:": {
+            "1": "name",
+            "2": "mode",
+            "3": "limit",
+            "4": "offset",
+            "5": "year"
+        }
+    },
+    "mode": {
+        "1": "detailed",
+        "2": "normal",
+        "3": "list"
+    },
+    "agency": {
+        "1": "1worldspace",
+        "2": "Ad Astra Rocket Company",
+        "3": "Aerojet",
+        "4": "Aeronautics and Space Research and Diffusion Center",
+        "5": "Aérospatiale",
+        "6": "Aevum",
+        "7": "Airbus Defence and Space",
+        "8": "Algerian Space Agency",
+        "9": "Alliant Techsystems",
+        "10": "AlYahSat",
+        "11": "American Rocket Company",
+        "12": "A.M. Makarov Yuzhny Machine-Building Plant",
+        "13": "Amsat",
+        "14": "Andrews Space",
+        "15": "Antrix Corporation Limited",
+        "16": "Arab Satellite Communications Organization",
+        "17": "Arianespace",
+        "18": "Armadillo Aerospace",
+        "19": "Army Ballistic Missile Agency",
+        "20": "Asia Pacific Multilateral Cooperation in Space Technology and Applications",
+        "21": "Asia-Pacific Regional Space Agency Forum",
+        "22": "Asia-Pacific Space Cooperation Organization",
+        "23": "Astra Space",
+        "24": "Astrium Satellites",
+        "25": "Astronautic Technology Sdn Bhd",
+        "26": "Austrian Space Agency",
+        "27": "Avanti Communications",
+        "28": "Avio S.p.A",
+        "29": "Axiom Space",
+        "30": "Azerbaijan National Aerospace Agency",
+        "31": "Ball Aerospace & Technologies Corp.",
+        "32": "Belarus Space Agency",
+        "33": "Belgian Institute for Space Aeronomy",
+        "34": "Bigelow Aerospace",
+        "35": "Blue Origin",
+        "36": "Boeing",
+        "37": "Bolivarian Agency for Space Activities",
+        "38": "Bolivian Space Agency",
+        "39": "Brazilian Space Agency",
+        "40": "Bristol Aerospace Company",
+        "41": "British Aerospace",
+        "42": "British Satellite Broadcasting",
+        "43": "Broadcasting Satellite System Corporation",
+        "44": "Bulgarian Space Agency",
+        "45": "Canadian Arrow",
+        "46": "Canadian Space Agency",
+        "47": "Centre for Remote Imaging, Sensing and Processing",
+        "48": "China Aerospace Corporation",
+        "49": "China Aerospace Science and Industry Corporation",
+        "50": "China Aerospace Science and Technology Corporation",
+        "51": "China Great Wall Industry Corporation",
+        "52": "China National Space Administration",
+        "53": "Chinarocket Co., Ltd.",
+        "54": "Chrysler",
+        "55": "Colombian Space Commission",
+        "56": "Comisión Nacional de Actividades Espaciales",
+        "57": "Committee on Space Research",
+        "58": "Commonwealth Scientific and Industrial Research Organisation",
+        "59": "Consultative Committee for Space Data Systems",
+        "60": "Convair",
+        "61": "Copenhagen Suborbitals",
+        "62": "Croatian Space Agency",
+        "63": "Danish National Space Center",
+        "64": "Deep Space Industries",
+        "65": "Department of Aerospace Science and Technology",
+        "66": "Digital Globe",
+        "67": "Direction générale de l'armement",
+        "68": "DirecTV",
+        "69": "EADS Astrium Space Transportation",
+        "70": "Echostar",
+        "71": "Energia",
+        "72": "Eurockot Launch Services",
+        "73": "European Launcher Development Organisation",
+        "74": "European Organisation for the Exploitation of Meteorological Satellites",
+        "75": "European Space Agency",
+        "76": "European Space Research Organisation",
+        "78": "Eutelsat",
+        "79": "EXOS Aerospace",
+        "80": "ExPace",
+        "81": "Fairchild Space and Electronics Division",
+        "82": "FCT Space Office",
+        "83": "Firefly Aerospace",
+        "84": "Fokker Space & Systems",
+        "85": "French Armed Forces",
+        "86": "Galactic Energy",
+        "87": "General Dynamics",
+        "88": "General Electric",
+        "89": "Geo-Informatics and Space Technology Development Agency",
+        "90": "GeoOptics",
+        "91": "German Aerospace Center",
+        "92": "Gilmour Space Technologies",
+        "93": "GK Launch Services",
+        "94": "Globalstar",
+        "95": "Hawker Siddeley Dynamics",
+        "96": "Hisdesat",
+        "97": "HispaSat",
+        "98": "Hughes",
+        "99": "Hughes Aircraft",
+        "100": "Hungarian Space Office",
+        "101": "IHI Corporation",
+        "102": "Indian Space Research Organization",
+        "103": "Inmarsat",
+        "104": "Institute for Space Applications and Remote Sensing",
+        "105": "Institute of Space and Astronautical Science",
+        "106": "Instituto Nacional de Técnica Aeroespacial",
+        "107": "Intelsat",
+        "108": "International Launch Services",
+        "109": "Interorbital Systems",
+        "110": "Interstellar Technologies",
+        "111": "INVAP",
+        "112": "Iranian Space Agency",
+        "113": "Iridium Communications",
+        "114": "ISC Kosmotras",
+        "115": "iSpace",
+        "116": "Israel Aerospace Industries",
+        "117": "Israeli Space Agency",
+        "118": "Italian Space Agency",
+        "119": "Japan Aerospace Exploration Agency",
+        "120": "JSC Information Satellite Systems",
+        "121": "Kazakh Space Research Institute",
+        "122": "KB Mashinostroyeniya",
+        "123": "Khrunichev State Research and Production Space Center",
+        "124": "Kongsberg Defence & Aerospace",
+        "125": "Korea Aerospace Research Institute",
+        "126": "Korean Astronaut Program",
+        "127": "Korean Committee of Space Technology",
+        "128": "Land Launch",
+        "129": "LandSpace",
+        "130": "Lithuanian Space Association",
+        "131": "Lockheed Martin",
+        "132": "Lockheed Martin Space Operations",
+        "133": "Lockheed Space Operations Company",
+        "134": "Makeyev Rocket Design Bureau",
+        "135": "Malaysian National Space Agency",
+        "136": "Martin Marietta",
+        "137": "Masten Space Systems",
+        "138": "McDonnell Douglas",
+        "139": "MEASAT Satellite Systems",
+        "140": "Mexican Satellite System",
+        "141": "Mexican Space Agency",
+        "142": "Ministry of Defence of the Russian Federation",
+        "143": "Ministry of Transport of the Czech Republic - Space Technologies and Satellite Systems Department",
+        "144": "Missile Defense Agency",
+        "145": "Mitsubishi Heavy Industries",
+        "146": "Mohammed bin Rashid Space Centre",
+        "147": "Moscow Institute of Thermal Technology",
+        "148": "National Aeronautics and Space Administration",
+        "149": "National Authority for Remote Sensing and Space Sciences",
+        "150": "National Center of Space Research",
+        "151": "National Commission for Aerospace Research and Development",
+        "152": "National Commission for Space Research",
+        "153": "National Institute of Aeronautics and Space",
+        "154": "National Oceanic and Atmospheric Administration",
+        "155": "National Reconnaissance Office",
+        "156": "National Remote Sensing Center of Mongolia",
+        "157": "National Remote Sensing Center of Tunisia",
+        "158": "National Research Council",
+        "159": "National Security Agency",
+        "160": "National Space Activities Commission",
+        "161": "National Space Agency (KazCosmos)",
+        "162": "National Space Agency of the Republic of Kazakhstan",
+        "163": "National Space Agency of Ukraine",
+        "164": "National Space Development Agency of Japan",
+        "165": "National Space Organization",
+        "166": "National Space Research and Development Agency",
+        "167": "Netherlands Institute for Space Research",
+        "168": "North American Aviation",
+        "169": "Northrop Grumman Innovation Systems",
+        "170": "Northrop Grumman Space Technology",
+        "171": "Norwegian Space Centre",
+        "172": "NPO Lavochkin",
+        "173": "OHB System",
+        "174": "OneSpace",
+        "175": "Optus",
+        "176": "Orbital ATK",
+        "177": "Orbital Sciences Corporation",
+        "178": "Pakistan Space and Upper Atmosphere Research Commission",
+        "179": "PanAmSat",
+        "180": "Paradigm Secure Communications",
+        "181": "People's Liberation Army",
+        "182": "Philco Ford",
+        "183": "Planetary Resources",
+        "184": "Planet Labs",
+        "185": "PlanetSpace",
+        "186": "Polish Space Agency",
+        "187": "Production Corporation Polyot",
+        "188": "Progress Rocket Space Center",
+        "189": "ProtoStar",
+        "190": "PT Telkom",
+        "191": "Reaction Engines Ltd.",
+        "192": "Regional African Satellite Communication Organization",
+        "193": "Relativity Space",
+        "194": "RKK Energiya",
+        "195": "Robotics Institute",
+        "196": "Rocketdyne",
+        "197": "Rocket Lab Ltd",
+        "198": "Rockwell International",
+        "199": "Romanian Space Agency",
+        "200": "Royal Aircraft Establishment",
+        "201": "Royal Australian Air Force",
+        "202": "Royal Centre for Remote Sensing",
+        "203": "RUAG Space",
+        "204": "Russian Aerospace Defence Forces",
+        "205": "Russian Federal Space Agency (ROSCOSMOS)",
+        "206": "Russian Space Forces",
+        "207": "Sandia National Laboratories",
+        "208": "Satmex",
+        "209": "Scaled Composites",
+        "210": "Science and Engineering Research Council",
+        "211": "Scorpius Space Launch Company",
+        "212": "Sea Launch",
+        "213": "SES",
+        "214": "Sierra Nevada Corporation",
+        "215": "SKY Perfect JSAT Group",
+        "216": "Snecma",
+        "217": "Société d'étude et de réalisation d'engins balistiques",
+        "218": "South African National Space Agency",
+        "219": "Southern Launch",
+        "220": "Soviet Space Program",
+        "221": "Space Adventures",
+        "222": "SpaceDev",
+        "223": "Spaceflight Launch Services",
+        "224": "Space Florida",
+        "225": "SpaceQuest, Ltd.",
+        "226": "Space Research and Remote Sensing Organization",
+        "227": "Space Research Centre",
+        "228": "Space Research Institute of Saudi Arabia",
+        "229": "Space Services Inc.",
+        "230": "Space Systems/Loral",
+        "231": "SpaceX",
+        "232": "SPAR Aerospace",
+        "233": "Spire Global",
+        "234": "Sri Lanka Space Agency",
+        "235": "Star One",
+        "236": "Starsem SA",
+        "237": "Strategic Missile Troops",
+        "238": "Surrey Satellite Technology Ltd",
+        "239": "Swales Aerospace",
+        "240": "Swedish National Space Board",
+        "241": "Swedish Space Corp",
+        "242": "Swiss Space Office",
+        "243": "Technical University of Denmark - National Space Institute",
+        "244": "Telesat",
+        "245": "Tethers Unlimited, Inc.",
+        "246": "Thaicom",
+        "247": "Thales Alenia Space",
+        "248": "TiSPACE",
+        "249": "TRW",
+        "250": "TUBITAK Space Technologies Research Institute",
+        "251": "Turkish Aerospace Industries",
+        "252": "Turkmenistan National Space Agency",
+        "253": "Türksat",
+        "254": "UK Ministry Of Defence",
+        "255": "UK Space Agency",
+        "256": "United Launch Alliance",
+        "257": "United Nations Committee on the Peaceful Uses of Outer Space",
+        "258": "United Nations Office for Outer Space Affairs",
+        "259": "United Space Alliance",
+        "260": "United States Air Force",
+        "261": "United States Departement of Defense",
+        "262": "UP Aerospace",
+        "263": "US Army",
+        "264": "US Navy",
+        "265": "Uzbek State Space Research Agency (UzbekCosmos)",
+        "266": "Vector",
+        "267": "Vietnam Posts and Telecommunications Group",
+        "268": "Virgin Galactic",
+        "269": "Virgin Orbit",
+        "270": "Vought",
+        "271": "Weapons Research Establishment",
+        "272": "WildBlue",
+        "273": "XCOR  Aerospace",
+        "274": "XTAR LLC",
+        "275": "Yuzhnoye Design Bureau"
+    }
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="937ed211-62e9-4607-a168-a58b0606b80b" is="#[MunitTools::equalTo(vars.expected)]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+</mule>

@@ -5,29 +5,36 @@ planets:
   host: "localhost"
   basepath: "/api/"
   port: "8088"
+  path1: "planets"
+  path2: "discovery"
 
 stations:
   host: "localhost"
   basepath: "/api/"
   port: "8083"
+  path: "station"
 
 launches:
   host: "localhost"
   basepath: "/api/"
   port: "8085"
+  path: "launchesByStatusAndYear"
 
 thespacedevs:
   host: "lldev.thespacedevs.com"
   basepath: "/2.2.0/config/"
   protocol: "HTTP"
+  path: "launcher"
 
 mongoDB:
-  connection: "mongodb+srv://<name>:<pass>@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
+  connection: "mongodb+srv://nataliia:Taras1@spaceagenciesdb.yqbfp.mongodb.net/SpaceAgenciesDB?retryWrites=true&w=majority"
 
 records:
+  to_write_folder: "C:/Users/Natalka/AnypointStudio/demo-workspace/agencies-api/src/main/resources/"
   write_folder: "C:/Users/Natalka/AnypointStudio/demo-workspace/agencies-api/src/main/resources/Write/"
   id_folder: "C:/Users/Natalka/AnypointStudio/demo-workspace/agencies-api/src/main/resources/id/"
-  dir: "C:\\Users\\Natalka\\AnypointStudio\\demo-workspace\\agencies-api\\src\\main\\resources\\id\\"
+  write_dir: "C:\\Users\\Natalka\\AnypointStudio\\demo-workspace\\agencies-api\\src\\main\\resources\\Write\\"
+  id_dir: "C:\\Users\\Natalka\\AnypointStudio\\demo-workspace\\agencies-api\\src\\main\\resources\\id\\"
   file: "r_id.txt"
   
 validation:
@@ -53,6 +60,5 @@ error_messaging:
                    3. There are no records with the specified launch year on the page you are viewing. 
                    Refer to the help page to find out which pages correspond to the year you are interested in and change the offset to the appropriate one."
 offset_limitations:
-  default: "-1"
   stations: "0"
   rockets: "500"

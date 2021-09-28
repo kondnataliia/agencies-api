@@ -27,22 +27,23 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 			doc:name="Set limit" doc:id="51e13b5a-cae2-4a85-aafc-8d5c5768a1ee"
 			variableName="limit" />
 		<set-variable
-			value="#[message.attributes.queryParams.offset default -1]"
+			value="#[message.attributes.queryParams.offset]"
 			doc:name="Set offset" doc:id="4f327e66-08db-4fd9-9176-f09cb7319d77"
 			variableName="offset" />
+		<choice doc:name="Choice" doc:id="24ee2858-dba6-4ca5-9925-b71614a4dd90" >
+			<when expression="#[isEmpty(vars.offset)]" >
+				<raise-error doc:name="WRONG_OFFSET error" doc:id="583c964a-dd11-49bf-a42c-b9cbc3ab3c98" type="APP:WRONG_OFFSET" description="You forgot to specify the 'offset' parameter" />
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Default block logger" doc:id="dd88e4e4-6aa6-48ad-8a20-d7334777a2d2" message="#[&quot;The 'offset' parameter has been set&quot;]"/>
+			</otherwise>
+		</choice>
 		<set-variable
 			value='#[message.attributes.queryParams.name default ""]'
 			doc:name="Set name"
 			doc:id="00fe79b6-a3c0-4751-a811-d4978a3cee41" variableName="name" />
 		<choice doc:name="Choice"
 			doc:id="f1553f30-ff0f-47af-b442-47b4d1f658cb">
-			<when
-				expression="#[vars.offset == Mule::p('offset_limitations.default')]">
-				<raise-error doc:name="WRONG_OFFSET error"
-					doc:id="583c964a-dd11-49bf-a42c-b9cbc3ab3c98"
-					type="APP:MISS_OFFSET"
-					description="You forgot to specify the 'offset' parameter" />
-			</when>
 			<when expression='#[vars.name == ""]'>
 				<raise-error doc:name="MISS_NAME error"
 					doc:id="1ccdaaed-7344-48a5-9b94-9e02c5b8f10a" type="APP:MISS_NAME"
@@ -51,7 +52,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 			<otherwise>
 				<logger level="INFO" doc:name="Default block logger"
 					doc:id="cc059b05-36d1-479b-96d0-d17d03080deb"
-					message='#["Default block execution"]' />
+					message="#[&quot;The 'offset' and 'name' parameters were set&quot;]" />
 			</otherwise>
 		</choice>
 		<set-variable
@@ -72,14 +73,25 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 		<http:request method="GET" doc:name="getLaunches"
 			doc:id="33edb96d-bfdb-4eab-9f50-609278864808"
 			config-ref="HTTP_Request_configuration_Launches"
-			path='#["launchesByStatusAndYear?limit=" ++ vars.limit ++ "&amp;offset=" ++ vars.offset]'
-			responseTimeout="60000" />
+			path='${launches.path}'
+			responseTimeout="60000" >
+			<http:query-params ><![CDATA[#[output application/json
+---
+{
+	"offset" : vars.offset,
+	"limit" : vars.limit
+}]]]></http:query-params>
+		</http:request>
 		<ee:transform doc:name="Basic data filtering"
 			doc:id="e98ff262-b8ce-4f83-8723-3ac6e1e40b50">
 			<ee:message>
 			</ee:message>
 			<ee:variables>
-				<ee:set-variable variableName="launchInfo"><![CDATA[%dw 2.0
+				<ee:set-variable variableName="launch_planet_arr" ><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-variable>
+				<ee:set-variable variableName="launchInfo" ><![CDATA[%dw 2.0
 output application/json
 ---
 payload.launches filter ((item, index) -> item.launch_service_provider == vars.name) map ( launch , indexOfLaunch ) -> {
@@ -110,10 +122,6 @@ payload.launches filter ((item, index) -> item.launch_service_provider == vars.n
 		}
 	}
 }]]></ee:set-variable>
-				<ee:set-variable variableName="launch_planet_arr" ><![CDATA[%dw 2.0
-output application/json
----
-[]]]></ee:set-variable>
 			
 </ee:variables>
 		</ee:transform>
@@ -134,8 +142,14 @@ output application/json
 					<http:request method="GET" doc:name="getPlanet"
 						doc:id="f90465f9-31db-49bb-99c7-17a429dc13c9"
 						config-ref="HTTP_Request_configuration_Planets"
-						path='#["planets?name=" ++ vars.planetName]'
-						responseTimeout="60000" />
+						path='${planets.path1}'
+						responseTimeout="60000" >
+						<http:query-params ><![CDATA[#[output application/json
+---
+{
+	"name" : vars.planetName
+}]]]></http:query-params>
+					</http:request>
 					<ee:transform doc:name="Planet info"
 						doc:id="c20c49c7-d509-490e-a55e-5eb891dcf463">
 						<ee:message>
@@ -240,7 +254,7 @@ vars.launch_planet_arr]]></ee:set-payload>
 		doc:id="b42af5cc-cf60-4c11-a8d8-747d58ba7b54">
 		<http:request method="GET" doc:name="getStations"
 			doc:id="c66dd9e8-1c9f-45c9-a86e-500b387bea61"
-			config-ref="HTTP_Request_configuration_Stations" path="station"
+			config-ref="HTTP_Request_configuration_Stations" path="${stations.path}"
 			responseTimeout="60000" />
 		<ee:transform doc:name="Basic data filtering"
 			doc:id="0744ac6c-cc23-4479-88b0-247806b1ff68">
@@ -259,7 +273,7 @@ payload filter ((item, index) -> item.owners contains(vars.name))]]></ee:set-pay
 		<http:request method="GET" doc:name="getRockets"
 			doc:id="9d5934e9-c4b8-4d25-9588-2e12dd167033"
 			config-ref="HTTP_Request_configuration_Rockets" path="launcher">
-			<http:query-params><![CDATA[#[output application/java
+			<http:query-params><![CDATA[#[output application/json
 ---
 {
 	"offset" : vars.offset,
@@ -518,10 +532,7 @@ payload filter ((item, index) -> item.launch_year == vars.year)]]></ee:set-paylo
 				</ee:transform>
 			</route>
 			<route>
-				<http:request method="GET" doc:name="getStations"
-					doc:id="b69b611f-abf3-4c8b-8ed3-7c89086e369c"
-					config-ref="HTTP_Request_configuration_Stations" path="station"
-					responseTimeout="60000" />
+				<flow-ref doc:name="getStations" doc:id="8a73f188-f815-46d6-a429-784a9b5d2230" name="getStations"/>
 				<ee:transform
 					doc:name="Filtering by agency name and activity years"
 					doc:id="4d908a1c-37fb-480d-865e-51029f405076">
@@ -529,20 +540,19 @@ payload filter ((item, index) -> item.launch_year == vars.year)]]></ee:set-paylo
 						<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-payload filter ((item, index) -> (item.owners contains(vars.name)) and 
-	(item.founded[0 to 3] as Number <= vars.year as Number) and 
+payload filter ((item, index) -> (item.founded[0 to 3] as Number <= vars.year as Number) and 
 	((item.deorbited == null) or (item.deorbited[0 to 3] as Number > vars.year as Number))) 
 	map ( payload01 , indexOfPayload01 ) -> {
-      name: payload01.name,
-      status: payload01.status_name,
-      "type": payload01."type",
-      founded: payload01.founded,
-      deorbited: payload01.deorbited as String default "",
-      description: payload01.description,
-      orbit: payload01.orbit,
-      owners: payload01.owners map ( owner , indexOfOwner ) -> owner,
-      image_url: payload01.image_url
-    }]]></ee:set-payload>
+	name: payload01.name,
+	status: payload01.status_name,
+	"type": payload01."type",
+	founded: payload01.founded,
+	deorbited: payload01.deorbited as String default "",
+	description: payload01.description,
+	orbit: payload01.orbit,
+	owners: payload01.owners map ( owner , indexOfOwner ) -> owner,
+	image_url: payload01.image_url
+}]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
 			</route>
@@ -550,7 +560,13 @@ payload filter ((item, index) -> (item.owners contains(vars.name)) and
 				<http:request method="GET" doc:name="getSolarSystemObjects"
 					doc:id="15455fb9-0856-4616-974d-81ff09417134"
 					config-ref="HTTP_Request_configuration_Planets"
-					path='#["discovery?year=" ++ vars.year]' />
+					path='${planets.path2}' >
+					<http:query-params ><![CDATA[#[output application/json
+---
+{
+	"year" : vars.year
+}]]]></http:query-params>
+				</http:request>
 			</route>
 		</scatter-gather>
 		<choice doc:name="Choice"
@@ -924,8 +940,9 @@ output application/json
 			</scheduling-strategy>
 			<file:matcher filenamePattern="*.json" />
 		</file:listener>
+		<set-variable value="#[java!org::spaceagencies::utils::FileOperations::isFileExists(Mule::p('records.id_dir') as String, Mule::p('records.file') as String)]" doc:name="Set checkIdFile" doc:id="baf30047-349d-44cb-8da6-6300a1c2967c" variableName="checkIdFile"/>
 		<choice doc:name="Choice" doc:id="19c97036-740e-48a5-b812-82398353e1a0">
-			<when expression="#[java!org::spaceagencies::utils::FileOperations::isFileExists(Mule::p('records.dir') as String, Mule::p('records.file') as String) == false]">
+			<when expression="#[vars.checkIdFile == false]">
 				<ee:transform doc:name="DB object representation" doc:id="65935a6f-2471-4e72-bb10-8ba9aa39be0f">
 					<ee:message />
 					<ee:variables>
@@ -969,7 +986,7 @@ if ( payload.stations == null and payload.launches == null ) payload map (record
 }]]></ee:set-variable>
 					</ee:variables>
 				</ee:transform>
-				<file:write doc:name="Write id" doc:id="feb1188c-7490-4ca8-a17c-c85b94842817" config-ref="File_Config" path='#[Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String]' mode="CREATE_NEW">
+				<file:write doc:name="Write id" doc:id="feb1188c-7490-4ca8-a17c-c85b94842817" config-ref="File_Config" path='#[Mule::p("records.id_folder") ++ Mule::p("records.file")]' mode="CREATE_NEW">
 					<file:content><![CDATA[#[vars.record[0].r_id as Number + 1]]]></file:content>
 				</file:write>
 			</when>
@@ -979,7 +996,7 @@ if ( payload.stations == null and payload.launches == null ) payload map (record
 					<ee:variables>
 						<ee:set-variable variableName="record"><![CDATA[%dw 2.0
 output application/json
-var r_id = java!org::spaceagencies::utils::FileOperations::fileReader(Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String as String)
+var r_id = java!org::spaceagencies::utils::FileOperations::fileReader(Mule::p("records.id_folder") ++ Mule::p("records.file"))
 ---
 if ( payload.stations == null and payload.launches == null ) payload map (record, index) -> {
 	r_id: r_id,
@@ -1018,7 +1035,7 @@ if ( payload.stations == null and payload.launches == null ) payload map (record
 }]]></ee:set-variable>
 					</ee:variables>
 				</ee:transform>
-				<file:write doc:name="Write id" doc:id="ef09dcfc-f682-4483-9f94-6f0aeeee3229" config-ref="File_Config" path='#[Mule::p("records.id_folder") as String ++ Mule::p("records.file") as String]'>
+				<file:write doc:name="Write id" doc:id="ef09dcfc-f682-4483-9f94-6f0aeeee3229" config-ref="File_Config" path='#[Mule::p("records.id_folder") ++ Mule::p("records.file")]'>
 					<file:content><![CDATA[#[vars.record[0].r_id as Number + 1]]]></file:content>
 				</file:write>
 			</otherwise>
@@ -1080,7 +1097,7 @@ output application/json
 			<when expression="#[vars.offset &gt;= Mule::p('offset_limitations.rockets')]">
 				<choice doc:name="Choice" doc:id="a31f8a2f-9a02-4fb5-9dde-5cb88b328a13">
 					<when expression='#[sizeOf(payload."0".payload) == 0]'>
-						<raise-error doc:name="Raise error" doc:id="aa7893ac-d392-4ab7-b14a-b7ba544d0d74" type="APP:ALL_EMPTY" description="No data to add to database." />
+						<raise-error doc:name="APP:ALL_EMPTY error" doc:id="aa7893ac-d392-4ab7-b14a-b7ba544d0d74" type="APP:ALL_EMPTY" description="No data to add to database." />
 					</when>
 					<otherwise>
 						<ee:transform doc:name="Formatting data to add to the database" doc:id="8bfce8ea-2c5f-4252-80b3-54499a7229e5">
@@ -1174,8 +1191,17 @@ output application/json
 				</ee:transform>
 			</otherwise>
 		</choice>
-		<set-variable value='#[Mule::p("records.write_folder") ++ vars.name as String ++ "-" ++&#10;&#10;now() as String {format: "yyyy-MM-dd"} ++ "-" ++&#10;&#10;now() as String {format: "hh-m-s"} ++ ".json"]' doc:name="Set file_name" doc:id="2073bf49-733f-42c4-9494-65ef1a76e1f0" variableName="file_name" />
-        <file:write doc:name="Write payload to file" doc:id="a128965e-96f5-4521-89a3-0747a6cff68b" config-ref="File_Config" path="#[vars.file_name]" mode="CREATE_NEW">
+		<set-variable value='#[Mule::p("records.write_folder") ++ vars.name as String ++ " - offset " ++ vars.offset as String ++ " - date " ++&#10;&#10;now() as String {format: "yyyy-MM-dd"} ++ " - time " ++&#10;&#10;now() as String {format: "hh-m-s"} ++ ".json"]' doc:name="Set file_name" doc:id="2073bf49-733f-42c4-9494-65ef1a76e1f0" variableName="file_name" />
+		<choice doc:name="Choice" doc:id="c675d5d3-0efc-4a10-962e-e7325fee9fc2" >
+			<when expression="#[java!org::spaceagencies::utils::FileOperations::isDirectoryExists(Mule::p('records.write_dir') as String) == false]">
+				<file:create-directory doc:name="Create directory" doc:id="864da14b-1fa4-4a44-8e09-3e94206676c1" config-ref="File_Config_No_Dir" directoryPath='#["C:/Users/Natalka/AnypointStudio/demo-workspace/agencies-api/src/main/resources/Write/"]'/>
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Directory exists logger" doc:id="3f7abfd7-9017-407f-b90d-7cf94b771107" message='#["The directory already exists"]'/>
+			</otherwise>
+		</choice>
+		<file:write doc:name="Write payload to file" doc:id="a128965e-96f5-4521-89a3-0747a6cff68b" config-ref="File_Config" path="#[vars.file_name]" mode="CREATE_NEW">
         </file:write>
-	</sub-flow>
+	
+</sub-flow>
 </mule>

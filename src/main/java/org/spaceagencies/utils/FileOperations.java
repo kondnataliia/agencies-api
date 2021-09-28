@@ -6,7 +6,14 @@ import java.io.FileReader;
 
 public class FileOperations {
 	public static boolean isFileExists(String directory, String file) {
-	    File dir = new File(directory + file);
+	    File fil = new File(directory + file);
+	    if (fil.exists())
+	    	return true;
+	    return false;
+	}
+	
+	public static boolean isDirectoryExists(String directory) {
+	    File dir = new File(directory);
 	    if (dir.exists())
 	    	return true;
 	    return false;

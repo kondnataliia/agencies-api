@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:telegram="http://www.mulesoft.org/schema/mule/telegram"
+<mule xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:telegram="http://www.mulesoft.org/schema/mule/telegram"
 	xmlns:file="http://www.mulesoft.org/schema/mule/file"
 	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
 	xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
@@ -10,6 +11,7 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd 
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd 
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
@@ -76,5 +78,8 @@ http://www.mulesoft.org/schema/mule/telegram http://www.mulesoft.org/schema/mule
 	<file:config name="File_Config" doc:name="File Config"
 		doc:id="bcdda69b-7b92-489b-af6e-946bb882deeb">
 		<file:connection workingDir="${records.write_folder}" />
+	</file:config>
+	<file:config name="File_Config_No_Dir" doc:name="File Config" doc:id="96488ede-de6f-436e-8109-01f85c6b0fc3" >
+		<file:connection workingDir="${records.to_write_folder}" />
 	</file:config>
 </mule>

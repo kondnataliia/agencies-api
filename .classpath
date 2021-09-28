@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.munit/munit-runner/2.3.5"/>
 	<classpathentry kind="con" path="org.mule.tooling.MULE_PROJECT_LIB"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.connectors/telegram-messanger-api/1.0.0"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.munit/munit-tools/2.3.4"/>
-	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.munit/munit-runner/2.3.4"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-objectstore-connector/1.2.1"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.modules/mule-validation-module/1.4.5"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-file-connector/1.3.4"/>
