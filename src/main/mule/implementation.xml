@@ -498,6 +498,7 @@ else
     payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="End logger" doc:id="67bc629d-fdec-4d96-b9ae-be64fe6ea0f9" message="Retrieved data #[payload]"/>
 	</sub-flow>
 	<sub-flow name="launchesAndStationsByAgencyAndYear"
 		doc:id="c373dc04-0fb0-499a-bbff-bc6ebea1763f">
@@ -612,6 +613,7 @@ output application/json
 }]]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="End logger" doc:id="a5aa6ff7-a855-459d-9b41-391f2392235d" message="Retrieved data #[payload]"/>
 	</sub-flow>
 	<sub-flow name="helpFlow" doc:id="3cb3089f-e931-42b7-909c-9cf2ce80a009" >
 		<ee:transform doc:name="Help Info" doc:id="278a685b-8cea-44b9-8924-763a4b30e72d">
@@ -1202,6 +1204,7 @@ output application/json
 		</choice>
 		<file:write doc:name="Write payload to file" doc:id="a128965e-96f5-4521-89a3-0747a6cff68b" config-ref="File_Config" path="#[vars.file_name]" mode="CREATE_NEW">
         </file:write>
+		<logger level="INFO" doc:name="End logger" doc:id="b0d6a825-fbab-4c3c-9a02-eb8852842a99" message="Data has been added to the file #[vars.file_name]"/>
 	
 </sub-flow>
 </mule>
