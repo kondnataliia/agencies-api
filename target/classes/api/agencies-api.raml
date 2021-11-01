@@ -25,13 +25,13 @@ types:
     description: Retrieves information about launches, rockets and space stations by agency name.
     queryParameters:
       name:
-        required: false
+        required: true
       mode:
         required: false
       limit:
         required: false
       offset:
-        required: false
+        required: true
     responses:
       200:
         body:
@@ -62,13 +62,13 @@ types:
                  in that year, owned by that agency, and solar system objects discovered in that year
     queryParameters:
       name:
-        required: false
+        required: true
       year:
-        required: false
+        required: true
       limit:
         required: false
       offset:
-        required: false
+        required: true
     responses:
       200:
         body:
@@ -90,9 +90,9 @@ types:
     description: Retrieves information about launches, rockets and space stations by agency name and set it to a DB
     queryParameters:
       name:
-        required: false
+        required: true
       offset:
-        required: false
+        required: true
     responses:
       200:
         body:

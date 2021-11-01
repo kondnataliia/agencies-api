@@ -20,7 +20,7 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 http://www.mulesoft.org/schema/mule/telegram http://www.mulesoft.org/schema/mule/telegram/current/mule-telegram.xsd">
 	<apikit:config name="agencies-api-config"
 		api="agencies-api.raml" outboundHeadersMapName="outboundHeaders"
-		httpStatusVarName="httpStatus" />
+		httpStatusVarName="httpStatus" raml="api\agencies-api.raml"/>
 	<http:listener-config name="HTTP_Listener_config"
 		doc:name="HTTP Listener config"
 		doc:id="c8d723b7-0100-46ea-bf2d-50ae7a2fd300">

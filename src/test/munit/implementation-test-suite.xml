@@ -2548,44 +2548,6 @@ output application/json
 			<munit-tools:assert-equals doc:name="httpStatus equality" doc:id="9c645641-616f-4e63-b1d4-60a42311f74f" actual="#[vars.httpStatus]" expected="#[400]" />
 		</munit:validation>
 	</munit:test>
-	<munit:test name="APP:WRONG_OFFSET_error_handling_test" doc:id="5ab8a076-ee3b-4f2b-8f45-0f5fbcd35462" expectedErrorType="APP:WRONG_OFFSET">
-		<munit:behavior>
-			<munit-tools:mock-when doc:name="Mock when" doc:id="9e8da6c5-a758-467f-83e9-c79a4759b2ca" processor="flow-ref">
-				<munit-tools:with-attributes>
-					<munit-tools:with-attribute whereValue="agencyWithStationAndLaunches" attributeName="doc:name" />
-					<munit-tools:with-attribute whereValue="af5ef739-acd5-4d7c-a337-953fb1e99ebd" attributeName="doc:id" />
-				</munit-tools:with-attributes>
-				<munit-tools:then-return>
-					<munit-tools:error typeId="APP:WRONG_OFFSET" />
-				</munit-tools:then-return>
-			</munit-tools:mock-when>
-		</munit:behavior>
-		<munit:execution>
-			<flow-ref doc:name="get:\agencies" doc:id="bfae5657-7a74-44b5-a972-53a100c896ed" name="get:\agencies:agencies-api-config" />
-		</munit:execution>
-		<munit:validation>
-			<munit-tools:assert-equals doc:name="httpStatus equality" doc:id="61927444-1df9-4876-858b-5276b7db9eb3" actual="#[vars.httpStatus]" expected="#[400]" />
-		</munit:validation>
-	</munit:test>
-	<munit:test name="APP:MISS_NAME_error_handling_test" doc:id="2f39b679-b8be-48cd-b816-fbeb8c0db998" expectedErrorType="APP:MISS_NAME">
-		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock when" doc:id="4f8a0d19-ee79-4cf8-8d8f-0260c9de1747" processor="flow-ref">
-				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="agencyWithStationAndLaunches" attributeName="doc:name" />
-					<munit-tools:with-attribute whereValue="af5ef739-acd5-4d7c-a337-953fb1e99ebd" attributeName="doc:id" />
-				</munit-tools:with-attributes>
-				<munit-tools:then-return >
-					<munit-tools:error typeId="APP:MISS_NAME" />
-				</munit-tools:then-return>
-			</munit-tools:mock-when>
-		</munit:behavior>
-		<munit:execution >
-			<flow-ref doc:name="get:\agencies" doc:id="68745b35-523e-4baf-a965-c43655fc586c" name="get:\agencies:agencies-api-config"/>
-		</munit:execution>
-		<munit:validation >
-			<munit-tools:assert-equals doc:name="httpStatus equality" doc:id="f647acff-3db6-4f5c-acff-a930172ef793" actual="#[vars.httpStatus]" expected="#[400]" />
-		</munit:validation>
-	</munit:test>
 	<munit:test name="APP:ALL_EMPTY_error_handling_test" doc:id="c43e4e0b-3605-42be-92bc-753da1f3c7f7" expectedErrorType="APP:ALL_EMPTY">
 		<munit:behavior >
 			<munit-tools:mock-when doc:name="Mock when" doc:id="ad5ec111-0611-47c2-bafe-facfde1142c8" processor="flow-ref">

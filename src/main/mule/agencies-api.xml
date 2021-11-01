@@ -3,10 +3,11 @@
     <flow name="agencies-api-main">
         <http:listener config-ref="HTTP_Listener_config" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
         <apikit:router config-ref="agencies-api-config"/>
@@ -15,25 +16,26 @@
     <flow name="agencies-api-console">
         <http:listener config-ref="HTTP_Listener_config" path="/console/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
         <apikit:console config-ref="agencies-api-config"/>
 		<error-handler ref="api-console-error-handler" />
     </flow>
     <flow name="get:\agencies:agencies-api-config">
-		<flow-ref doc:name="agencyWithStationAndLaunches" doc:id="af5ef739-acd5-4d7c-a337-953fb1e99ebd" name="agencyWithStationAndLaunches"/>
+		<flow-ref doc:name="agencyWithStationAndLaunches" doc:id="3fd38778-9fac-4e29-b050-67ca40cb4f5e" name="agencyWithStationAndLaunches"/>
     </flow>
     <flow name="get:\database:agencies-api-config">
-		<flow-ref doc:name="databaseFilling" doc:id="59a78358-96ed-4669-8c42-c1d982460949" name="databaseFilling"/>
+		<flow-ref doc:name="databaseFilling" doc:id="76eaa2ff-8e88-4905-8161-9f35b2fac38b" name="databaseFilling"/>
     </flow>
     <flow name="get:\help:agencies-api-config">
-		<flow-ref doc:name="helpFlow" doc:id="64b559c9-e067-4f87-98e4-1eb50c96fe5e" name="helpFlow"/>
+		<flow-ref doc:name="helpFlow" doc:id="8e626e7e-eb18-4705-8198-368e7cfc2810" name="helpFlow"/>
     </flow>
     <flow name="get:\infoByAgencyAndYear:agencies-api-config">
-		<flow-ref doc:name="launchesAndStationsByAgencyAndYear" doc:id="d48ce3a9-4019-4069-a8c9-13f0b55eca75" name="launchesAndStationsByAgencyAndYear"/>
+		<flow-ref doc:name="launchesAndStationsByAgencyAndYear" doc:id="5048f361-01a9-41f2-9078-8524378a3efc" name="launchesAndStationsByAgencyAndYear"/>
     </flow>
 </mule>
